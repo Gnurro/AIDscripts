@@ -5,7 +5,7 @@ All zips should import as-is on AID.
 
 
 
-RPGmech: No giant robots, but RPG mechanics in AID, using InputDCattributeBot and the skill/stat menus. Has example of piping placeholders into skills as well.
+RPGmech: No giant robots, but RPG mechanics in AID, using InputDCattributeBot and the skill/stat menus. Has example of piping placeholders into skills as well. Now with plenty more docstrings.
 
 PlaceholderGrab: Grab encapsulated placeholders for scripting.
 
