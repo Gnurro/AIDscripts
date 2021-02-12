@@ -11,6 +11,8 @@ PlaceholderGrab: Grab encapsulated placeholders for scripting.
 
 RandomNamesReplacer: Replaces a list of names with completely randomly generated words (with some rudimentary morphology).
 
+TemmieSpeak: Turns normal player inputs into tEMmiE speK, bUt Yo Cn gO COlEg t fiX i.
+
 EditorsNote: (HACKY!) Changes 'Author's Note:' to 'Editor's Note:', in a bruteforce way.
 
 FixQuotes: Fixes missing/trailing quotes.
