@@ -129,16 +129,22 @@ const modifier = (text) => {
         }
         // random wordlist inserts:
         if (typeof(curTextNote) !== 'undefined') {
-          if (curTextNote.match(/{.*}/gi)) {
-          for (insertTag in encounterWordLists) {
-            if (curTextNote.includes(insertTag)) {
-              console.log(insertTag)
-              pickedInsert = getRndFromList(encounterWordLists[insertTag])
-              console.log(pickedInsert)
-              curTextNote = curTextNote.replace(insertTag, pickedInsert)
+          curPlaceholderMatches = curTextNote.match(/\{(.*?)\}/g)
+          if (curPlaceholderMatches) {
+            //console.log(curPlaceholderMatches)
+            for (placeholder of curPlaceholderMatches) {
+              //console.log(placeholder)
+              for (insertTag in encounterWordLists) {
+                if (placeholder.includes(insertTag)) {
+                  //console.log(insertTag)
+                  pickedInsert = getRndFromList(encounterWordLists[insertTag])
+                  //console.log(pickedInsert)
+                  insertRegEx = new RegExp(`{${insertTag}}`,)
+                  curTextNote = curTextNote.replace(insertRegEx, pickedInsert)
+                }
+              }  
             }
-          }
-          curTextNote = curTextNote.replace(/({|})/gi, '')
+          // curTextNote = curTextNote.replace(/({|})/gi, '')
         }
         // for outputs:
         // modifiedText += ` ${curTextNote}`
@@ -189,16 +195,22 @@ const modifier = (text) => {
                     }
                     // random wordlist inserts:
                     if (typeof(curTextNote) !== 'undefined') {
-                      if (curTextNote.match(/{.*}/gi)) {    
-                      for (insertTag in encounterWordLists) {
-                        if (curTextNote.includes(insertTag)) {
-                          console.log(insertTag)
-                          pickedInsert = getRndFromList(encounterWordLists[insertTag])
-                          console.log(pickedInsert)
-                          curTextNote = curTextNote.replace(insertTag, pickedInsert)
+                      curPlaceholderMatches = curTextNote.match(/\{(.*?)\}/g)
+                      if (curPlaceholderMatches) {
+                        //console.log(curPlaceholderMatches)
+                        for (placeholder of curPlaceholderMatches) {
+                          //console.log(placeholder)
+                          for (insertTag in encounterWordLists) {
+                            if (placeholder.includes(insertTag)) {
+                              //console.log(insertTag)
+                              pickedInsert = getRndFromList(encounterWordLists[insertTag])
+                              //console.log(pickedInsert)
+                              insertRegEx = new RegExp(`{${insertTag}}`,)
+                              curTextNote = curTextNote.replace(insertRegEx, pickedInsert)
+                            }
+                          }  
                         }
-                      }
-                      curTextNote = curTextNote.replace(/({|})/gi, '')
+                        // curTextNote = curTextNote.replace(/({|})/gi, '')
                       }
                       // for outputs:
                       // modifiedText += ` ${curTextNote}`
