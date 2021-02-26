@@ -343,11 +343,12 @@ const modifier = (text) => {
         console.log(`${state.cooldownEncounters[cooldown][0]} cooldown over, removing.`)
         delete state.cooldownEncounters[cooldown]
       }
+    }
       if (state.cooldownEncounters[0] == null) {
         console.log(`No more cooldowns, removing array.`)
         delete state.cooldownEncounters
       }
-    }
+    
   }
   // END Encounters
   
