@@ -1,4 +1,4 @@
-# Encounters Framework (Beta 6)
+# Encounters Framework (Beta 6b)
 A framework to set up game-y things in AID scenarios without the hassle of having to do in-depth scripting.  
 Feel free to fork and improve! I'll also try to keep an eye on the Issues tracker.
 
