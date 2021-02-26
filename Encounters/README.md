@@ -8,7 +8,7 @@ There can only be one 'current encounter' at a time, and as long as it is define
 An encounter definition, or encounterDef for short, is a JSON object that defines the behaviour of an encounter. The encounterDB object contains the encounterDefs.  
 Encounter definitions can be added using Wolrd Info entries: The keys of such an entry must contain '!encounterDef', and the entry text must be a correct JSON object containing encounterDef keys.
 
-### Currently available encounterDef keys: (Probably still incomplete, this doc very WIP.)
+### Currently available encounterDef keys:
 #### encounterID
 **Format:** encounterID:STRING  
 **This key *must* have a string value, otherwise things *will* break! This is the only hardcoded, absolutely neccessary key:value for encounterDefs.**  
