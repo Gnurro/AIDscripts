@@ -87,10 +87,10 @@ Works the same as encounter triggers.
 **Format:** branchChance:INTEGER  
 **This chance is neccessary and can not be omitted!** Works the same as encounter chance.
 #### branchTextNotes
-**Format:** branchTextNotes:ARRAY
+**Format:** branchTextNotes:ARRAY  
 Will be immediately inserted if this branch is activated! Otherwise works the same as encounter textNotes.
 #### branchTextNotesWeighted
-**Format:** branchTextNotesWeighted:ARRAY
+**Format:** branchTextNotesWeighted:ARRAY  
 Will be immediately inserted if this branch is activated! Otherwise works the same as encounter textNotesWeighted.
 #### branchChained
 **Format:** branchChained:ARRAY  
