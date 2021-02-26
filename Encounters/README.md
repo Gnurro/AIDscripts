@@ -36,7 +36,7 @@ Once the encounter is set as current encounter, it will take this number of acti
 #### Encounter Effects:
 #### textNotes
 **Format:** textNotes:ARRAY; ARRAY = \[STRING, STRING, ...\]  
-A list of phrases or words. One phrase will be randomly chosen, if there are multiple. The chosen phrase will be added to the end of (text) once when the encounter activates. Phrases can contain {placeholders}, which will be filled with a random word/phrase from the encounterWordLists object ~~(see below for {placeholder}/random word list info)~~.
+A list of phrases or words. One phrase will be randomly chosen, if there are multiple. The chosen phrase will be added to the end of (text) once when the encounter activates. Phrases can contain {placeholders}, which will be filled with a random word/phrase from the encounterWordLists object (see below for {placeholder}/random word list info).
 #### textNotesWeighted
 **Format:** textNotesWeighted:ARRAY; ARRAY = \[\[STRING, INT\], \[STRING, INT\], ...\], INT = 0-100  
 For weighted lists, a function basically rolls a d100 and picks the first list item that fits. See shared.js, example encounterDef 'dance' for usage. Note: If there is also textNotes, textNotesWeighted will be ignored!
@@ -60,7 +60,7 @@ A list of WI entries to add. *All* entries in the list will be *added to WI* whe
 #### endTriggers
 **Format:** endTriggers:ARRAY; ARRAY = \[STRING, STRING, ...\]  
 This is a list of words to check (text) for. If any of the words are found in (text), the encounter will end. List items are turned into regular expressions to check, and thus can utilize full JS regEx syntax. Note: Some regEx special characters, like \b, might need to be double-escaped, like so: \\b  
-Note: Encounters can also be ended by branches~~, see below~~.
+Note: Encounters can also be ended by branches, see below.
 #### duration
 **Format:** duration:INTEGER  
 How many actions the encounter remains active. If duration is 0, the encounter will immediately end - this can be used to immediately activate chained encounters. ~~If duration is 1, the encounter will also end in the action it was activated, but chained encounters will not activate yet. (Not tested, but intended.)~~ If the encounter has *no duration* (by omitting it from the encounterDef), *it is endless* and needs to be ended by other means, like endTriggers.
