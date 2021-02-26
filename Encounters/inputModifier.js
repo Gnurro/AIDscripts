@@ -39,7 +39,7 @@ const modifier = (text) => {
           }
         }
       }
-      if (typeof(state.cooldownEncounters) !== 'undefined) {
+      if (typeof(state.cooldownEncounters) !== 'undefined') {
         cooldownLoop:
         for (cooldown of state.cooldownEncounters) {
           if (cooldown[0] == encounter) {
