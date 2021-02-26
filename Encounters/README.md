@@ -54,7 +54,7 @@ Will be shown above the buttons/input field as long as encounter is active.
 **Format:** memoryAdd:OBJECT; OBJECT = {memoryText:STRING,memoryLocation:STRING,memoryGreed:BOOL,memoryLingerDuration:INTEGER}  
 World Event style memory insert. key:value explanation TBD; see shared.js for example for now.
 #### addWI
-**Format:** addWI:ARRAY; ARRAY = \[{a valid WI JSON}, {a valid WI JSON}, ...\]
+**Format:** addWI:ARRAY; ARRAY = \[{a valid WI JSON}, {a valid WI JSON}, ...\]  
 A list of WI entries to add. *All* entries in the list will be *added to WI* when the encounter activates.
 #### Ending Encounters:
 #### endTriggers
