@@ -1,5 +1,6 @@
 # Encounters Framework (Beta 6)
-A framework to set up game-y things in AID scenarios without the hassle of having to do in-depth scripting.
+A framework to set up game-y things in AID scenarios without the hassle of having to do in-depth scripting.  
+Feel free to fork and improve! I'll also try to keep an eye on the Issues tracker.
 
 ## Core Functionality
 There can only be one 'current encounter' at a time, and as long as it is defined in state - iE (state.currentEncounter) == true/non-null/!'undefined' - other encounters can not start. Chaining allows to specify follow-up encounters, and branches allow conditional chaining or ending of the current encounter while it is active. 
