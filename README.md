@@ -1,11 +1,13 @@
 # AIDscripts
-Scripts for AI Dungeon (play.aidungeon.io)
+## Scripts for AI Dungeon (play.aidungeon.io)
 
 All JS scenario script zips should import as-is on AID.
 Python scripts require Python 3.
 
 
-JS scenario scripts:
+## JS scenario scripts:
+
+Encounters: Dynamic game event framework, with plenty functionality. See Encounters folder for more info.
 
 RPGmech: No giant robots, but RPG mechanics in AID, using InputDCattributeBot and the skill/stat menus. Has example of piping placeholders into skills as well. Now with plenty more docstrings.
 
@@ -24,6 +26,6 @@ FormChangeMaintain: Commands to set a context note that tells Ai which form you 
 UwUfier: Don't ask.
 
 
-Python utility scripts:
+## Python utility scripts:
 
 tokenStuff: Convenviently checks how texts encode/decode, with some utility to easily share the results
