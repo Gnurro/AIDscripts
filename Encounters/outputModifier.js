@@ -336,19 +336,23 @@ const modifier = (text) => {
   
   if (state.cooldownEncounters) {
     console.log(`Cooldowns detected!`)
+    cooldownLoop:
     for (cooldown in state.cooldownEncounters) {
+      if (state.cooldownEncounters[cooldown] == null) { // safety/legacy...
+        state.cooldownEncounters.splice(cooldown, 1)
+        continue cooldownLoop
+      }
       console.log(`'${state.cooldownEncounters[cooldown][0]}' (${cooldown}) cooldown: ${state.cooldownEncounters[cooldown][1]}.`)
       state.cooldownEncounters[cooldown][1] -= 1
-      if (state.cooldownEncounters[cooldown][1] < 1) {
+      if (state.cooldownEncounters[cooldown][1] <= 0) {
         console.log(`${state.cooldownEncounters[cooldown][0]} cooldown over, removing.`)
-        delete state.cooldownEncounters[cooldown]
+        state.cooldownEncounters.splice(cooldown, 1)
       }
     }
-      if (state.cooldownEncounters[0] == null) {
-        console.log(`No more cooldowns, removing array.`)
-        delete state.cooldownEncounters
-      }
-    
+    if (state.cooldownEncounters[0] == null) {
+      console.log(`No more cooldowns, removing array.`)
+      delete state.cooldownEncounters
+    }
   }
   // END Encounters
   
