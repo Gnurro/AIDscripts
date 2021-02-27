@@ -326,7 +326,7 @@ const modifier = (text) => {
         console.log(`'${encounterMemory.memoryText}' will stay in memory for ${encounterMemory.memoryLingerDuration} more actions.`)
         encounterMemory.memoryLingerDuration -= 1
       } else {
-        console.log(state.encounterMemories.indexOf(encounterMemory))
+        console.log(`'${encounterMemory.memoryText}' will no longer stay in memory.`)
         state.encounterMemories.splice(state.encounterMemories.indexOf(encounterMemory), 1)
       }
     }
