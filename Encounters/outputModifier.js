@@ -322,14 +322,14 @@ const modifier = (text) => {
   
   
   
-  // encounter memory stuff:
   if (state.encounterMemories) {
     for (encounterMemory of state.encounterMemories) {
-      if (encounterMemory.memoryLingerDuration > 0) {
+      if (encounterMemory.memoryLingerDuration >= 1) {
+        console.log(`'${encounterMemory.memoryText}' will stay in memory for ${encounterMemory.memoryLingerDuration} more actions.`)
         encounterMemory.memoryLingerDuration -= 1
-        console.log(`'${encounterMemory.memoryText}' will stay in memory for ${encounterMemory.memoryLingerDuration} more actions.`)  
       } else {
-        delete state.encounterMemories.encounterMemory
+        console.log(state.encounterMemories.indexOf(encounterMemory))
+        state.encounterMemories.splice(state.encounterMemories.indexOf(encounterMemory), 1)
       }
     }
   }
