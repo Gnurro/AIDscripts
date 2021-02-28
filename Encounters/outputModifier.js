@@ -16,9 +16,9 @@ const modifier = (text) => {
       if (encounterDB[encounter].inputLock) {
         console.log("Input checking disabled on this encounter.")
         continue globalLoop
-      }*/
+      }
       //for outputMod:
-      
+      */
       if (encounterDB[encounter].outputLock) {
         console.log("Output checking disabled on this encounter.")
         continue globalLoop
@@ -132,19 +132,43 @@ const modifier = (text) => {
         if (typeof(curTextNote) !== 'undefined') {
           curPlaceholderMatches = curTextNote.match(/\{(.*?)\}/g)
           if (curPlaceholderMatches) {
-            //console.log(curPlaceholderMatches)
+            console.log(`Matched placeholders: ${curPlaceholderMatches}`)
             for (placeholder of curPlaceholderMatches) {
-              //console.log(placeholder)
-              for (insertTag in encounterWordLists) {
-                if (placeholder.includes(insertTag)) {
-                  //console.log(insertTag)
-                  pickedInsert = getRndFromList(encounterWordLists[insertTag])
-                  //console.log(pickedInsert)
-                  insertRegEx = new RegExp(`{${insertTag}}`,)
-                  curTextNote = curTextNote.replace(insertRegEx, pickedInsert)
+              console.log(`Current placeholder: ${placeholder}`)
+              if (placeholder[1] == '*') {
+                console.log(`Current placeholder ${placeholder} contains a *, checking temporary word lists...`)
+                placeholder = placeholder.replace(/(\*|{|})/gi, '')
+                if (typeof(tempWordLists) == 'undefined') {
+                  tempWordLists = {}
                 }
-              }  
+                if (!tempWordLists[placeholder] || tempWordLists[placeholder].length == 0) {
+                  console.log(`${placeholder} temporary wordlist is either non-existant or empty! Getting a new one.`)
+                  tempWordLists[placeholder] = JSON.parse(JSON.stringify(encounterWordLists[placeholder]))
+                }
+                console.log(`Current temporary word lists:${tempWordLists}`)
+                for (insertTag in tempWordLists) {
+                  if (placeholder.includes(insertTag)) {
+                    console.log(`Found fitting placeholder tag in temporary list: ${insertTag}`)
+                    pickedInsert = getRndFromList(tempWordLists[insertTag])
+                    console.log(`Randomly picked placeholder insert from temporary list: ${pickedInsert}`)
+                    insertRegEx = new RegExp(`{\\*${insertTag}}`,)
+                    curTextNote = curTextNote.replace(insertRegEx, pickedInsert)
+                    tempWordLists[placeholder].splice(tempWordLists[placeholder].indexOf(pickedInsert), 1)
+                  }
+                }
+              } else {
+                for (insertTag in encounterWordLists) {
+                  if (placeholder.includes(insertTag)) {
+                    console.log(`Found fitting placeholder tag: ${insertTag}`)
+                    pickedInsert = getRndFromList(encounterWordLists[insertTag])
+                    console.log(`Randomly picked placeholder insert: ${pickedInsert}`)
+                    insertRegEx = new RegExp(`{${insertTag}}`,)
+                    curTextNote = curTextNote.replace(insertRegEx, pickedInsert)
+                  }
+                }
+              }
             }
+            delete tempWordLists
           // curTextNote = curTextNote.replace(/({|})/gi, '')
         }
         // for outputs:
@@ -194,36 +218,56 @@ const modifier = (text) => {
                     } else if (chkBranch.branchTextNotesWeighted) {
                       curTextNote = getRndFromListWeighted(chkBranch.branchTextNotesWeighted)
                     }
+                    
                     // random wordlist inserts:
-                    if (typeof(curTextNote) !== 'undefined') {
-                      curPlaceholderMatches = curTextNote.match(/\{(.*?)\}/g)
-                      if (curPlaceholderMatches) {
-                        //console.log(curPlaceholderMatches)
-                        for (placeholder of curPlaceholderMatches) {
-                          //console.log(placeholder)
-                          for (insertTag in encounterWordLists) {
-                            if (placeholder.includes(insertTag)) {
-                              //console.log(insertTag)
-                              pickedInsert = getRndFromList(encounterWordLists[insertTag])
-                              //console.log(pickedInsert)
-                              insertRegEx = new RegExp(`{${insertTag}}`,)
-                              curTextNote = curTextNote.replace(insertRegEx, pickedInsert)
-                            }
-                          }  
-                        }
-                        // curTextNote = curTextNote.replace(/({|})/gi, '')
-                      }
-                      // for outputs:
-                      modifiedText += ` ${curTextNote}`
-                      /*
-                      if (!modifiedText.match(/\n/)) {
-                        modifiedText += `\n${curTextNote}`
-                      } else {
-                        modifiedText += ` ${curTextNote}`
-                      }
-                      */
-                    }
+        if (typeof(curTextNote) !== 'undefined') {
+          curPlaceholderMatches = curTextNote.match(/\{(.*?)\}/g)
+          if (curPlaceholderMatches) {
+            console.log(`Matched placeholders: ${curPlaceholderMatches}`)
+            for (placeholder of curPlaceholderMatches) {
+              console.log(`Current placeholder: ${placeholder}`)
+              if (placeholder[1] == '*') {
+                console.log(`Current placeholder ${placeholder} contains a *, checking temporary word lists...`)
+                placeholder = placeholder.replace(/(\*|{|})/gi, '')
+                if (typeof(tempWordLists) == 'undefined') {
+                  tempWordLists = {}
+                }
+                if (!tempWordLists[placeholder] || tempWordLists[placeholder].length == 0) {
+                  console.log(`${placeholder} temporary wordlist is either non-existant or empty! Getting a new one.`)
+                  tempWordLists[placeholder] = JSON.parse(JSON.stringify(encounterWordLists[placeholder]))
+                }
+                console.log(`Current temporary word lists:${tempWordLists}`)
+                for (insertTag in tempWordLists) {
+                  if (placeholder.includes(insertTag)) {
+                    console.log(`Found fitting placeholder tag in temporary list: ${insertTag}`)
+                    pickedInsert = getRndFromList(tempWordLists[insertTag])
+                    console.log(`Randomly picked placeholder insert from temporary list: ${pickedInsert}`)
+                    insertRegEx = new RegExp(`{\\*${insertTag}}`,)
+                    curTextNote = curTextNote.replace(insertRegEx, pickedInsert)
+                    tempWordLists[placeholder].splice(tempWordLists[placeholder].indexOf(pickedInsert), 1)
                   }
+                }
+              } else {
+                for (insertTag in encounterWordLists) {
+                  if (placeholder.includes(insertTag)) {
+                    console.log(`Found fitting placeholder tag: ${insertTag}`)
+                    pickedInsert = getRndFromList(encounterWordLists[insertTag])
+                    console.log(`Randomly picked placeholder insert: ${pickedInsert}`)
+                    insertRegEx = new RegExp(`{${insertTag}}`,)
+                    curTextNote = curTextNote.replace(insertRegEx, pickedInsert)
+                  }
+                }
+              }
+            }
+            delete tempWordLists
+          // curTextNote = curTextNote.replace(/({|})/gi, '')
+        }
+        // for outputs:
+        modifiedText += ` ${curTextNote}`
+        // modifiedText += `\n${curTextNote}`
+        // state.currentEncounter.textInserted = true
+        }
+      }
                   
                   if (chkBranch.branchChained) {
                     updateCurrentEncounter(getRndFromList(chkBranch.branchChained))
@@ -322,6 +366,7 @@ const modifier = (text) => {
   
   
   
+  // encounter memory stuff:
   if (state.encounterMemories) {
     for (encounterMemory of state.encounterMemories) {
       if (encounterMemory.memoryLingerDuration >= 1) {
@@ -356,7 +401,6 @@ const modifier = (text) => {
   }
   // END Encounters
   
-  // You must return an object with the text property defined.
   return { text: modifiedText }
 }
 
