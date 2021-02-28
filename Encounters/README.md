@@ -10,7 +10,7 @@ An encounter definition, or encounterDef for short, is a JSON object that define
 Encounter definitions can be added using Wolrd Info entries: The keys of such an entry must contain '!encounterDef', and the entry text must be a correct JSON object containing encounterDef keys.
 
 ### Currently available encounterDef keys:
-#### encounterID
+##### encounterID
 **Format:** encounterID:STRING  
 **This key *must* have a string value, otherwise things *will* break! This is the only hardcoded, absolutely neccessary key:value for encounterDefs.**  
 This is used to keep track of the current encounter and for recurrence, cooldowns, chaining and branching.
@@ -43,7 +43,7 @@ A list of phrases or words. One phrase will be randomly chosen, if there are mul
 For weighted lists, a function basically rolls a d100 and picks the first list item that fits. See shared.js, example encounterDef 'dance' for usage. Note: If there is also textNotes, textNotesWeighted will be ignored!
 #### contextNotes
 **Format:** contextNotes:ARRAY; ARRAY = \[STRING, STRING, ...\]  
-A list of phrases or words. One phrase will be randomly chosen, if there are multiple. The chosen phrase will be shown to the AI right below AN as long as the encounter is active. ~~Phrases can contain {placeholders}, which will be filled with a random word/phrase from the encounterWordLists object (not yet implemented in Beta6) (see below for {placeholder}/random word list info)~~.
+A list of phrases or words. One phrase will be randomly chosen, if there are multiple. The chosen phrase will be shown to the AI right below AN as long as the encounter is active. Phrases can contain {placeholders}, which will be filled with a random word/phrase from the encounterWordLists object (see below for {placeholder}/{\*placeholder} info).
 #### contextNotesWeighted
 **Format:** contextNotesWeighted:ARRAY; ARRAY = \[\[STRING, INT\], \[STRING, INT\], ...\], INT = 0-100  
 For weighted lists, a function basically rolls a d100 and picks the first list item that fits. See shared.js, example encounterDef 'dance' for usage of weighted lists.  
