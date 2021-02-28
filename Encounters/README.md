@@ -1,4 +1,4 @@
-# Encounters Framework (Beta 6b)
+# Encounters Framework (Beta 7)
 A framework to set up game-y things in AID scenarios without the hassle of having to do in-depth scripting.  
 Feel free to fork and improve! I'll also try to keep an eye on the Issues tracker.
 
@@ -112,12 +112,15 @@ Limits how many times the encounter can be set as current encounter.
 Note: Gets set when encounter ends.
 
 
-### encounterWordLists
+## encounterWordLists
 Is an object holding arrays of strings to be randomly inserted into {placeholders}. Note: encounterWordLists is not part of encounterDB!  
+#### {placeholders}
 Keys in encounterWordLists must match the {placeholder} used like so:  
 '{color} flowers are my favorite', with encounterWordLists = {color:\["red", "blue", "green", "chartreuse"\]} will result in any of  
 'red flowers are my favorite', 'blue flowers are my favorite', 'green flowers are my favorite', 'chartreuse flowers are my favorite'  
 {placeholders} can be used in any of the textNotes strings (for now, probably going to add the functionality to all string things). Any number of {placeholders} should work, with any number of different lists in encounterWordLists.
+#### {\*placeholders}
+{\*placeholders} come with repetition prevention: Inserted words/phrases will not be repeated, unless there are not enough alternatives to fill the {\*placeholders} in the corresponding word list.
 
 
 ### License blurb
