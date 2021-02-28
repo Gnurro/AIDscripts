@@ -10,7 +10,7 @@ An encounter definition, or encounterDef for short, is a JSON object that define
 Encounter definitions can be added using Wolrd Info entries: The keys of such an entry must contain '!encounterDef', and the entry text must be a correct JSON object containing encounterDef keys.
 
 ### Currently available encounterDef keys:
-##### encounterID
+#### encounterID
 **Format:** encounterID:STRING  
 **This key *must* have a string value, otherwise things *will* break! This is the only hardcoded, absolutely neccessary key:value for encounterDefs.**  
 This is used to keep track of the current encounter and for recurrence, cooldowns, chaining and branching.
