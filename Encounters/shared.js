@@ -160,22 +160,39 @@ encounterDB = { // hardcoded encounters:
   */ // REMOVE THIS LINE AND THE ONE AT THE START OF encounterDB TO SEE THE EXAMPLE ENCOUNTERS IN ACTION
 }
 
-// encounters from WI:
-// these will be lower priority then the hardcoded ones above!
+// word list stuff like gauntlet script:
+encounterWordLists = {
+  /* Remove this line (and the one below) to enable the example word lists
+  color:["red","blue","green","yellow","orange"],
+  charClass:["mage","fighter","valkyrie"],
+  pattern:["sprinkles", "dots", "lines"],
+   */ // Remove this line (and the one above) to enable the example word lists
+}
+
+// WI data imports:
 for (WIentry of worldInfo) {
+  // encounters from WI:
+  // these will be lower priority then the hardcoded ones above!
   if (WIentry.keys.includes('!encounterDef')) {
     encounterDefFromWI = JSON.parse(WIentry.entry)
     console.log(`Found WI encounterDef for '${encounterDefFromWI.encounterID}', adding it to the DB!`)
     encounterDB[encounterDefFromWI.encounterID] = encounterDefFromWI
   }
+  // word lists from WI:
+  if (WIentry.keys.includes('!encounterWordListsFull')) {
+    encounterWordListsFromWI = JSON.parse(WIentry.entry)
+    console.log(`Found full WI encounterWordLists entry, adding them to the DB!`)
+    for (encounterSingleWordList of encounterWordListsFromWI) {
+      encounterWordLists[Object.keys(encounterSingleWordList)[0]] = Object.values(encounterSingleWordList)
+    }
+  }
+  if (WIentry.keys.includes('!encounterWordListSingle')) {
+    encounterWordListSingleFromWI = JSON.parse(WIentry.entry)
+    console.log(`Found WI encounterWordList, adding it to the DB!`)
+    encounterWordLists[Object.keys(encounterWordListSingleFromWI)[0]] = Object.values(encounterWordListSingleFromWI)
+  }
 }
 
-// word list stuff like gauntlet script:
-encounterWordLists = {
-  color:["red","blue","green","yellow","orange"],
-  charClass:["mage","fighter","valkyrie"],
-  pattern:["sprinkles", "dots", "lines"],
-}
 
 // encounter functions: (DON'T MESS WITH THESE!)
 function updateCurrentEncounter(encounter) { // sets or clears currentEncounter; if argument empty, clears current encounter
