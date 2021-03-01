@@ -252,7 +252,13 @@ function getRndInteger(min, max) {
 }
 // generic list-picker
 function getRndFromList(list) {
-  return (list[getRndInteger(0, list.length)])
+  if (list[0].length == 2) {
+    console.log(`${list} looks like a weighted list, doing that!`)
+    return (getRndFromListWeighted(list))
+  } else {
+    console.log(`${list} looks like a plain list, simply picking from it!`)
+    return (list[getRndInteger(0, list.length)])
+  }
 }
 // list picker for lists with weighted items:
 // currently works kinda like oldschool D&D encounter lists
