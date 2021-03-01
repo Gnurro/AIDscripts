@@ -64,7 +64,7 @@ encounterDB = { // hardcoded encounters:
     globalActionDelay:2, // info.actionCount needs to be higher than this to allow encounter triggering; always allow encounter if missing
     chance:100, // in percent; if missing, there is no chance for this encounter to occur unless chained; if triggers should always start this encounter, set chance to 100
     triggers:["(?<=(spot|see|find).*)goblin", "(?<=enter.*)(cave|warren|thicket)"], // trigger words: if found in text, set encounter; regEx possible!; if missing from encounterDef, it will trigger based on chance alone!
-    triggerDelay:0, // how many actions after triggering this starts it's thing; can be omitted
+    activationDelay:0, // how many actions after triggering this starts it's thing; can be omitted
     duration:0, // how many actions this sticks around; if there is no duration, encounter is endless, only ended by endTriggers; duration 0 leads to immediate end, for chaining
     // CHAINING
     // list of follow-up encounters! BD

@@ -104,9 +104,9 @@ const modifier = (text) => {
         
   // current encounter processing:
   if (state.currentEncounter) {
-    if (state.currentEncounter.triggerDelay) {
-      console.log(`Delaying by ${state.currentEncounter.triggerDelay} actions before running '${state.currentEncounter.encounterID}'!`)
-      state.currentEncounter.triggerDelay -= 1
+    if (state.currentEncounter.activationDelay) {
+      console.log(`Delaying by ${state.currentEncounter.activationDelay} actions before running '${state.currentEncounter.encounterID}'!`)
+      state.currentEncounter.activationDelay -= 1
     } else {
       console.log(`No delay, running '${state.currentEncounter.encounterID}'!`)
       // activating encounters:
