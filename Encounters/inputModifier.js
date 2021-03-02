@@ -124,8 +124,6 @@ const modifier = (text) => {
             if (!state.currentEncounter.textInserted) {
                 if (state.currentEncounter.textNotes) {
                     curTextNote = getRndFromList(state.currentEncounter.textNotes)
-                } else if (state.currentEncounter.textNotesWeighted) {
-                    curTextNote = getRndFromListWeighted(state.currentEncounter.textNotesWeighted)
                 }
                 // random wordlist inserts:
                 if (typeof (curTextNote) !== 'undefined') {
@@ -211,13 +209,8 @@ const modifier = (text) => {
                                         if (getRndInteger(1, 100) <= chkBranch.branchChance) {
                                             console.log(`Rolled below ${chkBranch.branchChance} chance for '${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}', branching!`)
 
-                                            if (chkBranch.branchTextNotes || chkBranch.branchTextNotesWeighted) {
-                                                if (chkBranch.branchTextNotes) {
-                                                    curTextNote = getRndFromList(chkBranch.branchTextNotes)
-                                                } else if (chkBranch.branchTextNotesWeighted) {
-                                                    curTextNote = getRndFromListWeighted(chkBranch.branchTextNotesWeighted)
-                                                }
-
+                                            if (chkBranch.branchTextNotes) {
+                                                curTextNote = getRndFromList(chkBranch.branchTextNotes)
                                                 // random wordlist inserts:
                                                 if (typeof (curTextNote) !== 'undefined') {
                                                     curPlaceholderMatches = curTextNote.match(/\{(.*?)\}/g)
@@ -271,9 +264,6 @@ const modifier = (text) => {
                                             if (chkBranch.branchChained) {
                                                 updateCurrentEncounter(getRndFromList(chkBranch.branchChained))
                                                 break branchLoop
-                                            } else if (chkBranch.branchChainedWeighted) {
-                                                updateCurrentEncounter(getRndFromListWeighted(chkBranch.branchChainedWeighted))
-                                                break branchLoop
                                             } else {
                                                 console.log(`'${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}' has no chained encounter, but this might be intentional.`)
                                             }
@@ -286,14 +276,9 @@ const modifier = (text) => {
                                 console.log(`Rolled below ${chkBranch.branchChance} chance for '${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}', branching!`)
                                 if (chkBranch.branchTextNotes) {
                                     modifiedText += ` ${getRndFromList(chkBranch.branchTextNotes)}`
-                                } else if (chkBranch.branchTextNotesWeighted) {
-                                    modifiedText += ` ${getRndFromListWeighted(chkBranch.branchTextNotesWeighted)}`
                                 }
                                 if (chkBranch.branchChained) {
                                     updateCurrentEncounter(getRndFromList(chkBranch.branchChained))
-                                    break branchLoop
-                                } else if (chkBranch.branchChainedWeighted) {
-                                    updateCurrentEncounter(getRndFromListWeighted(chkBranch.branchChainedWeighted))
                                     break branchLoop
                                 } else {
                                     console.log(`'${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}' has no chained encounter, but this might be intentional.`)
@@ -314,17 +299,11 @@ const modifier = (text) => {
                         caughtTrigger = text.match(triggerRegEx)
                         if (caughtTrigger) {
                             console.log(`Caught ${caughtTrigger}, ending '${state.currentEncounter.encounterID}'!`)
-                            if (state.currentEncounter.chained || state.currentEncounter.chainedWeighted) {
+                            if (state.currentEncounter.chained) {
                                 console.log(`Detected chained encounter(s) on ${state.currentEncounter.encounterID}!`)
                                 delete state.message
                                 delete state.encounterNote
-                                if (state.currentEncounter.chained) {
-                                    console.log(`Chained encounter(s) on ${state.currentEncounter.encounterID} are not weighted.`)
-                                    updateCurrentEncounter(getRndFromList(state.currentEncounter.chained))
-                                } else if (state.currentEncounter.chainedWeighted) {
-                                    console.log(`Chained encounters on ${state.currentEncounter.encounterID} are weighted.`)
-                                    updateCurrentEncounter(getRndFromListWeighted(state.currentEncounter.chainedWeighted))
-                                }
+                                updateCurrentEncounter(getRndFromList(state.currentEncounter.chained))
                             } else {
                                 updateCurrentEncounter()
                                 updateCurrentEffects()
@@ -333,24 +312,17 @@ const modifier = (text) => {
                     }
                 }
 
-
                 if (typeof (state.currentEncounter.duration) !== 'undefined') {
                     if (state.currentEncounter.duration > 0) {
                         console.log(`Keeping up ${state.currentEncounter.encounterID} for ${state.currentEncounter.duration} more actions!`)
                         state.currentEncounter.duration -= 1
                     } else {
                         console.log(`Duration of ${state.currentEncounter.encounterID} over!`)
-                        if (state.currentEncounter.chained || state.currentEncounter.chainedWeighted) {
+                        if (state.currentEncounter.chained) {
                             console.log(`Detected chained encounter(s) on ${state.currentEncounter.encounterID}!`)
                             delete state.message
                             delete state.encounterNote
-                            if (state.currentEncounter.chained) {
-                                console.log(`Chained encounter(s) on ${state.currentEncounter.encounterID} not weighted.`)
-                                updateCurrentEncounter(getRndFromList(state.currentEncounter.chained))
-                            } else if (state.currentEncounter.chainedWeighted) {
-                                console.log(`Chained encounters on ${state.currentEncounter.encounterID} are weighted.`)
-                                updateCurrentEncounter(getRndFromListWeighted(state.currentEncounter.chainedWeighted))
-                            }
+                            updateCurrentEncounter(getRndFromList(state.currentEncounter.chained))
                         } else {
                             updateCurrentEncounter()
                             updateCurrentEffects()
