@@ -111,65 +111,19 @@ const modifier = (text) => {
             console.log(`No delay, running '${state.currentEncounter.encounterID}'!`)
             // activating encounters:
             updateCurrentEffects()
-            if (!state.currentEncounter.memoryAdded) {
-                if (state.currentEncounter.memoryAdd) {
-                    if (!state.encounterMemories) {
-                        state.encounterMemories = []
-                    }
-                    state.encounterMemories.push(state.currentEncounter.memoryAdd)
-                    state.currentEncounter.memoryAdded = true
+            if (!state.currentEncounter.memoryAdded && state.currentEncounter.memoryAdd) {
+                if (!state.encounterMemories) {
+                    state.encounterMemories = []
                 }
+                state.encounterMemories.push(state.currentEncounter.memoryAdd)
+                state.currentEncounter.memoryAdded = true
             }
 
-            if (!state.currentEncounter.textInserted) {
-                if (state.currentEncounter.textNotes) {
-                    curTextNote = getRndFromList(state.currentEncounter.textNotes)
-                }
+            if (!state.currentEncounter.textInserted && state.currentEncounter.textNotes) {
+                curTextNote = getRndFromList(state.currentEncounter.textNotes)
                 // random wordlist inserts:
                 if (typeof (curTextNote) !== 'undefined') {
                     curTextNote = fillPlaceholders(curTextNote)
-                    /*
-                    curPlaceholderMatches = curTextNote.match(/\{(.*?)\}/g)
-                    if (curPlaceholderMatches) {
-                        console.log(`Matched placeholders: ${curPlaceholderMatches}`)
-                        for (placeholder of curPlaceholderMatches) {
-                            console.log(`Current placeholder: ${placeholder}`)
-                            if (placeholder[1] == '*') {
-                                console.log(`Current placeholder ${placeholder} contains a *, checking temporary word lists...`)
-                                placeholder = placeholder.replace(/(\*|{|})/gi, '')
-                                if (typeof (tempWordLists) == 'undefined') {
-                                    tempWordLists = {}
-                                }
-                                if (!tempWordLists[placeholder] || tempWordLists[placeholder].length == 0) {
-                                    console.log(`${placeholder} temporary wordlist is either non-existant or empty! Getting a new one.`)
-                                    tempWordLists[placeholder] = JSON.parse(JSON.stringify(encounterWordLists[placeholder]))
-                                }
-                                console.log(`Current temporary word lists:${tempWordLists}`)
-                                for (insertTag in tempWordLists) {
-                                    if (placeholder.includes(insertTag)) {
-                                        console.log(`Found fitting placeholder tag in temporary list: ${insertTag}`)
-                                        pickedInsert = getRndFromList(tempWordLists[insertTag])
-                                        console.log(`Randomly picked placeholder insert from temporary list: ${pickedInsert}`)
-                                        insertRegEx = new RegExp(`{\\*${insertTag}}`,)
-                                        curTextNote = curTextNote.replace(insertRegEx, pickedInsert)
-                                        tempWordLists[placeholder].splice(tempWordLists[placeholder].indexOf(pickedInsert), 1)
-                                    }
-                                }
-                            } else {
-                                for (insertTag in encounterWordLists) {
-                                    if (placeholder.includes(insertTag)) {
-                                        console.log(`Found fitting placeholder tag: ${insertTag}`)
-                                        pickedInsert = getRndFromList(encounterWordLists[insertTag])
-                                        console.log(`Randomly picked placeholder insert: ${pickedInsert}`)
-                                        insertRegEx = new RegExp(`{${insertTag}}`,)
-                                        curTextNote = curTextNote.replace(insertRegEx, pickedInsert)
-                                    }
-                                }
-                            }
-                        }
-                        delete tempWordLists
-                        // curTextNote = curTextNote.replace(/({|})/gi, '')
-                    } */
                     // for outputs:
                     // modifiedText += ` ${curTextNote}`
                     modifiedText += `\n${curTextNote}`
@@ -177,14 +131,12 @@ const modifier = (text) => {
                 }
             }
 
-            if (!state.currentEncounter.WIadded) {
-                if (state.currentEncounter.addWI) {
-                    for (WIentry in state.currentEncounter.addWI) {
-                        console.log(`Adding '${state.currentEncounter.addWI[WIentry].keys}' WI entry.`)
-                        addWorldEntry(state.currentEncounter.addWI[WIentry].keys, state.currentEncounter.addWI[WIentry].entry, state.currentEncounter.addWI[WIentry].hidden)
-                    }
-                    state.currentEncounter.WIadded = true
+            if (!state.currentEncounter.WIadded && state.currentEncounter.addWI) {
+                for (WIentry in state.currentEncounter.addWI) {
+                    console.log(`Adding '${state.currentEncounter.addWI[WIentry].keys}' WI entry.`)
+                    addWorldEntry(state.currentEncounter.addWI[WIentry].keys, state.currentEncounter.addWI[WIentry].entry, state.currentEncounter.addWI[WIentry].hidden)
                 }
+                state.currentEncounter.WIadded = true
             }
 
             // branching encounters:
@@ -215,51 +167,11 @@ const modifier = (text) => {
                                                 curTextNote = getRndFromList(chkBranch.branchTextNotes)
                                                 // random wordlist inserts:
                                                 if (typeof (curTextNote) !== 'undefined') {
-                                                    curPlaceholderMatches = curTextNote.match(/\{(.*?)\}/g)
-                                                    if (curPlaceholderMatches) {
-                                                        console.log(`Matched placeholders: ${curPlaceholderMatches}`)
-                                                        for (placeholder of curPlaceholderMatches) {
-                                                            console.log(`Current placeholder: ${placeholder}`)
-                                                            if (placeholder[1] == '*') {
-                                                                console.log(`Current placeholder ${placeholder} contains a *, checking temporary word lists...`)
-                                                                placeholder = placeholder.replace(/(\*|{|})/gi, '')
-                                                                if (typeof (tempWordLists) == 'undefined') {
-                                                                    tempWordLists = {}
-                                                                }
-                                                                if (!tempWordLists[placeholder] || tempWordLists[placeholder].length == 0) {
-                                                                    console.log(`${placeholder} temporary wordlist is either non-existant or empty! Getting a new one.`)
-                                                                    tempWordLists[placeholder] = JSON.parse(JSON.stringify(encounterWordLists[placeholder]))
-                                                                }
-                                                                console.log(`Current temporary word lists:${tempWordLists}`)
-                                                                for (insertTag in tempWordLists) {
-                                                                    if (placeholder.includes(insertTag)) {
-                                                                        console.log(`Found fitting placeholder tag in temporary list: ${insertTag}`)
-                                                                        pickedInsert = getRndFromList(tempWordLists[insertTag])
-                                                                        console.log(`Randomly picked placeholder insert from temporary list: ${pickedInsert}`)
-                                                                        insertRegEx = new RegExp(`{\\*${insertTag}}`,)
-                                                                        curTextNote = curTextNote.replace(insertRegEx, pickedInsert)
-                                                                        tempWordLists[placeholder].splice(tempWordLists[placeholder].indexOf(pickedInsert), 1)
-                                                                    }
-                                                                }
-                                                            } else {
-                                                                for (insertTag in encounterWordLists) {
-                                                                    if (placeholder.includes(insertTag)) {
-                                                                        console.log(`Found fitting placeholder tag: ${insertTag}`)
-                                                                        pickedInsert = getRndFromList(encounterWordLists[insertTag])
-                                                                        console.log(`Randomly picked placeholder insert: ${pickedInsert}`)
-                                                                        insertRegEx = new RegExp(`{${insertTag}}`,)
-                                                                        curTextNote = curTextNote.replace(insertRegEx, pickedInsert)
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                        delete tempWordLists
-                                                        // curTextNote = curTextNote.replace(/({|})/gi, '')
-                                                    }
+                                                    curTextNote = fillPlaceholders(curTextNote)
                                                     // for outputs:
                                                     // modifiedText += ` ${curTextNote}`
                                                     modifiedText += `\n${curTextNote}`
-                                                    state.currentEncounter.textInserted = true
+                                                    // state.currentEncounter.textInserted = true
                                                 }
                                             }
 
