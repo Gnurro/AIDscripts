@@ -30,24 +30,16 @@ This is a list of words to check (text) for. If any of them are found in (text),
 #### chance
 **Format:** chance:INTEGER; INTEGER = 0-100  
 Percentage chance of this encounter starting. Will be checked either if encounter has no triggers, or if triggers have been found in (text). Set chance:100 to make triggers always work. If chance is not set at all (by omitting it from the encounterDef), the encounter simply can not start on its own and needs to be chained.
-#### triggerDelay
-**Format:** triggerDelay:INTEGER  
+#### activationDelay
+**Format:** activationDelay:INTEGER  
 Once the encounter is set as current encounter, it will take this number of actions before it is activated.  
-**BETA WARNING: WILL MOST LIKELY CHANGE KEY STRING TO 'activationDelay' FOR CLARITY IN NEXT VERSIONS!** This will help with clarifying the small distinction between setting an encounter as current, and activating it.
 #### Encounter Effects:
 #### textNotes
-**Format:** textNotes:ARRAY; ARRAY = \[STRING, STRING, ...\]  
-A list of phrases or words. One phrase will be randomly chosen, if there are multiple. The chosen phrase will be added to the end of (text) once when the encounter activates. Phrases can contain {placeholders}, which will be filled with a random word/phrase from the encounterWordLists object (see below for {placeholder}/random word list info).
-#### textNotesWeighted
-**Format:** textNotesWeighted:ARRAY; ARRAY = \[\[STRING, INT\], \[STRING, INT\], ...\], INT = 0-100  
-For weighted lists, a function basically rolls a d100 and picks the first list item that fits. See shared.js, example encounterDef 'dance' for usage. Note: If there is also textNotes, textNotesWeighted will be ignored!
+**Format:** textNotes:ARRAY; ARRAY = \[STRING, STRING, ...\] OR ARRAY = \[\[STRING, INT\], \[STRING, INT\], ...\], INT = 0-100  
+A list of phrases or words. One phrase will be randomly chosen, if there are multiple. The chosen phrase will be added to the end of (text) once when the encounter activates. Phrases can contain {placeholders}, which will be filled with a random word/phrase from the encounterWordLists object (see below for {placeholder}/random word list info). For weighted lists, a function basically rolls a d100 and picks the first list item that fits. See shared.js, example encounterDef 'dance' for usage.
 #### contextNotes
-**Format:** contextNotes:ARRAY; ARRAY = \[STRING, STRING, ...\]  
-A list of phrases or words. One phrase will be randomly chosen, if there are multiple. The chosen phrase will be shown to the AI right below AN as long as the encounter is active. Phrases can contain {placeholders}, which will be filled with a random word/phrase from the encounterWordLists object (see below for {placeholder}/{\*placeholder} info).
-#### contextNotesWeighted
-**Format:** contextNotesWeighted:ARRAY; ARRAY = \[\[STRING, INT\], \[STRING, INT\], ...\], INT = 0-100  
-For weighted lists, a function basically rolls a d100 and picks the first list item that fits. See shared.js, example encounterDef 'dance' for usage of weighted lists.  
-Note: If there is also contextNotes, contextNotesWeighted will be ignored!
+**Format:** contextNotes:ARRAY; ARRAY = \[STRING, STRING, ...\] OR ARRAY = \[\[STRING, INT\], \[STRING, INT\], ...\], INT = 0-100  
+A list of phrases or words. One phrase will be randomly chosen, if there are multiple. The chosen phrase will be shown to the AI right below AN as long as the encounter is active. List can be weighted. ~~Phrases can contain {placeholders}, which will be filled with a random word/phrase from the encounterWordLists object (see below for {placeholder}/{\*placeholder} info).~~
 #### messageString
 **Format:** messageString:STRING  
 Will be shown above the buttons/input field as long as encounter is active.
@@ -66,11 +58,8 @@ Note: Encounters can also be ended by branches, see below.
 **Format:** duration:INTEGER  
 How many actions the encounter remains active. If duration is 0, the encounter will immediately end - this can be used to immediately activate chained encounters. ~~If duration is 1, the encounter will also end in the action it was activated, but chained encounters will not activate yet. (Not tested, but intended.)~~ If the encounter has *no duration* (by omitting it from the encounterDef), *it is endless* and needs to be ended by other means, like endTriggers.
 #### chained
-**Format:** chained:ARRAY; ARRAY = \[encounterID, encounterID, ...\]  
-A list of follow-up encounters. IDs in the list must match a defined encounterDef. One follow-up encounter will be randomly chosen and set as the current encounter.
-#### chainedWeighted
-**Format:** chainedWeighted:ARRAY; ARRAY = \[\[encounterID, INTEGER\], \[encounterID, INTEGER\], ...\], INTEGER 0-100  
-A weighted list of follow-up encounters. IDs in the list must each match a defined encounterDef. One follow-up encounter will be randomly chosen and set as the current encounter. Works like any other weighted list in Encounters.
+**Format:** chained:ARRAY; ARRAY = \[encounterID, encounterID, ...\] or ARRAY = \[\[encounterID, INTEGER\], \[encounterID, INTEGER\], ...\], INTEGER 0-100  
+A list of follow-up encounters. IDs in the list must match a defined encounterDef. One follow-up encounter will be randomly chosen and set as the current encounter. Allows weighted list.
 #### Branching:
 #### branches
 **Format:** branches:ARRAY; ARRAY = \[{a branchDef}, {a branchDef}, ...\]  
@@ -90,18 +79,11 @@ Works the same as encounter triggers.
 #### branchTextNotes
 **Format:** branchTextNotes:ARRAY  
 Will be immediately inserted if this branch is activated! Otherwise works the same as encounter textNotes.
-#### branchTextNotesWeighted
-**Format:** branchTextNotesWeighted:ARRAY  
-Will be immediately inserted if this branch is activated! Otherwise works the same as encounter textNotesWeighted.
 #### branchChained
 **Format:** branchChained:ARRAY  
 This will immediately set the chosen encounter as current encounter! Otherwise works the same as encounter chained.  
 Note: If the list is *empty*, this will *immediately end* the current encounter and *clear current encounter*!  
-Note: If this (and branchChainedWeighted) is omitted, this branch will add its effects (textNotes, for now) and then the remaining branches will be checked.
-#### branchChainedWeighted
-**Format:** branchChainedWeighted:ARRAY  
-This will immediately set the chosen encounter as current encounter! Otherwise works the same as encounter chainedWeighted.  
-Note: If this (and branchChained) is omitted, this branch will add its effects (textNotes, for now) and then the remaining branches will be checked.
+Note: If this is omitted, this branch will add its effects (textNotes, for now) and then the remaining branches will be checked.
 #### Limiting Encounters:
 #### cooldown
 **Format:** cooldown:INTEGER  
