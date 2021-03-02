@@ -127,6 +127,8 @@ const modifier = (text) => {
                 }
                 // random wordlist inserts:
                 if (typeof (curTextNote) !== 'undefined') {
+                    curTextNote = fillPlaceholders(curTextNote)
+                    /*
                     curPlaceholderMatches = curTextNote.match(/\{(.*?)\}/g)
                     if (curPlaceholderMatches) {
                         console.log(`Matched placeholders: ${curPlaceholderMatches}`)
@@ -167,7 +169,7 @@ const modifier = (text) => {
                         }
                         delete tempWordLists
                         // curTextNote = curTextNote.replace(/({|})/gi, '')
-                    }
+                    } */
                     // for outputs:
                     // modifiedText += ` ${curTextNote}`
                     modifiedText += `\n${curTextNote}`

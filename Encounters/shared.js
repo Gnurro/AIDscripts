@@ -247,6 +247,50 @@ function updateCurrentEffects() { // 'activates' currentEncounter; or clears enc
     }
 }
 
+function fillPlaceholders(placeHolderString) {
+    curPlaceholderMatches = placeHolderString.match(/\{(.*?)\}/g)
+    if (curPlaceholderMatches) {
+        console.log(`Matched placeholders: ${curPlaceholderMatches}`)
+        for (placeholder of curPlaceholderMatches) {
+            console.log(`Current placeholder: ${placeholder}`)
+            if (placeholder[1] == '*') {
+                console.log(`Current placeholder ${placeholder} contains a *, checking temporary word lists...`)
+                placeholder = placeholder.replace(/(\*|{|})/gi, '')
+                if (typeof (tempWordLists) == 'undefined') {
+                    tempWordLists = {}
+                }
+                if (!tempWordLists[placeholder] || tempWordLists[placeholder].length == 0) {
+                    console.log(`${placeholder} temporary wordlist is either non-existant or empty! Getting a new one.`)
+                    tempWordLists[placeholder] = JSON.parse(JSON.stringify(encounterWordLists[placeholder]))
+                }
+                console.log(`Current temporary word lists:${tempWordLists}`)
+                for (insertTag in tempWordLists) {
+                    if (placeholder.includes(insertTag)) {
+                        console.log(`Found fitting placeholder tag in temporary list: ${insertTag}`)
+                        pickedInsert = getRndFromList(tempWordLists[insertTag])
+                        console.log(`Randomly picked placeholder insert from temporary list: ${pickedInsert}`)
+                        insertRegEx = new RegExp(`{\\*${insertTag}}`,)
+                        placeHolderString = placeHolderString.replace(insertRegEx, pickedInsert)
+                        tempWordLists[placeholder].splice(tempWordLists[placeholder].indexOf(pickedInsert), 1)
+                    }
+                }
+            } else {
+                for (insertTag in encounterWordLists) {
+                    if (placeholder.includes(insertTag)) {
+                        console.log(`Found fitting placeholder tag: ${insertTag}`)
+                        pickedInsert = getRndFromList(encounterWordLists[insertTag])
+                        console.log(`Randomly picked placeholder insert: ${pickedInsert}`)
+                        insertRegEx = new RegExp(`{${insertTag}}`,)
+                        placeHolderString = placeHolderString.replace(insertRegEx, pickedInsert)
+                    }
+                }
+            }
+        }
+        delete tempWordLists
+        return (placeHolderString)
+    }
+}
+
 // misc helper functions:
 // get random
 function getRndInteger(min, max) {
