@@ -13,13 +13,13 @@ const modifier = (text) => {
             for (encounter in encounterDB) { // go through encounters
                 console.log(`Global checking '${encounter}'...`)
                 if (encounterDB[encounter].inputLock) {
-                    console.log("Input checking disabled on this encounter.")
+                    console.log(`Input checking disabled on '${encounter}'.`)
                     continue globalLoop
                 }
                 //for outputMod:
                 /*
                 if (encounterDB[encounter].outputLock) {
-                  console.log("Output checking disabled on this encounter.")
+                  console.log(`Output checking disabled on '${encounter}'.`)
                   continue globalLoop
                 }
                 */
