@@ -26,7 +26,7 @@ If set to *true*, stops the encounter from being considered on input actions. Th
 If set to *true*, stops the encounter from being considered on output actions. This also *applies to endTriggers and branching*!
 #### triggers
 **Format:** triggers:ARRAY; ARRAY = \[STRING, STRING, ...\]  
-This is a list of words to check (text) for. If any of them are found in (text), the encounter will be set as current encounter *if chance allows*. List items are turned into regular expressions to check, and thus can utilize full JS regEx syntax. Note: Some regEx special characters, like \b, might need to be double-escaped, like so: \\b
+This is a list of words to check (text) for. If any of them are found in (text), the encounter will be set as current encounter *if chance allows*. List items are turned into regular expressions to check, and thus can utilize full JS regEx syntax. Note: Some regEx special characters, like \b, might need to be double-escaped, like so: \\\\b
 #### chance
 **Format:** chance:INTEGER; INTEGER = 0-100  
 Percentage chance of this encounter starting. Will be checked either if encounter has no triggers, or if triggers have been found in (text). Set chance:100 to make triggers always work. If chance is not set at all (by omitting it from the encounterDef), the encounter simply can not start on its own and needs to be chained.
