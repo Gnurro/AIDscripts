@@ -3,6 +3,7 @@ encounterDB = { // hardcoded encounters:
     // one global encounter (=encounters that do not need to be chained) can trigger at a time only (for now, may change this)
     // there is only one encounter at a time (for now, may change this), and global encounters can only start if there is no active encounter
     // order in this object determines precedence!
+    /* REMOVE THIS LINE AND THE ONE AT THE END OF encounterDB TO SEE THE EXAMPLE ENCOUNTERS IN ACTION
     randoTest: {
         encounterID: "randoTest",
         chance: 100,
@@ -10,7 +11,6 @@ encounterDB = { // hardcoded encounters:
         duration: [2, 5],
         cooldown: [1, 6]
     }
-    /* REMOVE THIS LINE AND THE ONE AT THE END OF encounterDB TO SEE THE EXAMPLE ENCOUNTERS IN ACTION
     pickPebble:{
       encounterID:"pickPebble",
       triggers:["pick a pebble"],
