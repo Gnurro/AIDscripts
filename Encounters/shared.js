@@ -348,10 +348,11 @@ function displayStatsUpdate(inKey, inValue, inColor) {
     let displayStatUpdated = false
     for (displayStat of state.displayStats) {
         console.log(`Checking ${displayStat.key} entry...`)
+        let curDisplayStatIndex = state.displayStats[state.displayStats.indexOf(displayStat)]
         if (displayStat.key == inKey) {
-            console.log(`Found ${inKey} displayStats entry: ${state.displayStats[state.displayStats.indexOf(displayStat)].key}, ${state.displayStats[state.displayStats.indexOf(displayStat)].value}, ${state.displayStats[state.displayStats.indexOf(displayStat)].color}, updating!`)
-            state.displayStats[state.displayStats.indexOf(displayStat)].value = inValue
-            state.displayStats[state.displayStats.indexOf(displayStat)].color = inColor
+            console.log(`Found ${inKey} displayStats entry: ${curDisplayStatIndex.key}, ${curDisplayStatIndex.value}, ${curDisplayStatIndex.color}, updating!`)
+            state.displayStats[curDisplayStatIndex].value = inValue
+            state.displayStats[curDisplayStatIndex].color = inColor
             displayStatUpdated = true
         }
     }
