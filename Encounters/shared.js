@@ -3,6 +3,11 @@ encounterDB = { // hardcoded encounters:
     // one global encounter (=encounters that do not need to be chained) can trigger at a time only (for now, may change this)
     // there is only one encounter at a time (for now, may change this), and global encounters can only start if there is no active encounter
     // order in this object determines precedence!
+    randoTest:{
+        encounterID:"randoTest",
+        chance:100,
+        duration:[2,5]
+    }
     /* REMOVE THIS LINE AND THE ONE AT THE END OF encounterDB TO SEE THE EXAMPLE ENCOUNTERS IN ACTION
     pickPebble:{
       encounterID:"pickPebble",
@@ -195,7 +200,7 @@ for (WIentry of worldInfo) {
 
 
 // encounter functions: (DON'T MESS WITH THESE!)
-function updateCurrentEncounter(encounter) { // sets or clears currentEncounter; if argument empty, clears current encounter
+function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEncounter; if argument empty, clears current encounter
     // limiting encounter recurrence:
     if (state.currentEncounter) {
         if (state.currentEncounter.recurrenceLimit) {
@@ -222,9 +227,15 @@ function updateCurrentEncounter(encounter) { // sets or clears currentEncounter;
             state.cooldownEncounters.push([state.currentEncounter.encounterID, state.currentEncounter.cooldown])
         }
     }
-    if (encounter) {
-        console.log(`Setting current encounter to '${encounter}'.`)
-        state.currentEncounter = encounterDB[encounter]
+    if (encounterUpcoming) {
+        console.log(`Setting current encounter to '${encounterUpcoming}'.`)
+        state.currentEncounter = encounterDB[encounterUpcoming]
+        // random initial values handling:
+        if (typeof(state.currentEncounter.duration) == 'Array' && state.currentEncounter.duration.length == 2) {
+            console.log(`${encounterUpcoming} has random duration: ${state.currentEncounter.duration}`)
+            state.currentEncounter.duration = getRndInteger(state.currentEncounter.duration[0], state.currentEncounter.duration[1])
+            console.log(`${encounterUpcoming} random duration set to ${state.currentEncounter.duration}`)
+        }
     } else {
         console.log("Clearing current encounter.")
         delete state.currentEncounter
@@ -297,7 +308,7 @@ function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min)) + min
 }
 
-// generic list-picker
+// list-picker, dynamically handles weighted lists
 function getRndFromList(list) {
     if (list[0].length == 2) {
         console.log(`${list} looks like a weighted list, doing that!`)
