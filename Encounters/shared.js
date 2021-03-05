@@ -339,4 +339,25 @@ function getRndFromListWeighted(weightedList) {
     }
 }
 
+// displayStats handling:
+function displayStatsUpdate(inKey, inValue, inColor) {
+    // if key already exists, update; else push new entry
+    if (!state.displayStats) {
+        state.displayStats = []
+    }
+    let displayStatUpdated = false
+    for (displayStat of state.displayStats) {
+        console.log(`Checking ${displayStat.key} entry...`)
+        if (displayStat.key == inKey) {
+            console.log(`Found ${inKey} displayStats entry: ${state.displayStats[state.displayStats.indexOf(displayStat)].key}, ${state.displayStats[state.displayStats.indexOf(displayStat)].value}, ${state.displayStats[state.displayStats.indexOf(displayStat)].color}, updating!`)
+            state.displayStats[state.displayStats.indexOf(displayStat)].value = inValue
+            state.displayStats[state.displayStats.indexOf(displayStat)].color = inColor
+            displayStatUpdated = true
+        }
+    }
+    if (!displayStatUpdated) {
+        state.displayStats.push({'key': inKey, 'value': inValue, 'color': inColor})
+    }
+}
+
 // END Encounters
