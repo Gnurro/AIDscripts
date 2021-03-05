@@ -1,8 +1,8 @@
 // BEGIN Encounters!
 encounterDB = { // hardcoded encounters:
-                // one global encounter (=encounters that do not need to be chained) can trigger at a time only (for now, may change this)
-                // there is only one encounter at a time (for now, may change this), and global encounters can only start if there is no active encounter
-                // order in this object determines precedence!
+    // one global encounter (=encounters that do not need to be chained) can trigger at a time only (for now, may change this)
+    // there is only one encounter at a time (for now, may change this), and global encounters can only start if there is no active encounter
+    // order in this object determines precedence!
     /* REMOVE THIS LINE AND THE ONE AT THE END OF encounterDB TO SEE THE EXAMPLE ENCOUNTERS IN ACTION
     pickPebble:{
       encounterID:"pickPebble",
@@ -182,8 +182,8 @@ for (WIentry of worldInfo) {
     if (WIentry.keys.includes('!encounterWordListsFull')) {
         encounterWordListsFromWI = JSON.parse(WIentry.entry)
         console.log(`Found full WI encounterWordLists entry, adding them to the DB!`)
-        for (encounterSingleWordList of encounterWordListsFromWI) {
-            encounterWordLists[Object.keys(encounterSingleWordList)[0]] = Object.values(encounterSingleWordList)
+        for (encounterSingleWordList in encounterWordListsFromWI) {
+            encounterWordLists[encounterSingleWordList] = Object.values(encounterWordListsFromWI[encounterSingleWordList])
         }
     }
     if (WIentry.keys.includes('!encounterWordListSingle')) {
@@ -196,7 +196,7 @@ for (WIentry of worldInfo) {
 
 // encounter functions: (DON'T MESS WITH THESE!)
 function updateCurrentEncounter(encounter) { // sets or clears currentEncounter; if argument empty, clears current encounter
-                                             // limiting encounter recurrence:
+    // limiting encounter recurrence:
     if (state.currentEncounter) {
         if (state.currentEncounter.recurrenceLimit) {
             if (!state.limitedEncounters) {
