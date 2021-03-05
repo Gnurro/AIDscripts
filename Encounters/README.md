@@ -26,7 +26,7 @@ If set to *true*, stops the encounter from being considered on input actions. Th
 If set to *true*, stops the encounter from being considered on output actions. This also *applies to endTriggers and branching*!
 #### triggers
 **Format:** triggers:ARRAY; ARRAY = \[STRING, STRING, ...\]  
-This is a list of words to check (text) for. If any of them are found in (text), the encounter will be set as current encounter *if chance allows*. List items are turned into regular expressions to check, and thus can utilize full JS regEx syntax. Note: Some regEx special characters, like \b, might need to be double-escaped, like so: \\b
+This is a list of words to check (text) for. If any of them are found in (text), the encounter will be set as current encounter *if chance allows*. List items are turned into regular expressions to check, and thus can utilize full JS regEx syntax. Note: Some regEx special characters, like \b, might need to be double-escaped, like so: \\\\b
 #### chance
 **Format:** chance:INTEGER; INTEGER = 0-100  
 Percentage chance of this encounter starting. Will be checked either if encounter has no triggers, or if triggers have been found in (text). Set chance:100 to make triggers always work. If chance is not set at all (by omitting it from the encounterDef), the encounter simply can not start on its own and needs to be chained.
@@ -52,11 +52,11 @@ A list of WI entries to add. *All* entries in the list will be *added to WI* whe
 #### Ending Encounters:
 #### endTriggers
 **Format:** endTriggers:ARRAY; ARRAY = \[STRING, STRING, ...\]  
-This is a list of words to check (text) for. If any of the words are found in (text), the encounter will end. List items are turned into regular expressions to check, and thus can utilize full JS regEx syntax. Note: Some regEx special characters, like \b, might need to be double-escaped, like so: \\b  
+This is a list of words to check (text) for. If any of the words are found in (text), the encounter will end. List items are turned into regular expressions to check, and thus can utilize full JS regEx syntax. Note: Some regEx special characters, like \\b, might need to be double-escaped, like so: \\\\b  
 Note: Encounters can also be ended by branches, see below.
 #### duration
 **Format:** duration:INTEGER  
-How many actions the encounter remains active. If duration is 0, the encounter will immediately end - this can be used to immediately activate chained encounters. ~~If duration is 1, the encounter will also end in the action it was activated, but chained encounters will not activate yet. (Not tested, but intended.)~~ If the encounter has *no duration* (by omitting it from the encounterDef), *it is endless* and needs to be ended by other means, like endTriggers.
+How many actions the encounter remains active. If duration is 0, the encounter will immediately end - this can be used to immediately make chained encounters current. ~~If duration is 1, the encounter will also end in the action it was activated, but chained encounters will not activate yet. (Not tested, but intended.)~~ If the encounter has *no duration* (by omitting it from the encounterDef), *it is endless* and needs to be ended by other means, like endTriggers.
 #### chained
 **Format:** chained:ARRAY; ARRAY = \[encounterID, encounterID, ...\] or ARRAY = \[\[encounterID, INTEGER\], \[encounterID, INTEGER\], ...\], INTEGER 0-100  
 A list of follow-up encounters. IDs in the list must match a defined encounterDef. One follow-up encounter will be randomly chosen and set as the current encounter. Allows weighted list.
@@ -65,7 +65,7 @@ A list of follow-up encounters. IDs in the list must match a defined encounterDe
 **Format:** branches:ARRAY; ARRAY = \[{a branchDef}, {a branchDef}, ...\]  
 Allows dynamic stuff while the encounter is current.
 #### branchDef (Note: This isn't a key; just for this explanation)
-**Format:** OBJECT; OBJECT = {branchID:STRING, branchTriggers:ARRAY, branchChance:INTEGER, branchTextNotes:ARRAY, branchTextNotesWeighted:ARRAY, branchChained:ARRAY, branchChainedWeighted:ARRAY}  
+**Format:** OBJECT; OBJECT = {branchID:STRING, branchTriggers:ARRAY, branchChance:INTEGER, branchTextNotes:ARRAY, branchTextNotesWeighted:ARRAY, branchChained:ARRAY}  
 #### branchDef key:values:
 #### branchID
 **Format:** branchID:STRING  
