@@ -3,10 +3,12 @@ encounterDB = { // hardcoded encounters:
     // one global encounter (=encounters that do not need to be chained) can trigger at a time only (for now, may change this)
     // there is only one encounter at a time (for now, may change this), and global encounters can only start if there is no active encounter
     // order in this object determines precedence!
-    randoTest:{
-        encounterID:"randoTest",
-        chance:100,
-        duration:[2,5]
+    randoTest: {
+        encounterID: "randoTest",
+        chance: 100,
+        activationDelay: [1, 2],
+        duration: [2, 5],
+        cooldown: [1, 6]
     }
     /* REMOVE THIS LINE AND THE ONE AT THE END OF encounterDB TO SEE THE EXAMPLE ENCOUNTERS IN ACTION
     pickPebble:{
@@ -231,10 +233,13 @@ function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEn
         console.log(`Setting current encounter to '${encounterUpcoming}'.`)
         state.currentEncounter = encounterDB[encounterUpcoming]
         // random initial values handling:
-        if (typeof(state.currentEncounter.duration) == 'Array' && state.currentEncounter.duration.length == 2) {
-            console.log(`${encounterUpcoming} has random duration: ${state.currentEncounter.duration}`)
-            state.currentEncounter.duration = getRndInteger(state.currentEncounter.duration[0], state.currentEncounter.duration[1])
-            console.log(`${encounterUpcoming} random duration set to ${state.currentEncounter.duration}`)
+        randomizables = ['duration', 'activationDelay', 'cooldown']
+        for (encounterValue of randomizables) {
+            if (typeof (state.currentEncounter[encounterValue]) !== 'number' && state.currentEncounter[encounterValue].length == 2) {
+                console.log(`${encounterUpcoming} has random ${encounterValue}: ${state.currentEncounter[encounterValue]}`)
+                state.currentEncounter[encounterValue] = getRndInteger(state.currentEncounter[encounterValue][0], state.currentEncounter[encounterValue][1])
+                console.log(`${encounterUpcoming} random ${encounterValue} set to ${state.currentEncounter[encounterValue]}`)
+            }
         }
     } else {
         console.log("Clearing current encounter.")
