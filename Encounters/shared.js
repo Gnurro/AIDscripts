@@ -256,8 +256,9 @@ function updateCurrentEffects() { // 'activates' currentEncounter; or clears enc
         }
         if (state.currentEncounter.contextNotes) {
             state.encounterNote = getRndFromList(state.currentEncounter.contextNotes)
-        } else if (state.currentEncounter.contextNotesWeighted) {
-            state.encounterNote = getRndFromListWeighted(state.currentEncounter.contextNotesWeighted)
+        }
+        if (state.currentEncounter.displayStatNotes) {
+            displayStatsUpdate(getRndFromList(state.currentEncounter.displayStatNotes))
         }
     } else {
         delete state.message
@@ -343,7 +344,7 @@ function getRndFromListWeighted(weightedList) {
 
 // displayStats handling:
 function displayStatsUpdate(inKey, inValue, inColor) {
-    // if key already exists, update; else push new entry
+    // if key already exists, update; else push new entry; if no value given, removes displayStat entry matching key, if it exists
     if (!state.displayStats) {
         state.displayStats = []
     }
@@ -353,12 +354,24 @@ function displayStatsUpdate(inKey, inValue, inColor) {
         let curDisplayStatIndex = state.displayStats[state.displayStats.indexOf(displayStat)]
         if (displayStat.key == inKey) {
             console.log(`Found ${inKey} displayStats entry: ${curDisplayStatIndex.key}, ${curDisplayStatIndex.value}, ${curDisplayStatIndex.color}, updating!`)
-            state.displayStats[curDisplayStatIndex].value = inValue
-            state.displayStats[curDisplayStatIndex].color = inColor
+            if (inValue) {
+                console.log(`Value to update displayStat entry inputted, updating.`)
+                state.displayStats[curDisplayStatIndex].value = fillPlaceholders(inValue)
+            } else {
+                console.log(`No value to update displayStat inputted, removing entry.`)
+                state.displayStats.splice(curDisplayStatIndex, 1)
+                displayStatUpdated = true
+                break
+            }
+            if (inColor) {
+                state.displayStats[curDisplayStatIndex].color = inColor
+            }
             displayStatUpdated = true
+            break
         }
     }
     if (!displayStatUpdated) {
+        console.log(`No ${inKey} displayStats entry found, adding it!`)
         state.displayStats.push({'key': inKey, 'value': inValue, 'color': inColor})
     }
 }
