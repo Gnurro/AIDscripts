@@ -4,12 +4,13 @@ encounterDB = {
     // one global encounter (=encounters that do not need to be chained) can trigger at a time only (for now, may change this)
     // there is only one encounter at a time (for now, may change this), and global encounters can only start if there is no active encounter
     // order in this object determines precedence!
-    displayStuff: {
-        encounterID: "displayStuff",
-        chance:100,
-        displayStatNotes:[{"Bugs",100,"red"}]
-    }
     /* REMOVE THIS LINE AND THE ONE AT THE END OF encounterDB TO SEE THE EXAMPLE ENCOUNTERS IN ACTION
+    displayStuff: {
+        encounterID:"displayStuff",
+        chance:100,
+        displayStatNotes:[["Bugs","{amount}","{color}"], ["Bugs",100,"red"]],
+        duration:0
+    },
     randoTest: {
         encounterID: "randoTest",
         chance: 100,
@@ -176,9 +177,10 @@ encounterDB = {
 // word list stuff like gauntlet script:
 encounterWordLists = {
     /* Remove this line (and the one below) to enable the example word lists
-    color:["red","blue","green","yellow","orange"],
     charClass:["mage","fighter","valkyrie"],
     pattern:["sprinkles", "dots", "lines"],
+    color:["red","blue","green","yellow","orange"],
+    amount:["many","few","all of them"]
      */ // Remove this line (and the one above) to enable the example word lists
 }
 
@@ -349,20 +351,26 @@ function getRndFromListWeighted(weightedList) {
 }
 
 // displayStats handling:
-function displayStatsUpdate(inKey, inValue, inColor) {
+function displayStatsUpdate([inKey, inValue, inColor]) {
     // if key already exists, update; else push new entry; if no value given, removes displayStat entry matching key, if it exists
     if (!state.displayStats) {
         state.displayStats = []
     }
     let displayStatUpdated = false
     for (displayStat of state.displayStats) {
-        console.log(`Checking ${displayStat.key} entry...`)
-        let curDisplayStatIndex = state.displayStats[state.displayStats.indexOf(displayStat)]
+        console.log(`Checking ${displayStat.key} displayStats entry...`)
+        let curDisplayStatIndex = state.displayStats.indexOf(displayStat)
         if (displayStat.key == inKey) {
-            console.log(`Found ${inKey} displayStats entry: ${curDisplayStatIndex.key}, ${curDisplayStatIndex.value}, ${curDisplayStatIndex.color}, updating!`)
+            console.log(`Found ${inKey} displayStats entry: ${state.displayStats[curDisplayStatIndex].key}, ${state.displayStats[curDisplayStatIndex].value}, ${state.displayStats[curDisplayStatIndex].color}, updating!`)
             if (inValue) {
-                console.log(`Value to update displayStat entry inputted, updating.`)
-                state.displayStats[curDisplayStatIndex].value = fillPlaceholders(inValue)
+                if (typeof(inValue) == 'string') {
+                    inValue = fillPlaceholders(inValue)
+                    console.log(`Value to update displayStat entry inputted: '${inValue}', updating.`)
+                    state.displayStats[curDisplayStatIndex].value = inValue
+                } else {
+                    console.log(`Value to update displayStat entry inputted: '${inValue}', updating.`)
+                    state.displayStats[curDisplayStatIndex].value = inValue
+                }
             } else {
                 console.log(`No value to update displayStat inputted, removing entry.`)
                 state.displayStats.splice(curDisplayStatIndex, 1)
@@ -370,7 +378,7 @@ function displayStatsUpdate(inKey, inValue, inColor) {
                 break
             }
             if (inColor) {
-                state.displayStats[curDisplayStatIndex].color = inColor
+                state.displayStats[curDisplayStatIndex].color = fillPlaceholders(inColor)
             }
             displayStatUpdated = true
             break
