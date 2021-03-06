@@ -1,8 +1,14 @@
 // BEGIN Encounters!
-encounterDB = { // hardcoded encounters:
+encounterDB = {
+    // hardcoded encounters:
     // one global encounter (=encounters that do not need to be chained) can trigger at a time only (for now, may change this)
     // there is only one encounter at a time (for now, may change this), and global encounters can only start if there is no active encounter
     // order in this object determines precedence!
+    displayStuff: {
+        encounterID: "displayStuff",
+        chance:100,
+        displayStatNotes:[{"Bugs",100,"red"}]
+    }
     /* REMOVE THIS LINE AND THE ONE AT THE END OF encounterDB TO SEE THE EXAMPLE ENCOUNTERS IN ACTION
     randoTest: {
         encounterID: "randoTest",
