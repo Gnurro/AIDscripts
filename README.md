@@ -7,7 +7,7 @@ Python scripts require Python 3.
 
 ## JS scenario scripts:
 
-Encounters: Dynamic game event framework, with plenty functionality. See Encounters folder for more info.
+[Encounters](https://github.com/Gnurro/AIDscripts/wiki/Encounters): Dynamic game event framework, with plenty functionality. See Encounters folder for more info.
 
 RPGmech: No giant robots, but RPG mechanics in AID, using InputDCattributeBot and the skill/stat menus. Has example of piping placeholders into skills as well. Now with plenty more docstrings.
 
