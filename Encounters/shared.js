@@ -314,8 +314,8 @@ function fillPlaceholders(placeHolderString) {
             }
         }
         delete tempWordLists
-        return (placeHolderString)
     }
+    return (placeHolderString)
 }
 
 // misc helper functions:
