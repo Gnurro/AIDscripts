@@ -33,7 +33,6 @@ encounterDB = {
       // textNotes:["The pebble is {color}, with {color} {pattern}. There was another {color} one with {color} {pattern} and {color} {pattern}."],
       duration:0,
     },
-
     dragonAwake:{
       encounterID:"dragonAwake",
       chance:10,
@@ -87,8 +86,6 @@ encounterDB = {
     },
     goblinAttackRocks:{
       encounterID:"goblinAttackRocks", // to indentify type of current encounter
-      inputLock:true, // since this is chain-only, setting these keeps the logs tidy
-      outputLock:true, // since this is chain-only, setting these keeps the logs tidy
       duration:3, // how many actions this sticks around; if there is no duration, encounter is endless, only ended by endTriggers; duration 0 leads to immediate end, for chaining
       endTriggers:["(?<=(hit|kill|scare).*)goblin","/(?<=you.*).+(((leave|escape|flee).*)(?!=you.*)(cave|warren|thicket))"], // to end the encounter based on (text); soft-required for no-duration/infinite encounters
       messageString:"Goblin attack!", // to be shown in state.message; optional
