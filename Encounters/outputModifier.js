@@ -227,24 +227,26 @@ const modifier = (text) => {
                     }
                 }
 
-                if (typeof (state.currentEncounter.duration) !== 'undefined') {
-                    if (state.currentEncounter.duration > 0) {
-                        console.log(`Keeping up ${state.currentEncounter.encounterID} for ${state.currentEncounter.duration} more actions!`)
-                        state.currentEncounter.duration -= 1
-                    } else {
-                        console.log(`Duration of ${state.currentEncounter.encounterID} over!`)
-                        if (state.currentEncounter.chained) {
-                            console.log(`Detected chained encounter(s) on ${state.currentEncounter.encounterID}!`)
-                            delete state.message
-                            delete state.encounterNote
-                            updateCurrentEncounter(getRndFromList(state.currentEncounter.chained))
+                if (typeof (state.currentEncounter) !== 'undefined') {
+                    if (typeof (state.currentEncounter.duration) !== 'undefined') {
+                        if (state.currentEncounter.duration > 0) {
+                            console.log(`Keeping up ${state.currentEncounter.encounterID} for ${state.currentEncounter.duration} more actions!`)
+                            state.currentEncounter.duration -= 1
                         } else {
-                            updateCurrentEncounter()
-                            updateCurrentEffects()
+                            console.log(`Duration of ${state.currentEncounter.encounterID} over!`)
+                            if (state.currentEncounter.chained) {
+                                console.log(`Detected chained encounter(s) on ${state.currentEncounter.encounterID}!`)
+                                delete state.message
+                                delete state.encounterNote
+                                updateCurrentEncounter(getRndFromList(state.currentEncounter.chained))
+                            } else {
+                                updateCurrentEncounter()
+                                updateCurrentEffects()
+                            }
                         }
+                    } else {
+                        console.log(`No duration on ${state.currentEncounter.encounterID}, keeping it up infinitely!`)
                     }
-                } else {
-                    console.log(`No duration on ${state.currentEncounter.encounterID}, keeping it up infinitely!`)
                 }
             }
         }
