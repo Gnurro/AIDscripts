@@ -5,7 +5,6 @@ const modifier = (text) => {
     // BEGIN Encounters
 
     // Debugging action counter: (uncomment to better check global timer-only encounters)
-    // state.displayStats = [{key:'Actions', value: `${info.actionCount}`}]
     if (encounterSettings.debugMode) {
         displayStatsUpdate(['Actions',`${info.actionCount}`])
     }
@@ -66,7 +65,6 @@ const modifier = (text) => {
                     console.log(`'${encounterDB[encounter].encounterID}' has triggers!`)
                     triggerLoop:
                         for (let triggerStr of encounterDB[encounter].triggers) {
-                            // console.log(triggerStr)
                             let triggerRegEx = new RegExp(triggerStr, "gi")
                             let caughtTrigger = text.match(triggerRegEx)
                             if (caughtTrigger) {
@@ -139,7 +137,7 @@ const modifier = (text) => {
             }
 
             if (!state.currentEncounter.WIadded && state.currentEncounter.addWI) {
-                for (WIentry in state.currentEncounter.addWI) {
+                for (let WIentry in state.currentEncounter.addWI) {
                     console.log(`Adding '${state.currentEncounter.addWI[WIentry].keys}' WI entry.`)
                     addWorldEntry(state.currentEncounter.addWI[WIentry].keys, state.currentEncounter.addWI[WIentry].entry, state.currentEncounter.addWI[WIentry].hidden)
                 }
@@ -271,6 +269,13 @@ const modifier = (text) => {
             } else {
                 console.log(`'${encounterMemory.memoryText}' will no longer stay in memory.`)
                 state.encounterMemories.splice(state.encounterMemories.indexOf(encounterMemory), 1)
+                if (encounterSettings.debugMode) {
+                    displayStatsUpdate([`"${encounterMemory.memoryText}" memory`])
+                }
+                continue
+            }
+            if (encounterSettings.debugMode) {
+                displayStatsUpdate([`"${encounterMemory.memoryText}" memory`,`${encounterMemory.memoryLingerDuration} actions remaining`])
             }
         }
     }
@@ -279,15 +284,18 @@ const modifier = (text) => {
         console.log(`Cooldowns detected!`)
         cooldownLoop:
             for (cooldown in state.cooldownEncounters) {
-                if (state.cooldownEncounters[cooldown] == null) { // safety/legacy...
-                    state.cooldownEncounters.splice(cooldown, 1)
-                    continue cooldownLoop
-                }
                 console.log(`'${state.cooldownEncounters[cooldown][0]}' [${cooldown}] cooldown: ${state.cooldownEncounters[cooldown][1]}.`)
                 state.cooldownEncounters[cooldown][1] -= 1
                 if (state.cooldownEncounters[cooldown][1] <= 0) {
                     console.log(`${state.cooldownEncounters[cooldown][0]} cooldown over, removing.`)
                     state.cooldownEncounters.splice(cooldown, 1)
+                    if (encounterSettings.debugMode) {
+                        displayStatsUpdate([`'${state.cooldownEncounters[cooldown][0]}' cooldown`])
+                    }
+                    continue cooldownLoop
+                }
+                if (encounterSettings.debugMode) {
+                    displayStatsUpdate([`"'${state.cooldownEncounters[cooldown][0]}' cooldown`,`${state.cooldownEncounters[cooldown][1]} actions remaining`])
                 }
             }
         if (state.cooldownEncounters[0] == null) {
