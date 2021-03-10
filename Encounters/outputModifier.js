@@ -22,8 +22,8 @@ const modifier = (text) => {
                 //for outputMod:
                 */
                 if (encounterDB[encounter].outputLock) {
-                  console.log(`Output checking disabled on '${encounter}'.`)
-                  continue globalLoop
+                    console.log(`Output checking disabled on '${encounter}'.`)
+                    continue globalLoop
                 }
 
                 // limiting encounter recurrence:
@@ -109,7 +109,7 @@ const modifier = (text) => {
         if (state.currentEncounter) {
 
             if (encounterSettings.debugMode) {
-                displayStatsUpdate(['\nCurrent encounter',`${state.currentEncounter.encounterID}`])
+                displayStatsUpdate(['Current encounter',`${state.currentEncounter.encounterID}`])
             }
 
             if (state.currentEncounter.activationDelay) {
@@ -148,7 +148,7 @@ const modifier = (text) => {
                 // branching encounters:
                 // for outputMod:
                 if (state.currentEncounter.branches && !state.currentEncounter.outputLock) {
-                // if (state.currentEncounter.branches && !state.currentEncounter.inputLock) {
+                    // if (state.currentEncounter.branches && !state.currentEncounter.inputLock) {
                     branchLoop:
                         for (let chkBranch of state.currentEncounter.branches) {
                             console.log(`Checking '${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}'...`)
@@ -296,7 +296,7 @@ const modifier = (text) => {
                     continue cooldownLoop
                 }
                 if (encounterSettings.debugMode) {
-                    displayStatsUpdate([`"'${state.cooldownEncounters[cooldown][0]}' cooldown`,`${state.cooldownEncounters[cooldown][1]} actions remaining`])
+                    displayStatsUpdate([`'${state.cooldownEncounters[cooldown][0]}' cooldown`,`${state.cooldownEncounters[cooldown][1]} actions remaining`])
                 }
             }
         if (state.cooldownEncounters[0] == null) {

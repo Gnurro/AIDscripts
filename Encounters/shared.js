@@ -41,7 +41,7 @@ const encounterDB = {
     },
     dragonAwake:{
       encounterID:"dragonAwake",
-      chance:10,
+      chance:100,
       // memory insert, like World Events:
       // will be in order of encounters as they happen
       memoryAdd:{
@@ -366,7 +366,7 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
     for (let displayStat of state.displayStats) {
         console.log(`Checking ${displayStat.key} displayStats entry...`)
         let curDisplayStatIndex = state.displayStats.indexOf(displayStat)
-        if (displayStat.key === inKey) {
+        if (displayStat.key === inKey || displayStat.key === '\n' + inKey) {
             console.log(`Found ${inKey} displayStats entry: ${state.displayStats[curDisplayStatIndex].key}, ${state.displayStats[curDisplayStatIndex].value}, ${state.displayStats[curDisplayStatIndex].color}, updating!`)
             if (inValue) {
                 if (typeof(inValue) == 'string') {
@@ -390,7 +390,7 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
             break
         }
     }
-    if (!displayStatUpdated) {
+    if (displayStatUpdated === false) {
         console.log(`No ${inKey} displayStats entry found, adding it!`)
         if (state.displayStats.length > 0) {
             inKey = '\n' + inKey
