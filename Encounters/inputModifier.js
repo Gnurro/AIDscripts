@@ -110,7 +110,7 @@ const modifier = (text) => {
     if (state.currentEncounter) {
 
         if (encounterSettings.debugMode) {
-            displayStatsUpdate(['Current encounter',`${state.currentEncounter.encounterID}`])
+            displayStatsUpdate(['\nCurrent encounter',`${state.currentEncounter.encounterID}`])
         }
 
         if (state.currentEncounter.activationDelay) {
@@ -133,8 +133,6 @@ const modifier = (text) => {
                 // random wordlist inserts:
                 if (typeof (curTextNote) !== 'undefined') {
                     curTextNote = fillPlaceholders(curTextNote)
-                    // for outputs:
-                    // modifiedText += ` ${curTextNote}`
                     modifiedText += ` ${curTextNote}`
                     state.currentEncounter.textInserted = true
                 }

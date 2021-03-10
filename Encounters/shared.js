@@ -329,12 +329,16 @@ function getRndInteger(min, max) {
 
 // list-picker, dynamically handles weighted lists
 function getRndFromList(list) {
-    if (list[0].length === 2) {
-        console.log(`${list} looks like a weighted list, doing that!`)
-        return (getRndFromListWeighted(list))
+    if (list[0]) {
+        if (list[0].length === 2) {
+            console.log(`${list} looks like a weighted list, doing that!`)
+            return (getRndFromListWeighted(list))
+        } else {
+            console.log(`${list} looks like a plain list with ${list.length} item(s), simply picking from it!`)
+            return (list[getRndInteger(0, list.length-1)])
+        }
     } else {
-        console.log(`${list} looks like a plain list, simply picking from it!`)
-        return (list[getRndInteger(0, list.length)])
+        return ('')
     }
 }
 

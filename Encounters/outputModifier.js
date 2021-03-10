@@ -111,7 +111,7 @@ const modifier = (text) => {
         if (state.currentEncounter) {
 
             if (encounterSettings.debugMode) {
-                displayStatsUpdate(['Current encounter',`${state.currentEncounter.encounterID}`])
+                displayStatsUpdate(['\nCurrent encounter',`${state.currentEncounter.encounterID}`])
             }
 
             if (state.currentEncounter.activationDelay) {
@@ -149,8 +149,8 @@ const modifier = (text) => {
 
                 // branching encounters:
                 // for outputMod:
-                // if (state.currentEncounter.branches && !state.currentEncounter.outputLock) {
-                if (state.currentEncounter.branches && !state.currentEncounter.inputLock) {
+                if (state.currentEncounter.branches && !state.currentEncounter.outputLock) {
+                //if (state.currentEncounter.branches && !state.currentEncounter.inputLock) {
                     branchLoop:
                         for (chkBranch of state.currentEncounter.branches) {
                             console.log(`Checking '${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}'...`)

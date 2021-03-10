@@ -12,9 +12,9 @@ const modifier = (text) => {
                     continue memoryLoop
                 }
                 state.memory.context = memory
-                if (encounterMemory.memoryLocation == 'bottom') {
+                if (encounterMemory.memoryLocation === 'bottom') {
                     state.memory.context = `${state.memory.context}\n${encounterMemory.memoryText}`
-                } else if (encounterMemory.memoryLocation == 'top') {
+                } else if (encounterMemory.memoryLocation === 'top') {
                     state.memory.context = `${encounterMemory.memoryText}\n${state.memory.context}`
                 } else {
                     console.log(`No memoryLocation defined for '${encounterMemory.memoryText}', defaulting to 'top'.`)
