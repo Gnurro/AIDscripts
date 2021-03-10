@@ -5,7 +5,7 @@ const modifier = (text) => {
     // encounter memory stuff:
     if (state.encounterMemories) {
         memoryLoop:
-            for (encounterMemory of state.encounterMemories) {
+            for (let encounterMemory of state.encounterMemories) {
                 // take care to not overload memory, unless forced:
                 if (!encounterMemory.memoryGreed && (encounterMemory.memoryText.length + memory.length) > 1000) {
                     console.log(`Non-greedy encounterMemory too long, not inserting it!`)
