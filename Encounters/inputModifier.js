@@ -5,12 +5,14 @@ const modifier = (text) => {
     // BEGIN Encounters
 
     // Debugging action counter: (uncomment to better check global timer-only encounters)
-    // state.displayStats = [{key:'Actions', value: `${info.actionCount}`}]
+    if (encounterSettings.debugMode) {
+        displayStatsUpdate(['Actions',`${info.actionCount}`])
+    }
 
     // encounter trigger processing
     if (!state.currentEncounter) {
         globalLoop:
-            for (encounter in encounterDB) { // go through encounters
+            for (let encounter in encounterDB) { // go through encounters
                 console.log(`Global checking '${encounter}'...`)
                 if (encounterDB[encounter].inputLock) {
                     console.log(`Input checking disabled on '${encounter}'.`)
@@ -26,8 +28,8 @@ const modifier = (text) => {
                 // limiting encounter recurrence:
                 if (state.limitedEncounters) {
                     limitLoop:
-                        for (limiter of state.limitedEncounters) {
-                            if (limiter[0] == encounter) {
+                        for (let limiter of state.limitedEncounters) {
+                            if (limiter[0] === encounter) {
                                 console.log(`'${encounter}' recurrence has an active limit.`)
                                 if (limiter[1] > 0) {
                                     console.log(`'${limiter[0]}' can still happen ${limiter[1]} times.`)
@@ -41,8 +43,8 @@ const modifier = (text) => {
                 }
                 if (typeof (state.cooldownEncounters) !== 'undefined') {
                     cooldownLoop:
-                        for (cooldown of state.cooldownEncounters) {
-                            if (cooldown[0] == encounter) {
+                        for (let cooldown of state.cooldownEncounters) {
+                            if (cooldown[0] === encounter) {
                                 console.log(`'${encounter}' has an active cooldown.`)
                                 continue globalLoop
                             }
@@ -62,10 +64,9 @@ const modifier = (text) => {
                 if (encounterDB[encounter].triggers) {
                     console.log(`'${encounterDB[encounter].encounterID}' has triggers!`)
                     triggerLoop:
-                        for (triggerStr of encounterDB[encounter].triggers) {
-                            // console.log(triggerStr)
-                            triggerRegEx = new RegExp(triggerStr, "gi")
-                            caughtTrigger = text.match(triggerRegEx)
+                        for (let triggerStr of encounterDB[encounter].triggers) {
+                            let triggerRegEx = new RegExp(triggerStr, "gi")
+                            let caughtTrigger = text.match(triggerRegEx)
                             if (caughtTrigger) {
                                 console.log(`Caught '${caughtTrigger}', checking '${encounter}' chance...`)
                                 if (!encounterDB[encounter].chance) {
@@ -103,75 +104,76 @@ const modifier = (text) => {
     }
 
     // current encounter processing:
-    if (state.currentEncounter) {
-        if (state.currentEncounter.activationDelay) {
-            console.log(`Delaying by ${state.currentEncounter.activationDelay} actions before running '${state.currentEncounter.encounterID}'!`)
-            state.currentEncounter.activationDelay -= 1
-        } else {
-            console.log(`No delay, running '${state.currentEncounter.encounterID}'!`)
-            // activating encounters:
-            updateCurrentEffects()
-            if (!state.currentEncounter.memoryAdded && state.currentEncounter.memoryAdd) {
-                if (!state.encounterMemories) {
-                    state.encounterMemories = []
-                }
-                state.encounterMemories.push(state.currentEncounter.memoryAdd)
-                state.currentEncounter.memoryAdded = true
+    procCurEncounter: {
+        if (state.currentEncounter) {
+
+            if (encounterSettings.debugMode) {
+                displayStatsUpdate(['Current encounter',`${state.currentEncounter.encounterID}`])
             }
 
-            if (!state.currentEncounter.textInserted && state.currentEncounter.textNotes) {
-                curTextNote = getRndFromList(state.currentEncounter.textNotes)
-                // random wordlist inserts:
-                if (typeof (curTextNote) !== 'undefined') {
-                    curTextNote = fillPlaceholders(curTextNote)
-                    // for outputs:
-                    // modifiedText += ` ${curTextNote}`
-                    modifiedText += `\n${curTextNote}`
-                    state.currentEncounter.textInserted = true
+            if (state.currentEncounter.activationDelay) {
+                console.log(`Delaying by ${state.currentEncounter.activationDelay} actions before running '${state.currentEncounter.encounterID}'!`)
+                state.currentEncounter.activationDelay -= 1
+            } else {
+                console.log(`No delay, running '${state.currentEncounter.encounterID}'!`)
+                // activating encounters:
+                updateCurrentEffects()
+                if (!state.currentEncounter.memoryAdded && state.currentEncounter.memoryAdd) {
+                    if (!state.encounterMemories) {
+                        state.encounterMemories = []
+                    }
+                    state.encounterMemories.push(state.currentEncounter.memoryAdd)
+                    state.currentEncounter.memoryAdded = true
                 }
-            }
 
-            if (!state.currentEncounter.WIadded && state.currentEncounter.addWI) {
-                for (WIentry in state.currentEncounter.addWI) {
-                    console.log(`Adding '${state.currentEncounter.addWI[WIentry].keys}' WI entry.`)
-                    addWorldEntry(state.currentEncounter.addWI[WIentry].keys, state.currentEncounter.addWI[WIentry].entry, state.currentEncounter.addWI[WIentry].hidden)
+                if (!state.currentEncounter.textInserted && state.currentEncounter.textNotes) {
+                    let curTextNote = getRndFromList(state.currentEncounter.textNotes)
+                    // random wordlist inserts:
+                    if (typeof (curTextNote) !== 'undefined') {
+                        curTextNote = fillPlaceholders(curTextNote)
+                        modifiedText += ` ${curTextNote}`
+                        state.currentEncounter.textInserted = true
+                    }
                 }
-                state.currentEncounter.WIadded = true
-            }
 
-            // branching encounters:
-            // for outputMod:
-            // if (state.currentEncounter.branches && !state.currentEncounter.outputLock) {
-            if (state.currentEncounter.branches && !state.currentEncounter.inputLock) {
-                branchLoop:
-                    for (chkBranch of state.currentEncounter.branches) {
-                        console.log(`Checking '${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}'...`)
+                if (!state.currentEncounter.WIadded && state.currentEncounter.addWI) {
+                    for (let WIentry in state.currentEncounter.addWI) {
+                        console.log(`Adding '${state.currentEncounter.addWI[WIentry].keys}' WI entry.`)
+                        addWorldEntry(state.currentEncounter.addWI[WIentry].keys, state.currentEncounter.addWI[WIentry].entry, state.currentEncounter.addWI[WIentry].hidden)
+                    }
+                    state.currentEncounter.WIadded = true
+                }
 
-                        if (!chkBranch.branchChance) {
-                            console.log(`'${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}' has no chance, this is most likely an error!`)
-                            continue branchLoop
-                        }
+                // branching encounters:
+                // for outputMod:
+                // if (state.currentEncounter.branches && !state.currentEncounter.outputLock) {
+                if (state.currentEncounter.branches && !state.currentEncounter.inputLock) {
+                    branchLoop:
+                        for (let chkBranch of state.currentEncounter.branches) {
+                            console.log(`Checking '${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}'...`)
 
-                        if (chkBranch.branchTriggers) {
-                            console.log(`'${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}' has triggers!`)
-                            branchTriggerLoop:
-                                for (triggerStr of chkBranch.branchTriggers) {
-                                    triggerRegEx = new RegExp(triggerStr, "gi")
-                                    caughtTrigger = text.match(triggerRegEx)
+                            if (!chkBranch.branchChance) {
+                                console.log(`'${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}' has no chance, this is most likely an error!`)
+                                continue branchLoop
+                            }
+
+                            if (chkBranch.branchTriggers) {
+                                console.log(`'${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}' has triggers!`)
+
+                                for (let triggerStr of chkBranch.branchTriggers) {
+                                    let triggerRegEx = new RegExp(triggerStr, "gi")
+                                    let caughtTrigger = text.match(triggerRegEx)
                                     if (caughtTrigger) {
                                         console.log(`Caught trigger '${caughtTrigger}' for '${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}', checking chance...`)
                                         if (getRndInteger(1, 100) <= chkBranch.branchChance) {
                                             console.log(`Rolled below ${chkBranch.branchChance} chance for '${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}', branching!`)
 
                                             if (chkBranch.branchTextNotes) {
-                                                curTextNote = getRndFromList(chkBranch.branchTextNotes)
+                                                let curTextNote = getRndFromList(chkBranch.branchTextNotes)
                                                 // random wordlist inserts:
                                                 if (typeof (curTextNote) !== 'undefined') {
                                                     curTextNote = fillPlaceholders(curTextNote)
-                                                    // for outputs:
-                                                    // modifiedText += ` ${curTextNote}`
-                                                    modifiedText += `\n${curTextNote}`
-                                                    // state.currentEncounter.textInserted = true
+                                                    modifiedText += ` ${curTextNote}`
                                                 }
                                             }
 
@@ -184,49 +186,56 @@ const modifier = (text) => {
                                         }
                                     }
                                 }
-                        } else {
-                            console.log(`'${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}' has no triggers, using pure chance!`)
-                            if (getRndInteger(1, 100) <= chkBranch.branchChance) {
-                                console.log(`Rolled below ${chkBranch.branchChance} chance for '${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}', branching!`)
-                                if (chkBranch.branchTextNotes) {
-                                    modifiedText += ` ${getRndFromList(chkBranch.branchTextNotes)}`
-                                }
-                                if (chkBranch.branchChained) {
-                                    updateCurrentEncounter(getRndFromList(chkBranch.branchChained))
-                                    break branchLoop
-                                } else {
-                                    console.log(`'${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}' has no chained encounter, but this might be intentional.`)
-                                }
-                            }
-                        }
-                    }
-            }
-
-            // ending encounters:
-            if (typeof (state.currentEncounter) == 'undefined') {
-                console.log(`state.currentEncounter doesn't exist! This can happen due to branching.`)
-            } else {
-                if (state.currentEncounter.endTriggers) {
-                    console.log(`${state.currentEncounter.encounterID} has end triggers!`)
-                    for (triggerStr of state.currentEncounter.endTriggers) {
-                        triggerRegEx = new RegExp(triggerStr, "gi")
-                        caughtTrigger = text.match(triggerRegEx)
-                        if (caughtTrigger) {
-                            console.log(`Caught ${caughtTrigger}, ending '${state.currentEncounter.encounterID}'!`)
-                            if (state.currentEncounter.chained) {
-                                console.log(`Detected chained encounter(s) on ${state.currentEncounter.encounterID}!`)
-                                delete state.message
-                                delete state.encounterNote
-                                updateCurrentEncounter(getRndFromList(state.currentEncounter.chained))
                             } else {
-                                updateCurrentEncounter()
-                                updateCurrentEffects()
+                                console.log(`'${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}' has no triggers, using pure chance!`)
+                                if (getRndInteger(1, 100) <= chkBranch.branchChance) {
+                                    console.log(`Rolled below ${chkBranch.branchChance} chance for '${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}', branching!`)
+
+                                    if (chkBranch.branchTextNotes) {
+                                        let curTextNote = getRndFromList(chkBranch.branchTextNotes)
+                                        // random wordlist inserts:
+                                        if (typeof (curTextNote) !== 'undefined') {
+                                            curTextNote = fillPlaceholders(curTextNote)
+                                            modifiedText += ` ${curTextNote}`
+                                        }
+                                    }
+
+                                    if (chkBranch.branchChained) {
+                                        updateCurrentEncounter(getRndFromList(chkBranch.branchChained))
+                                        break branchLoop
+                                    } else {
+                                        console.log(`'${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}' has no chained encounter, but this might be intentional.`)
+                                    }
+                                }
                             }
                         }
-                    }
                 }
 
-                if (typeof (state.currentEncounter) !== 'undefined') {
+                // ending encounters:
+                if (typeof (state.currentEncounter) == 'undefined') {
+                    console.log(`state.currentEncounter doesn't exist! This can happen due to branching.`)
+                    break procCurEncounter
+                } else {
+                    if (state.currentEncounter.endTriggers) {
+                        console.log(`${state.currentEncounter.encounterID} has end triggers!`)
+                        for (let triggerStr of state.currentEncounter.endTriggers) {
+                            let triggerRegEx = new RegExp(triggerStr, "gi")
+                            let caughtTrigger = text.match(triggerRegEx)
+                            if (caughtTrigger) {
+                                console.log(`Caught ${caughtTrigger}, ending '${state.currentEncounter.encounterID}'!`)
+                                if (state.currentEncounter.chained) {
+                                    console.log(`Detected chained encounter(s) on ${state.currentEncounter.encounterID}!`)
+                                    delete state.message
+                                    delete state.encounterNote
+                                    updateCurrentEncounter(getRndFromList(state.currentEncounter.chained))
+                                } else {
+                                    updateCurrentEncounter()
+                                    updateCurrentEffects()
+                                    break procCurEncounter
+                                }
+                            }
+                        }
+                    }
                     if (typeof (state.currentEncounter.duration) !== 'undefined') {
                         if (state.currentEncounter.duration > 0) {
                             console.log(`Keeping up ${state.currentEncounter.encounterID} for ${state.currentEncounter.duration} more actions!`)
@@ -251,7 +260,6 @@ const modifier = (text) => {
         }
     }
 
-
     // encounter memory stuff:
     if (state.encounterMemories) {
         for (encounterMemory of state.encounterMemories) {
@@ -261,6 +269,13 @@ const modifier = (text) => {
             } else {
                 console.log(`'${encounterMemory.memoryText}' will no longer stay in memory.`)
                 state.encounterMemories.splice(state.encounterMemories.indexOf(encounterMemory), 1)
+                if (encounterSettings.debugMode) {
+                    displayStatsUpdate([`"${encounterMemory.memoryText}" memory`])
+                }
+                continue
+            }
+            if (encounterSettings.debugMode) {
+                displayStatsUpdate([`"${encounterMemory.memoryText}" memory`,`${encounterMemory.memoryLingerDuration} actions remaining`])
             }
         }
     }
@@ -269,15 +284,18 @@ const modifier = (text) => {
         console.log(`Cooldowns detected!`)
         cooldownLoop:
             for (cooldown in state.cooldownEncounters) {
-                if (state.cooldownEncounters[cooldown] == null) { // safety/legacy...
-                    state.cooldownEncounters.splice(cooldown, 1)
-                    continue cooldownLoop
-                }
-                console.log(`'${state.cooldownEncounters[cooldown][0]}' (${cooldown}) cooldown: ${state.cooldownEncounters[cooldown][1]}.`)
+                console.log(`'${state.cooldownEncounters[cooldown][0]}' [${cooldown}] cooldown: ${state.cooldownEncounters[cooldown][1]}.`)
                 state.cooldownEncounters[cooldown][1] -= 1
                 if (state.cooldownEncounters[cooldown][1] <= 0) {
                     console.log(`${state.cooldownEncounters[cooldown][0]} cooldown over, removing.`)
                     state.cooldownEncounters.splice(cooldown, 1)
+                    if (encounterSettings.debugMode) {
+                        displayStatsUpdate([`'${state.cooldownEncounters[cooldown][0]}' cooldown`])
+                    }
+                    continue cooldownLoop
+                }
+                if (encounterSettings.debugMode) {
+                    displayStatsUpdate([`'${state.cooldownEncounters[cooldown][0]}' cooldown`,`${state.cooldownEncounters[cooldown][1]} actions remaining`])
                 }
             }
         if (state.cooldownEncounters[0] == null) {

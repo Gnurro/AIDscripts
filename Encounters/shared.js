@@ -1,5 +1,11 @@
 // BEGIN Encounters!
-encounterDB = {
+
+const encounterSettings = {
+    debugMode: true
+}
+
+// encounterDef database:
+const encounterDB = {
     // hardcoded encounters:
     // one global encounter (=encounters that do not need to be chained) can trigger at a time only (for now, may change this)
     // there is only one encounter at a time (for now, may change this), and global encounters can only start if there is no active encounter
@@ -35,7 +41,7 @@ encounterDB = {
     },
     dragonAwake:{
       encounterID:"dragonAwake",
-      chance:10,
+      chance:100,
       // memory insert, like World Events:
       // will be in order of encounters as they happen
       memoryAdd:{
@@ -172,7 +178,7 @@ encounterDB = {
 }
 
 // word list stuff like gauntlet script:
-encounterWordLists = {
+const encounterWordLists = {
     /* Remove this line (and the one below) to enable the example word lists
     charClass:["mage","fighter","valkyrie"],
     pattern:["sprinkles", "dots", "lines"],
@@ -186,20 +192,20 @@ for (WIentry of worldInfo) {
     // encounters from WI:
     // these will be lower priority then the hardcoded ones above!
     if (WIentry.keys.includes('!encounterDef')) {
-        encounterDefFromWI = JSON.parse(WIentry.entry)
+        let encounterDefFromWI = JSON.parse(WIentry.entry)
         console.log(`Found WI encounterDef for '${encounterDefFromWI.encounterID}', adding it to the DB!`)
         encounterDB[encounterDefFromWI.encounterID] = encounterDefFromWI
     }
     // word lists from WI:
     if (WIentry.keys.includes('!encounterWordListsFull')) {
-        encounterWordListsFromWI = JSON.parse(WIentry.entry)
+        let encounterWordListsFromWI = JSON.parse(WIentry.entry)
         console.log(`Found full WI encounterWordLists entry, adding them to the DB!`)
-        for (encounterSingleWordList in encounterWordListsFromWI) {
+        for (let encounterSingleWordList in encounterWordListsFromWI) {
             encounterWordLists[encounterSingleWordList] = Object.values(encounterWordListsFromWI[encounterSingleWordList])
         }
     }
     if (WIentry.keys.includes('!encounterWordListSingle')) {
-        encounterWordListSingleFromWI = JSON.parse(WIentry.entry)
+        let encounterWordListSingleFromWI = JSON.parse(WIentry.entry)
         console.log(`Found WI encounterWordList, adding it to the DB!`)
         encounterWordLists[Object.keys(encounterWordListSingleFromWI)[0]] = Object.values(encounterWordListSingleFromWI)
     }
@@ -215,8 +221,8 @@ function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEn
                 state.limitedEncounters = []
                 state.limitedEncounters.push([state.currentEncounter.encounterID, state.currentEncounter.recurrenceLimit - 1])
             } else {
-                for (limiter of state.limitedEncounters) {
-                    if (limiter[0] == state.currentEncounter.encounterID) {
+                for (let limiter of state.limitedEncounters) {
+                    if (limiter[0] === state.currentEncounter.encounterID) {
                         console.log(`'${state.currentEncounter.encounterID}' recurrence already has a limit.`)
                         if (limiter[1] > 0) {
                             limiter[1] = limiter[1] - 1
@@ -238,10 +244,10 @@ function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEn
         console.log(`Setting current encounter to '${encounterUpcoming}'.`)
         state.currentEncounter = encounterDB[encounterUpcoming]
         // random initial values handling:
-        randomizables = ['duration', 'activationDelay', 'cooldown']
-        for (encounterValue of randomizables) {
+        const randomizables = ['duration', 'activationDelay', 'cooldown']
+        for (let encounterValue of randomizables) {
             if (typeof (state.currentEncounter[encounterValue]) !== 'undefined') {
-                if (typeof (state.currentEncounter[encounterValue]) !== 'number' && state.currentEncounter[encounterValue].length == 2) {
+                if (typeof (state.currentEncounter[encounterValue]) !== 'number' && state.currentEncounter[encounterValue].length === 2) {
                     console.log(`${encounterUpcoming} has random ${encounterValue}: ${state.currentEncounter[encounterValue]}`)
                     state.currentEncounter[encounterValue] = getRndInteger(state.currentEncounter[encounterValue][0], state.currentEncounter[encounterValue][1])
                     console.log(`${encounterUpcoming} random ${encounterValue} set to ${state.currentEncounter[encounterValue]}`)
@@ -272,39 +278,39 @@ function updateCurrentEffects() { // 'activates' currentEncounter; or clears enc
 }
 
 function fillPlaceholders(placeHolderString) {
-    curPlaceholderMatches = placeHolderString.match(/\{(.*?)\}/g)
+    let curPlaceholderMatches = placeHolderString.match(/\{(.*?)\}/g)
     if (curPlaceholderMatches) {
         console.log(`Matched placeholders: ${curPlaceholderMatches}`)
-        for (placeholder of curPlaceholderMatches) {
+        for (let placeholder of curPlaceholderMatches) {
             console.log(`Current placeholder: ${placeholder}`)
-            if (placeholder[1] == '*') {
+            if (placeholder[1] === '*') {
                 console.log(`Current placeholder ${placeholder} contains a *, checking temporary word lists...`)
                 placeholder = placeholder.replace(/(\*|{|})/gi, '')
                 if (typeof (tempWordLists) == 'undefined') {
                     tempWordLists = {}
                 }
-                if (!tempWordLists[placeholder] || tempWordLists[placeholder].length == 0) {
+                if (!tempWordLists[placeholder] || tempWordLists[placeholder].length === 0) {
                     console.log(`${placeholder} temporary wordlist is either non-existant or empty! Getting a new one.`)
                     tempWordLists[placeholder] = JSON.parse(JSON.stringify(encounterWordLists[placeholder]))
                 }
                 console.log(`Current temporary word lists:${tempWordLists}`)
-                for (insertTag in tempWordLists) {
+                for (let insertTag in tempWordLists) {
                     if (placeholder.includes(insertTag)) {
                         console.log(`Found fitting placeholder tag in temporary list: ${insertTag}`)
-                        pickedInsert = getRndFromList(tempWordLists[insertTag])
+                        let pickedInsert = getRndFromList(tempWordLists[insertTag])
                         console.log(`Randomly picked placeholder insert from temporary list: ${pickedInsert}`)
-                        insertRegEx = new RegExp(`{\\*${insertTag}}`,)
+                        let insertRegEx = new RegExp(`{\\*${insertTag}}`,)
                         placeHolderString = placeHolderString.replace(insertRegEx, pickedInsert)
                         tempWordLists[placeholder].splice(tempWordLists[placeholder].indexOf(pickedInsert), 1)
                     }
                 }
             } else {
-                for (insertTag in encounterWordLists) {
+                for (let insertTag in encounterWordLists) {
                     if (placeholder.includes(insertTag)) {
                         console.log(`Found fitting placeholder tag: ${insertTag}`)
-                        pickedInsert = getRndFromList(encounterWordLists[insertTag])
+                        let pickedInsert = getRndFromList(encounterWordLists[insertTag])
                         console.log(`Randomly picked placeholder insert: ${pickedInsert}`)
-                        insertRegEx = new RegExp(`{${insertTag}}`,)
+                        let insertRegEx = new RegExp(`{${insertTag}}`,)
                         placeHolderString = placeHolderString.replace(insertRegEx, pickedInsert)
                     }
                 }
@@ -323,26 +329,29 @@ function getRndInteger(min, max) {
 
 // list-picker, dynamically handles weighted lists
 function getRndFromList(list) {
-    if (list[0].length == 2) {
-        console.log(`${list} looks like a weighted list, doing that!`)
-        return (getRndFromListWeighted(list))
+    if (list[0]) {
+        if (list[0].length === 2) {
+            console.log(`${list} looks like a weighted list, doing that!`)
+            return (getRndFromListWeighted(list))
+        } else {
+            console.log(`${list} looks like a plain list with ${list.length} item(s), simply picking from it!`)
+            return (list[getRndInteger(0, list.length-1)])
+        }
     } else {
-        console.log(`${list} looks like a plain list, simply picking from it!`)
-        return (list[getRndInteger(0, list.length)])
+        return ('')
     }
 }
 
 // list picker for lists with weighted items:
 // currently works kinda like oldschool D&D encounter lists
 function getRndFromListWeighted(weightedList) {
-    cutOff = getRndInteger(1, 100)
+    let cutOff = getRndInteger(1, 100)
     console.log(`Picking from weighted list, cutoff: ${cutOff}`)
-    for (item of weightedList) {
+    for (let item of weightedList) {
         console.log(`'${item[0]}' threshold: ${item[1]}.`)
         if (cutOff <= item[1]) {
             console.log(`'${item[0]}' cutoff below threshold, picking it!`)
             return item[0]
-            break
         }
     }
 }
@@ -354,10 +363,10 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
         state.displayStats = []
     }
     let displayStatUpdated = false
-    for (displayStat of state.displayStats) {
+    for (let displayStat of state.displayStats) {
         console.log(`Checking ${displayStat.key} displayStats entry...`)
         let curDisplayStatIndex = state.displayStats.indexOf(displayStat)
-        if (displayStat.key == inKey) {
+        if (displayStat.key === inKey || displayStat.key === '\n' + inKey) {
             console.log(`Found ${inKey} displayStats entry: ${state.displayStats[curDisplayStatIndex].key}, ${state.displayStats[curDisplayStatIndex].value}, ${state.displayStats[curDisplayStatIndex].color}, updating!`)
             if (inValue) {
                 if (typeof(inValue) == 'string') {
@@ -381,8 +390,11 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
             break
         }
     }
-    if (!displayStatUpdated) {
+    if (displayStatUpdated === false) {
         console.log(`No ${inKey} displayStats entry found, adding it!`)
+        if (state.displayStats.length > 0) {
+            inKey = '\n' + inKey
+        }
         state.displayStats.push({'key': inKey, 'value': inValue, 'color': inColor})
     }
 }

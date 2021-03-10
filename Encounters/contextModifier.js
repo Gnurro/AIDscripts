@@ -5,16 +5,16 @@ const modifier = (text) => {
     // encounter memory stuff:
     if (state.encounterMemories) {
         memoryLoop:
-            for (encounterMemory of state.encounterMemories) {
+            for (let encounterMemory of state.encounterMemories) {
                 // take care to not overload memory, unless forced:
                 if (!encounterMemory.memoryGreed && (encounterMemory.memoryText.length + memory.length) > 1000) {
                     console.log(`Non-greedy encounterMemory too long, not inserting it!`)
                     continue memoryLoop
                 }
                 state.memory.context = memory
-                if (encounterMemory.memoryLocation == 'bottom') {
+                if (encounterMemory.memoryLocation === 'bottom') {
                     state.memory.context = `${state.memory.context}\n${encounterMemory.memoryText}`
-                } else if (encounterMemory.memoryLocation == 'top') {
+                } else if (encounterMemory.memoryLocation === 'top') {
                     state.memory.context = `${encounterMemory.memoryText}\n${state.memory.context}`
                 } else {
                     console.log(`No memoryLocation defined for '${encounterMemory.memoryText}', defaulting to 'top'.`)
