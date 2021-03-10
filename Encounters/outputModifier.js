@@ -13,7 +13,7 @@ const modifier = (text) => {
     // encounter trigger processing
     if (!state.currentEncounter) {
         globalLoop:
-            for (encounter in encounterDB) { // go through encounters
+            for (let encounter in encounterDB) { // go through encounters
                 console.log(`Global checking '${encounter}'...`)
                 /*
                 if (encounterDB[encounter].inputLock) {
@@ -31,8 +31,8 @@ const modifier = (text) => {
                 // limiting encounter recurrence:
                 if (state.limitedEncounters) {
                     limitLoop:
-                        for (limiter of state.limitedEncounters) {
-                            if (limiter[0] == encounter) {
+                        for (let limiter of state.limitedEncounters) {
+                            if (limiter[0] === encounter) {
                                 console.log(`'${encounter}' recurrence has an active limit.`)
                                 if (limiter[1] > 0) {
                                     console.log(`'${limiter[0]}' can still happen ${limiter[1]} times.`)
@@ -46,8 +46,8 @@ const modifier = (text) => {
                 }
                 if (typeof (state.cooldownEncounters) !== 'undefined') {
                     cooldownLoop:
-                        for (cooldown of state.cooldownEncounters) {
-                            if (cooldown[0] == encounter) {
+                        for (let cooldown of state.cooldownEncounters) {
+                            if (cooldown[0] === encounter) {
                                 console.log(`'${encounter}' has an active cooldown.`)
                                 continue globalLoop
                             }
@@ -67,9 +67,10 @@ const modifier = (text) => {
                 if (encounterDB[encounter].triggers) {
                     console.log(`'${encounterDB[encounter].encounterID}' has triggers!`)
                     triggerLoop:
-                        for (triggerStr of encounterDB[encounter].triggers) {
-                            triggerRegEx = new RegExp(triggerStr, "gi")
-                            caughtTrigger = text.match(triggerRegEx)
+                        for (let triggerStr of encounterDB[encounter].triggers) {
+                            // console.log(triggerStr)
+                            let triggerRegEx = new RegExp(triggerStr, "gi")
+                            let caughtTrigger = text.match(triggerRegEx)
                             if (caughtTrigger) {
                                 console.log(`Caught '${caughtTrigger}', checking '${encounter}' chance...`)
                                 if (!encounterDB[encounter].chance) {
@@ -130,7 +131,7 @@ const modifier = (text) => {
                 }
 
                 if (!state.currentEncounter.textInserted && state.currentEncounter.textNotes) {
-                    curTextNote = getRndFromList(state.currentEncounter.textNotes)
+                    let curTextNote = getRndFromList(state.currentEncounter.textNotes)
                     // random wordlist inserts:
                     if (typeof (curTextNote) !== 'undefined') {
                         curTextNote = fillPlaceholders(curTextNote)
@@ -150,9 +151,9 @@ const modifier = (text) => {
                 // branching encounters:
                 // for outputMod:
                 if (state.currentEncounter.branches && !state.currentEncounter.outputLock) {
-                //if (state.currentEncounter.branches && !state.currentEncounter.inputLock) {
+                // if (state.currentEncounter.branches && !state.currentEncounter.inputLock) {
                     branchLoop:
-                        for (chkBranch of state.currentEncounter.branches) {
+                        for (let chkBranch of state.currentEncounter.branches) {
                             console.log(`Checking '${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}'...`)
 
                             if (!chkBranch.branchChance) {
@@ -163,16 +164,16 @@ const modifier = (text) => {
                             if (chkBranch.branchTriggers) {
                                 console.log(`'${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}' has triggers!`)
 
-                                for (triggerStr of chkBranch.branchTriggers) {
-                                    triggerRegEx = new RegExp(triggerStr, "gi")
-                                    caughtTrigger = text.match(triggerRegEx)
+                                for (let triggerStr of chkBranch.branchTriggers) {
+                                    let triggerRegEx = new RegExp(triggerStr, "gi")
+                                    let caughtTrigger = text.match(triggerRegEx)
                                     if (caughtTrigger) {
                                         console.log(`Caught trigger '${caughtTrigger}' for '${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}', checking chance...`)
                                         if (getRndInteger(1, 100) <= chkBranch.branchChance) {
                                             console.log(`Rolled below ${chkBranch.branchChance} chance for '${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}', branching!`)
 
                                             if (chkBranch.branchTextNotes) {
-                                                curTextNote = getRndFromList(chkBranch.branchTextNotes)
+                                                let curTextNote = getRndFromList(chkBranch.branchTextNotes)
                                                 // random wordlist inserts:
                                                 if (typeof (curTextNote) !== 'undefined') {
                                                     curTextNote = fillPlaceholders(curTextNote)
@@ -195,7 +196,7 @@ const modifier = (text) => {
                                     console.log(`Rolled below ${chkBranch.branchChance} chance for '${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}', branching!`)
 
                                     if (chkBranch.branchTextNotes) {
-                                        curTextNote = getRndFromList(chkBranch.branchTextNotes)
+                                        let curTextNote = getRndFromList(chkBranch.branchTextNotes)
                                         // random wordlist inserts:
                                         if (typeof (curTextNote) !== 'undefined') {
                                             curTextNote = fillPlaceholders(curTextNote)
@@ -221,9 +222,9 @@ const modifier = (text) => {
                 } else {
                     if (state.currentEncounter.endTriggers) {
                         console.log(`${state.currentEncounter.encounterID} has end triggers!`)
-                        for (triggerStr of state.currentEncounter.endTriggers) {
-                            triggerRegEx = new RegExp(triggerStr, "gi")
-                            caughtTrigger = text.match(triggerRegEx)
+                        for (let triggerStr of state.currentEncounter.endTriggers) {
+                            let triggerRegEx = new RegExp(triggerStr, "gi")
+                            let caughtTrigger = text.match(triggerRegEx)
                             if (caughtTrigger) {
                                 console.log(`Caught ${caughtTrigger}, ending '${state.currentEncounter.encounterID}'!`)
                                 if (state.currentEncounter.chained) {
@@ -284,7 +285,7 @@ const modifier = (text) => {
                     state.cooldownEncounters.splice(cooldown, 1)
                     continue cooldownLoop
                 }
-                console.log(`'${state.cooldownEncounters[cooldown][0]}' (${cooldown}) cooldown: ${state.cooldownEncounters[cooldown][1]}.`)
+                console.log(`'${state.cooldownEncounters[cooldown][0]}' [${cooldown}] cooldown: ${state.cooldownEncounters[cooldown][1]}.`)
                 state.cooldownEncounters[cooldown][1] -= 1
                 if (state.cooldownEncounters[cooldown][1] <= 0) {
                     console.log(`${state.cooldownEncounters[cooldown][0]} cooldown over, removing.`)
