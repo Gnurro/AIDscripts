@@ -392,6 +392,9 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
     }
     if (!displayStatUpdated) {
         console.log(`No ${inKey} displayStats entry found, adding it!`)
+        if (state.displayStats.length > 0) {
+            inKey = '\n' + inKey
+        }
         state.displayStats.push({'key': inKey, 'value': inValue, 'color': inColor})
     }
 }
