@@ -1,4 +1,10 @@
 // BEGIN Encounters!
+
+var encounterSettings = {
+    debugMode:true
+}
+
+// encounterDef database:
 encounterDB = {
     // hardcoded encounters:
     // one global encounter (=encounters that do not need to be chained) can trigger at a time only (for now, may change this)
@@ -216,7 +222,7 @@ function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEn
                 state.limitedEncounters.push([state.currentEncounter.encounterID, state.currentEncounter.recurrenceLimit - 1])
             } else {
                 for (limiter of state.limitedEncounters) {
-                    if (limiter[0] == state.currentEncounter.encounterID) {
+                    if (limiter[0] === state.currentEncounter.encounterID) {
                         console.log(`'${state.currentEncounter.encounterID}' recurrence already has a limit.`)
                         if (limiter[1] > 0) {
                             limiter[1] = limiter[1] - 1
@@ -241,7 +247,7 @@ function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEn
         randomizables = ['duration', 'activationDelay', 'cooldown']
         for (encounterValue of randomizables) {
             if (typeof (state.currentEncounter[encounterValue]) !== 'undefined') {
-                if (typeof (state.currentEncounter[encounterValue]) !== 'number' && state.currentEncounter[encounterValue].length == 2) {
+                if (typeof (state.currentEncounter[encounterValue]) !== 'number' && state.currentEncounter[encounterValue].length === 2) {
                     console.log(`${encounterUpcoming} has random ${encounterValue}: ${state.currentEncounter[encounterValue]}`)
                     state.currentEncounter[encounterValue] = getRndInteger(state.currentEncounter[encounterValue][0], state.currentEncounter[encounterValue][1])
                     console.log(`${encounterUpcoming} random ${encounterValue} set to ${state.currentEncounter[encounterValue]}`)
@@ -277,13 +283,13 @@ function fillPlaceholders(placeHolderString) {
         console.log(`Matched placeholders: ${curPlaceholderMatches}`)
         for (placeholder of curPlaceholderMatches) {
             console.log(`Current placeholder: ${placeholder}`)
-            if (placeholder[1] == '*') {
+            if (placeholder[1] === '*') {
                 console.log(`Current placeholder ${placeholder} contains a *, checking temporary word lists...`)
                 placeholder = placeholder.replace(/(\*|{|})/gi, '')
                 if (typeof (tempWordLists) == 'undefined') {
                     tempWordLists = {}
                 }
-                if (!tempWordLists[placeholder] || tempWordLists[placeholder].length == 0) {
+                if (!tempWordLists[placeholder] || tempWordLists[placeholder].length === 0) {
                     console.log(`${placeholder} temporary wordlist is either non-existant or empty! Getting a new one.`)
                     tempWordLists[placeholder] = JSON.parse(JSON.stringify(encounterWordLists[placeholder]))
                 }
@@ -323,7 +329,7 @@ function getRndInteger(min, max) {
 
 // list-picker, dynamically handles weighted lists
 function getRndFromList(list) {
-    if (list[0].length == 2) {
+    if (list[0].length === 2) {
         console.log(`${list} looks like a weighted list, doing that!`)
         return (getRndFromListWeighted(list))
     } else {
@@ -342,7 +348,6 @@ function getRndFromListWeighted(weightedList) {
         if (cutOff <= item[1]) {
             console.log(`'${item[0]}' cutoff below threshold, picking it!`)
             return item[0]
-            break
         }
     }
 }
@@ -357,7 +362,7 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
     for (displayStat of state.displayStats) {
         console.log(`Checking ${displayStat.key} displayStats entry...`)
         let curDisplayStatIndex = state.displayStats.indexOf(displayStat)
-        if (displayStat.key == inKey) {
+        if (displayStat.key === inKey) {
             console.log(`Found ${inKey} displayStats entry: ${state.displayStats[curDisplayStatIndex].key}, ${state.displayStats[curDisplayStatIndex].value}, ${state.displayStats[curDisplayStatIndex].color}, updating!`)
             if (inValue) {
                 if (typeof(inValue) == 'string') {

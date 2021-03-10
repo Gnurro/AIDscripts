@@ -6,6 +6,9 @@ const modifier = (text) => {
 
     // Debugging action counter: (uncomment to better check global timer-only encounters)
     // state.displayStats = [{key:'Actions', value: `${info.actionCount}`}]
+    if (encounterSettings.debugMode) {
+        displayStatsUpdate(['Actions',`${info.actionCount}`])
+    }
 
     // encounter trigger processing
     if (!state.currentEncounter) {
@@ -105,6 +108,11 @@ const modifier = (text) => {
     // current encounter processing:
     procCurEncounter: {
     if (state.currentEncounter) {
+
+        if (encounterSettings.debugMode) {
+            displayStatsUpdate(['Current encounter',`${state.currentEncounter.encounterID}`])
+        }
+
         if (state.currentEncounter.activationDelay) {
             console.log(`Delaying by ${state.currentEncounter.activationDelay} actions before running '${state.currentEncounter.encounterID}'!`)
             state.currentEncounter.activationDelay -= 1
