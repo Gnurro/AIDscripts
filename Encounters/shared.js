@@ -1,7 +1,7 @@
 // BEGIN Encounters!
 
-var encounterSettings = {
-    debugMode:true
+const encounterSettings = {
+    debugMode: true
 }
 
 // encounterDef database:
