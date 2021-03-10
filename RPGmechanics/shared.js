@@ -153,19 +153,7 @@ skillDB = {
 
 featDB = {
   
-  flatchest:{
-    displayString: "Flat Chest",
-    attFlatMods: { // pun somewhat intended
-      Dexterity:+1, // placeholder
-      Charisma:-1 // placeholder
-    },
-    skillFlatMods: {
-      dance:+1,
-      seduce:-1
-    },
-    triggers: ["\\b(chest|breast(s)*|boob(s)*|tit(s)*|bazongas|mammaries|udder)(?<=your)"],
-    note: ["Your breasts are very small."]
-  }
+
 
 }
 
