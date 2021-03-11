@@ -217,27 +217,27 @@ function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEn
     // limiting encounter recurrence:
     if (state.currentEncounter) {
         if (state.currentEncounter.recurrenceLimit) {
-            if (!state.limitedEncounters) {
-                state.limitedEncounters = []
-                state.limitedEncounters.push([state.currentEncounter.encounterID, state.currentEncounter.recurrenceLimit - 1])
+            if (!state.encounterPersistence.limited) {
+                state.encounterPersistence.limited = []
+                state.encounterPersistence.limited.push([state.currentEncounter.encounterID, state.currentEncounter.recurrenceLimit - 1])
             } else {
-                for (let limiter of state.limitedEncounters) {
+                for (let limiter of state.encounterPersistence.limited) {
                     if (limiter[0] === state.currentEncounter.encounterID) {
                         console.log(`'${state.currentEncounter.encounterID}' recurrence already has a limit.`)
                         if (limiter[1] > 0) {
                             limiter[1] = limiter[1] - 1
                         }
                     } else {
-                        state.limitedEncounters.push([state.currentEncounter.encounterID, state.currentEncounter.recurrenceLimit - 1])
+                        state.encounterPersistence.limited.push([state.currentEncounter.encounterID, state.currentEncounter.recurrenceLimit - 1])
                     }
                 }
             }
         }
         if (state.currentEncounter.cooldown) {
-            if (!state.cooldownEncounters) {
-                state.cooldownEncounters = []
+            if (!state.encounterPersistence.cooldowns) {
+                state.encounterPersistence.cooldowns = []
             }
-            state.cooldownEncounters.push([state.currentEncounter.encounterID, state.currentEncounter.cooldown])
+            state.encounterPersistence.cooldowns.push([state.currentEncounter.encounterID, state.currentEncounter.cooldown])
         }
     }
     if (encounterUpcoming) {
@@ -266,14 +266,14 @@ function updateCurrentEffects() { // 'activates' currentEncounter; or clears enc
             state.message = state.currentEncounter.messageString
         }
         if (state.currentEncounter.contextNotes) {
-            state.encounterNote = getRndFromList(state.currentEncounter.contextNotes)
+            state.encounterPersistence.encounterNote = getRndFromList(state.currentEncounter.contextNotes)
         }
         if (state.currentEncounter.displayStatNotes) {
             displayStatsUpdate(getRndFromList(state.currentEncounter.displayStatNotes))
         }
     } else {
         delete state.message
-        delete state.encounterNote
+        delete state.encounterPersistence.encounterNote
     }
 }
 

@@ -261,14 +261,14 @@ const modifier = (text) => {
     }
 
     // encounter memory stuff:
-    if (state.encounterMemories) {
-        for (encounterMemory of state.encounterMemories) {
+    if (state.encounterPersistence.memories) {
+        for (encounterMemory of state.encounterPersistence.memories) {
             if (encounterMemory.memoryLingerDuration >= 1) {
                 console.log(`'${encounterMemory.memoryText}' will stay in memory for ${encounterMemory.memoryLingerDuration} more actions.`)
                 encounterMemory.memoryLingerDuration -= 1
             } else {
                 console.log(`'${encounterMemory.memoryText}' will no longer stay in memory.`)
-                state.encounterMemories.splice(state.encounterMemories.indexOf(encounterMemory), 1)
+                state.encounterPersistence.memories.splice(state.encounterPersistence.memories.indexOf(encounterMemory), 1)
                 if (encounterSettings.debugMode) {
                     displayStatsUpdate([`"${encounterMemory.memoryText}" memory`])
                 }
@@ -280,27 +280,27 @@ const modifier = (text) => {
         }
     }
 
-    if (state.cooldownEncounters) {
+    if (state.encounterPersistence.cooldowns) {
         console.log(`Cooldowns detected!`)
         cooldownLoop:
-            for (cooldown in state.cooldownEncounters) {
-                console.log(`'${state.cooldownEncounters[cooldown][0]}' [${cooldown}] cooldown: ${state.cooldownEncounters[cooldown][1]}.`)
-                state.cooldownEncounters[cooldown][1] -= 1
-                if (state.cooldownEncounters[cooldown][1] <= 0) {
-                    console.log(`${state.cooldownEncounters[cooldown][0]} cooldown over, removing.`)
-                    state.cooldownEncounters.splice(cooldown, 1)
+            for (cooldown in state.encounterPersistence.cooldowns) {
+                console.log(`'${state.encounterPersistence.cooldowns[cooldown][0]}' [${cooldown}] cooldown: ${state.encounterPersistence.cooldowns[cooldown][1]}.`)
+                state.encounterPersistence.cooldowns[cooldown][1] -= 1
+                if (state.encounterPersistence.cooldowns[cooldown][1] <= 0) {
+                    console.log(`${state.encounterPersistence.cooldowns[cooldown][0]} cooldown over, removing.`)
+                    state.encounterPersistence.cooldowns.splice(cooldown, 1)
                     if (encounterSettings.debugMode) {
-                        displayStatsUpdate([`'${state.cooldownEncounters[cooldown][0]}' cooldown`])
+                        displayStatsUpdate([`'${state.encounterPersistence.cooldowns[cooldown][0]}' cooldown`])
                     }
                     continue cooldownLoop
                 }
                 if (encounterSettings.debugMode) {
-                    displayStatsUpdate([`'${state.cooldownEncounters[cooldown][0]}' cooldown`,`${state.cooldownEncounters[cooldown][1]} actions remaining`])
+                    displayStatsUpdate([`'${state.encounterPersistence.cooldowns[cooldown][0]}' cooldown`,`${state.encounterPersistence.cooldowns[cooldown][1]} actions remaining`])
                 }
             }
-        if (state.cooldownEncounters[0] == null) {
+        if (state.encounterPersistence.cooldowns[0] == null) {
             console.log(`No more cooldowns, removing array.`)
-            delete state.cooldownEncounters
+            delete state.encounterPersistence.cooldowns
         }
     }
     // END Encounters
