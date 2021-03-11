@@ -31,7 +31,7 @@ const modifier = (text) => {
     // BEGIN Encounters
     // for mashing with other context scripts, keep this between 'const lines' and 'const combinedLines'
     if (typeof (state.currentEncounter) !== 'undefined') { // if there's an event...
-        lines.splice(-3, 0, state.encounterPersistence.encounterNote) // ...put it right below AN, so AI knows what's up
+        lines.splice(-3, 0, state.encounterPersistence.contextNote) // ...put it right below AN, so AI knows what's up
     }
     // END Encounters
 

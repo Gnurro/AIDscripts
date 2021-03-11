@@ -226,7 +226,7 @@ const modifier = (text) => {
                                 if (state.currentEncounter.chained) {
                                     console.log(`Detected chained encounter(s) on ${state.currentEncounter.encounterID}!`)
                                     delete state.message
-                                    delete state.encounterNote
+                                    delete state.encounterPersistence.contextNote
                                     updateCurrentEncounter(getRndFromList(state.currentEncounter.chained))
                                 } else {
                                     updateCurrentEncounter()
@@ -245,7 +245,7 @@ const modifier = (text) => {
                             if (state.currentEncounter.chained) {
                                 console.log(`Detected chained encounter(s) on ${state.currentEncounter.encounterID}!`)
                                 delete state.message
-                                delete state.encounterNote
+                                delete state.encounterPersistence.contextNote
                                 updateCurrentEncounter(getRndFromList(state.currentEncounter.chained))
                             } else {
                                 updateCurrentEncounter()

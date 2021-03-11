@@ -266,14 +266,14 @@ function updateCurrentEffects() { // 'activates' currentEncounter; or clears enc
             state.message = state.currentEncounter.messageString
         }
         if (state.currentEncounter.contextNotes) {
-            state.encounterPersistence.encounterNote = getRndFromList(state.currentEncounter.contextNotes)
+            state.encounterPersistence.contextNote = getRndFromList(state.currentEncounter.contextNotes)
         }
         if (state.currentEncounter.displayStatNotes) {
             displayStatsUpdate(getRndFromList(state.currentEncounter.displayStatNotes))
         }
     } else {
         delete state.message
-        delete state.encounterPersistence.encounterNote
+        delete state.encounterPersistence.contextNote
     }
 }
 
