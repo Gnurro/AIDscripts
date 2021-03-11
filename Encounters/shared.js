@@ -22,19 +22,22 @@ const encounterDB = {
         triggers:["redflag"],
         chance:100,
         countOccurrence:true, // count how often this encounter ENDED
-        recurrenceLimit:1,
+        recurrenceLimit:1, // recurrenceLimit is independent of countOccurrence (for now; beta9 dev 11.03.21)
+        message:"The red flag is waved!",
         duration:0,
     },
     waveGreenFlag: {
         encounterID:"waveGreenFlag",
         chance:100,
         prerequisite:[['waveRedFlag',1]], // ALL items must have occurred at least the specified number of times to allow encounter to become current
+        message:"The green flag is waved!",
         duration:0,
     },
     waveBlueFlag: {
         encounterID:"waveBlueFlag",
         chance:100,
         blockers:[['waveRedFlag',1]], // if any of the items have occurred at least the specified number of times, do not allow encounter to become current
+        message:"The blue flag is waved!",
         duration:0,
     },
     /* REMOVE THIS LINE AND THE ONE AT THE END OF encounterDB TO SEE THE EXAMPLE ENCOUNTERS IN ACTION
