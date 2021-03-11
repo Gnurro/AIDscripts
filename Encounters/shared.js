@@ -7,9 +7,30 @@ const encounterSettings = {
 // encounterDef database:
 const encounterDB = {
     // hardcoded encounters:
-    // one global encounter (=encounters that do not need to be chained) can trigger at a time only (for now, may change this)
-    // there is only one encounter at a time (for now, may change this), and global encounters can only start if there is no active encounter
+    // one open encounter (=encounters that have chance) will be made current at a time only (from consideration, branches might do more)
+    // closed encounters (=encounters without chance) can only become current through chaining
+    // there is only one current encounter at a time, and open encounters are only considered if there is no current encounter
     // order in this object determines precedence!
+    waveRedFlag: {
+        encounterID:"waveRedFlag",
+        triggers:["redflag"],
+        chance:100,
+        countOccurrence:true, // count how often this encounter ENDED
+        recurrenceLimit:1,
+        duration:0,
+    },
+    waveGreenFlag: {
+        encounterID:"waveGreenFlag",
+        chance:100,
+        prerequisite:[['waveRedFlag',1]], // ALL items must have occurred at least the specified number of times to allow encounter to become current
+        duration:0,
+    },
+    waveBlueFlag: {
+        encounterID:"waveBlueFlag",
+        chance:100,
+        blockers:[['waveRedFlag',1]], // if any of the items have occurred at least the specified number of times, do not allow encounter to become current
+        duration:0,
+    },
     /* REMOVE THIS LINE AND THE ONE AT THE END OF encounterDB TO SEE THE EXAMPLE ENCOUNTERS IN ACTION
     displayStuff: {
         encounterID:"displayStuff",
@@ -69,7 +90,7 @@ const encounterDB = {
     },
     dance:{ // example for precedence, if 'you dance' while 'you enter a cave', only 'dance' happens, but not the goblinAttack stuff below; also an almost minimal encounterDef
       encounterID:"dance",
-      globalActionDelay:0,
+      totalActionDelay:0,
       triggers:["dance"],
       chance:100,
       duration:0,
@@ -80,7 +101,7 @@ const encounterDB = {
     },
     goblinAttackInit:{ // this is an 'initializer' encounter, it does nothing but trigger by itself and then chain into one of two random followup encounters
       encounterID:"goblinAttackInit", // to indentify type of current encounter;
-      globalActionDelay:2, // info.actionCount needs to be higher than this to allow encounter triggering; always allow encounter if missing
+      totalActionDelay:2, // info.actionCount needs to be higher than this to allow encounter triggering; always allow encounter if missing
       chance:100, // in percent; if missing, there is no chance for this encounter to occur unless chained; if triggers should always start this encounter, set chance to 100
       triggers:["(?<=(spot|see|find).*)goblin", "(?<=enter.*)(cave|warren|thicket)"], // trigger words: if found in text, set encounter; regEx possible!; if missing from encounterDef, it will trigger based on chance alone!
       activationDelay:0, // how many actions after triggering this starts it's thing; can be omitted
@@ -238,6 +259,21 @@ function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEn
                 state.encounterPersistence.cooldowns = []
             }
             state.encounterPersistence.cooldowns.push([state.currentEncounter.encounterID, state.currentEncounter.cooldown])
+        }
+        if (state.currentEncounter.countOccurrence) {
+            if (!state.encounterPersistence.counts) {
+                state.encounterPersistence.counts = []
+                state.encounterPersistence.counts.push([state.currentEncounter.encounterID, 1])
+            } else countsChecker: {
+                for (let count of state.encounterPersistence.counts) {
+                    if (count[0] === state.currentEncounter.encounterID) {
+                        console.log(`'${state.currentEncounter.encounterID}' already has a occurrence count.`)
+                        count[1] += 1
+                        break countsChecker
+                    }
+                }
+                state.encounterPersistence.counts.push([state.currentEncounter.encounterID, 1])
+            }
         }
     }
     if (encounterUpcoming) {

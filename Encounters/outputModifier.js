@@ -53,17 +53,17 @@ const modifier = (text) => {
                             }
                         }
                 }
-                if (typeof (encounterDB[encounter].globalActionDelay) == 'undefined') {
+                if (typeof (encounterDB[encounter].totalActionDelay) == 'undefined') {
                     console.log(`No global delay on '${encounterDB[encounter].encounterID}'!`)
-                    globalActionDelay = 0
+                    totalActionDelay = 0
                 } else {
-                    globalActionDelay = encounterDB[encounter].globalActionDelay
+                    totalActionDelay = encounterDB[encounter].totalActionDelay
                 }
-                if (info.actionCount < globalActionDelay) {
+                if (info.actionCount < totalActionDelay) {
                     console.log(`It's too early for '${encounterDB[encounter].encounterID}'.`)
                     continue globalLoop
                 }
-                console.log(`Hit more then ${globalActionDelay} total actions, allowing '${encounter}'!`)
+                console.log(`Hit more then ${totalActionDelay} total actions, allowing '${encounter}'!`)
                 if (encounterDB[encounter].triggers) {
                     console.log(`'${encounterDB[encounter].encounterID}' has triggers!`)
                     triggerLoop:

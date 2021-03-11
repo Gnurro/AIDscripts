@@ -9,58 +9,116 @@ const modifier = (text) => {
         displayStatsUpdate(['Actions',`${info.actionCount}`])
     }
 
-    // encounter trigger processing
+    // global encounter consideration
     if (!state.currentEncounter) {
-        globalLoop:
+        considerLoop:
             for (let encounter in encounterDB) { // go through encounters
-                console.log(`Global checking '${encounter}'...`)
+                console.log(`Considering '${encounter}'...`)
+
+                // limiting encounter setting:
                 if (encounterDB[encounter].inputLock) {
                     console.log(`Input checking disabled on '${encounter}'.`)
-                    continue globalLoop
+                    continue considerLoop
                 }
+
                 //for outputMod:
                 /*
                 if (encounterDB[encounter].outputLock) {
                   console.log(`Output checking disabled on '${encounter}'.`)
-                  continue globalLoop
+                  continue considerLoop
                 }
                 */
-                // limiting encounter recurrence:
-                if (state.limitedEncounters) {
-                    limitLoop:
-                        for (let limiter of state.limitedEncounters) {
-                            if (limiter[0] === encounter) {
-                                console.log(`'${encounter}' recurrence has an active limit.`)
-                                if (limiter[1] > 0) {
-                                    console.log(`'${limiter[0]}' can still happen ${limiter[1]} times.`)
-                                    break limitLoop
-                                } else {
-                                    console.log(`'${limiter[0]}' can't happen anymore.`)
-                                    continue globalLoop
+
+                if (encounterDB[encounter].recurrenceLimit) {
+                    if (state.encounterPersistence.limited) {
+                        limitLoop:
+                            for (let limiter of state.encounterPersistence.limited) {
+                                if (limiter[0] === encounter) {
+                                    console.log(`'${encounter}' recurrence has an active limit.`)
+                                    if (limiter[1] > 0) {
+                                        console.log(`'${limiter[0]}' can still happen ${limiter[1]} times.`)
+                                        break limitLoop
+                                    } else {
+                                        console.log(`'${limiter[0]}' can't happen anymore.`)
+                                        continue considerLoop
+                                    }
                                 }
                             }
-                        }
+                    }
                 }
-                if (typeof (state.cooldownEncounters) !== 'undefined') {
-                    cooldownLoop:
-                        for (let cooldown of state.cooldownEncounters) {
+
+                if (encounterDB[encounter].cooldown) {
+                    if (typeof (state.encounterPersistence.cooldowns) !== 'undefined') {
+                        for (let cooldown of state.encounterPersistence.cooldowns) {
                             if (cooldown[0] === encounter) {
                                 console.log(`'${encounter}' has an active cooldown.`)
-                                continue globalLoop
+                                continue considerLoop
                             }
                         }
+                    }
                 }
-                if (typeof (encounterDB[encounter].globalActionDelay) == 'undefined') {
+
+                if (encounterDB[encounter].prerequisite) {
+                    console.log(`'${encounterDB[encounter].encounterID}' has prerequisites: ${encounterDB[encounter].prerequisite}`)
+                    if (state.encounterPersistence.counts) {
+                        prerequisiteLoop:
+                            for (let prerequisite of encounterDB[encounter].prerequisite) {
+                                console.log(`Looking for '${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}'...`)
+                                for (let count of state.encounterPersistence.counts) {
+                                    if (count[0] === prerequisite[0]) {
+                                        console.log(`Found '${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}', checking count...`)
+                                        if (count[1] >= prerequisite[1]) {
+                                            console.log(`'${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}' count high enough!`)
+                                            continue prerequisiteLoop
+                                        } else {
+                                            console.log(`'${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}' count too low!`)
+                                            continue considerLoop
+                                        }
+                                    }
+                                }
+                                console.log(`Couldn't find '${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}'.`)
+                                continue considerLoop
+                            }
+                    } else {
+                        console.log(`'${encounterDB[encounter].encounterID}' has prerequisites, but there are no counted occurrences.`)
+                        continue considerLoop
+                    }
+                }
+
+                if (encounterDB[encounter].blockers) {
+                    console.log(`'${encounterDB[encounter].encounterID}' has blockers: ${encounterDB[encounter].blockers}`)
+                    if (state.encounterPersistence.counts) {
+                        for (let blocker of encounterDB[encounter].blockers) {
+                            console.log(`Looking for '${encounterDB[encounter].encounterID}' blocker '${blocker[0]}'...`)
+                            for (let count of state.encounterPersistence.counts) {
+                                if (count[0] === blocker[0]) {
+                                    console.log(`Found '${encounterDB[encounter].encounterID}' blocker '${blocker[0]}', checking count...`)
+                                    if (count[1] >= blocker[1]) {
+                                        console.log(`'${encounterDB[encounter].encounterID}' blocker '${blocker[0]}' count too high!`)
+                                        continue considerLoop
+                                    } else {
+                                        console.log(`'${encounterDB[encounter].encounterID}' blocker '${blocker[0]}' count low enough!`)
+                                    }
+                                }
+                            }
+                            console.log(`Couldn't find '${encounterDB[encounter].encounterID}' blocker '${blocker[0]}'.`)
+                        }
+                    } else {
+                        console.log(`'${encounterDB[encounter].encounterID}' not blocked, as there are no counted occurrences.`)
+                    }
+                }
+
+                if (typeof (encounterDB[encounter].totalActionDelay) == 'undefined') {
                     console.log(`No global delay on '${encounterDB[encounter].encounterID}'!`)
-                    globalActionDelay = 0
+                    totalActionDelay = 0
                 } else {
-                    globalActionDelay = encounterDB[encounter].globalActionDelay
+                    totalActionDelay = encounterDB[encounter].totalActionDelay
                 }
-                if (info.actionCount < globalActionDelay) {
+                if (info.actionCount < totalActionDelay) {
                     console.log(`It's too early for '${encounterDB[encounter].encounterID}'.`)
-                    continue globalLoop
+                    continue considerLoop
                 }
-                console.log(`Hit more then ${globalActionDelay} total actions, allowing '${encounter}'!`)
+                console.log(`Hit more then ${totalActionDelay} total actions, allowing '${encounter}'!`)
                 if (encounterDB[encounter].triggers) {
                     console.log(`'${encounterDB[encounter].encounterID}' has triggers!`)
                     triggerLoop:
@@ -76,7 +134,7 @@ const modifier = (text) => {
                                     if (getRndInteger(1, 100) <= encounterDB[encounter].chance) {
                                         console.log(`Rolled below ${encounterDB[encounter].chance} chance, running '${encounter}'!`)
                                         updateCurrentEncounter(encounter)
-                                        break globalLoop
+                                        break considerLoop
                                     } else {
                                         console.log(`Rolled above ${encounterDB[encounter].chance} chance, so no '${encounter}'!`)
                                     }
@@ -91,13 +149,13 @@ const modifier = (text) => {
                         if (getRndInteger(1, 100) <= encounterDB[encounter].chance) {
                             console.log(`Rolled below ${encounterDB[encounter].chance} chance, running '${encounter}'!`)
                             updateCurrentEncounter(encounter)
-                            break globalLoop
+                            break considerLoop
                         } else {
                             console.log(`Rolled above ${encounterDB[encounter].chance} chance, so no '${encounter}'!`)
                         }
                     } else {
                         console.log(`No chance on '${encounterDB[encounter].encounterID}' detected, so it's probably a chain-only encounter!`)
-                        continue globalLoop
+                        continue considerLoop
                     }
                 }
             }
@@ -260,7 +318,7 @@ const modifier = (text) => {
         }
     }
 
-    // encounter memory stuff:
+    // encounter persistent stuff:
     if (state.encounterPersistence.memories) {
         for (encounterMemory of state.encounterPersistence.memories) {
             if (encounterMemory.memoryLingerDuration >= 1) {
