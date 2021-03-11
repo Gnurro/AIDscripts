@@ -214,20 +214,20 @@ for (WIentry of worldInfo) {
     // these will be lower priority then the hardcoded ones above!
     if (WIentry.keys.includes('!encounterDef')) {
         let encounterDefFromWI = JSON.parse(WIentry.entry)
-        console.log(`Found WI encounterDef for '${encounterDefFromWI.encounterID}', adding it to the DB!`)
+        encounterLog(`Found WI encounterDef for '${encounterDefFromWI.encounterID}', adding it to the DB!`)
         encounterDB[encounterDefFromWI.encounterID] = encounterDefFromWI
     }
     // word lists from WI:
     if (WIentry.keys.includes('!encounterWordListsFull')) {
         let encounterWordListsFromWI = JSON.parse(WIentry.entry)
-        console.log(`Found full WI encounterWordLists entry, adding them to the DB!`)
+        encounterLog(`Found full WI encounterWordLists entry, adding them to the DB!`)
         for (let encounterSingleWordList in encounterWordListsFromWI) {
             encounterWordLists[encounterSingleWordList] = Object.values(encounterWordListsFromWI[encounterSingleWordList])
         }
     }
     if (WIentry.keys.includes('!encounterWordListSingle')) {
         let encounterWordListSingleFromWI = JSON.parse(WIentry.entry)
-        console.log(`Found WI encounterWordList, adding it to the DB!`)
+        encounterLog(`Found WI encounterWordList, adding it to the DB!`)
         encounterWordLists[Object.keys(encounterWordListSingleFromWI)[0]] = Object.values(encounterWordListSingleFromWI)
     }
 }
@@ -244,7 +244,7 @@ function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEn
             } else {
                 for (let limiter of state.encounterPersistence.limited) {
                     if (limiter[0] === state.currentEncounter.encounterID) {
-                        console.log(`'${state.currentEncounter.encounterID}' recurrence already has a limit.`)
+                        encounterLog(`'${state.currentEncounter.encounterID}' recurrence already has a limit.`)
                         if (limiter[1] > 0) {
                             limiter[1] = limiter[1] - 1
                         }
@@ -267,7 +267,7 @@ function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEn
             } else countsChecker: {
                 for (let count of state.encounterPersistence.counts) {
                     if (count[0] === state.currentEncounter.encounterID) {
-                        console.log(`'${state.currentEncounter.encounterID}' already has a occurrence count.`)
+                        encounterLog(`'${state.currentEncounter.encounterID}' already has a occurrence count.`)
                         count[1] += 1
                         break countsChecker
                     }
@@ -277,21 +277,21 @@ function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEn
         }
     }
     if (encounterUpcoming) {
-        console.log(`Setting current encounter to '${encounterUpcoming}'.`)
+        encounterLog(`Setting current encounter to '${encounterUpcoming}'.`)
         state.currentEncounter = encounterDB[encounterUpcoming]
         // random initial values handling:
         const randomizables = ['duration', 'activationDelay', 'cooldown']
         for (let encounterValue of randomizables) {
             if (typeof (state.currentEncounter[encounterValue]) !== 'undefined') {
                 if (typeof (state.currentEncounter[encounterValue]) !== 'number' && state.currentEncounter[encounterValue].length === 2) {
-                    console.log(`${encounterUpcoming} has random ${encounterValue}: ${state.currentEncounter[encounterValue]}`)
+                    encounterLog(`${encounterUpcoming} has random ${encounterValue}: ${state.currentEncounter[encounterValue]}`)
                     state.currentEncounter[encounterValue] = getRndInteger(state.currentEncounter[encounterValue][0], state.currentEncounter[encounterValue][1])
-                    console.log(`${encounterUpcoming} random ${encounterValue} set to ${state.currentEncounter[encounterValue]}`)
+                    encounterLog(`${encounterUpcoming} random ${encounterValue} set to ${state.currentEncounter[encounterValue]}`)
                 }
             }
         }
     } else {
-        console.log("Clearing current encounter.")
+        encounterLog("Clearing current encounter.")
         delete state.currentEncounter
     }
 }
@@ -316,25 +316,25 @@ function updateCurrentEffects() { // 'activates' currentEncounter; or clears enc
 function fillPlaceholders(placeHolderString) {
     let curPlaceholderMatches = placeHolderString.match(/\{(.*?)\}/g)
     if (curPlaceholderMatches) {
-        console.log(`Matched placeholders: ${curPlaceholderMatches}`)
+        encounterLog(`Matched placeholders: ${curPlaceholderMatches}`)
         for (let placeholder of curPlaceholderMatches) {
-            console.log(`Current placeholder: ${placeholder}`)
+            encounterLog(`Current placeholder: ${placeholder}`)
             if (placeholder[1] === '*') {
-                console.log(`Current placeholder ${placeholder} contains a *, checking temporary word lists...`)
+                encounterLog(`Current placeholder ${placeholder} contains a *, checking temporary word lists...`)
                 placeholder = placeholder.replace(/(\*|{|})/gi, '')
                 if (typeof (tempWordLists) == 'undefined') {
                     tempWordLists = {}
                 }
                 if (!tempWordLists[placeholder] || tempWordLists[placeholder].length === 0) {
-                    console.log(`${placeholder} temporary wordlist is either non-existant or empty! Getting a new one.`)
+                    encounterLog(`${placeholder} temporary wordlist is either non-existant or empty! Getting a new one.`)
                     tempWordLists[placeholder] = JSON.parse(JSON.stringify(encounterWordLists[placeholder]))
                 }
-                console.log(`Current temporary word lists:${tempWordLists}`)
+                encounterLog(`Current temporary word lists:${tempWordLists}`)
                 for (let insertTag in tempWordLists) {
                     if (placeholder.includes(insertTag)) {
-                        console.log(`Found fitting placeholder tag in temporary list: ${insertTag}`)
+                        encounterLog(`Found fitting placeholder tag in temporary list: ${insertTag}`)
                         let pickedInsert = getRndFromList(tempWordLists[insertTag])
-                        console.log(`Randomly picked placeholder insert from temporary list: ${pickedInsert}`)
+                        encounterLog(`Randomly picked placeholder insert from temporary list: ${pickedInsert}`)
                         let insertRegEx = new RegExp(`{\\*${insertTag}}`,)
                         placeHolderString = placeHolderString.replace(insertRegEx, pickedInsert)
                         tempWordLists[placeholder].splice(tempWordLists[placeholder].indexOf(pickedInsert), 1)
@@ -343,9 +343,9 @@ function fillPlaceholders(placeHolderString) {
             } else {
                 for (let insertTag in encounterWordLists) {
                     if (placeholder.includes(insertTag)) {
-                        console.log(`Found fitting placeholder tag: ${insertTag}`)
+                        encounterLog(`Found fitting placeholder tag: ${insertTag}`)
                         let pickedInsert = getRndFromList(encounterWordLists[insertTag])
-                        console.log(`Randomly picked placeholder insert: ${pickedInsert}`)
+                        encounterLog(`Randomly picked placeholder insert: ${pickedInsert}`)
                         let insertRegEx = new RegExp(`{${insertTag}}`,)
                         placeHolderString = placeHolderString.replace(insertRegEx, pickedInsert)
                     }
@@ -367,10 +367,10 @@ function getRndInteger(min, max) {
 function getRndFromList(list) {
     if (list[0]) {
         if (list[0].length === 2) {
-            console.log(`${list} looks like a weighted list, doing that!`)
+            encounterLog(`${list} looks like a weighted list, doing that!`)
             return (getRndFromListWeighted(list))
         } else {
-            console.log(`${list} looks like a plain list with ${list.length} item(s), simply picking from it!`)
+            encounterLog(`${list} looks like a plain list with ${list.length} item(s), simply picking from it!`)
             return (list[getRndInteger(0, list.length-1)])
         }
     } else {
@@ -382,11 +382,11 @@ function getRndFromList(list) {
 // currently works kinda like oldschool D&D encounter lists
 function getRndFromListWeighted(weightedList) {
     let cutOff = getRndInteger(1, 100)
-    console.log(`Picking from weighted list, cutoff: ${cutOff}`)
+    encounterLog(`Picking from weighted list, cutoff: ${cutOff}`)
     for (let item of weightedList) {
-        console.log(`'${item[0]}' threshold: ${item[1]}.`)
+        encounterLog(`'${item[0]}' threshold: ${item[1]}.`)
         if (cutOff <= item[1]) {
-            console.log(`'${item[0]}' cutoff below threshold, picking it!`)
+            encounterLog(`'${item[0]}' cutoff below threshold, picking it!`)
             return item[0]
         }
     }
@@ -400,21 +400,21 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
     }
     let displayStatUpdated = false
     for (let displayStat of state.displayStats) {
-        console.log(`Checking ${displayStat.key} displayStats entry...`)
+        encounterLog(`Checking ${displayStat.key} displayStats entry...`)
         let curDisplayStatIndex = state.displayStats.indexOf(displayStat)
         if (displayStat.key === inKey || displayStat.key === '\n' + inKey) {
-            console.log(`Found ${inKey} displayStats entry: ${state.displayStats[curDisplayStatIndex].key}, ${state.displayStats[curDisplayStatIndex].value}, ${state.displayStats[curDisplayStatIndex].color}, updating!`)
+            encounterLog(`Found ${inKey} displayStats entry: ${state.displayStats[curDisplayStatIndex].key}, ${state.displayStats[curDisplayStatIndex].value}, ${state.displayStats[curDisplayStatIndex].color}, updating!`)
             if (inValue) {
                 if (typeof(inValue) == 'string') {
                     inValue = fillPlaceholders(inValue)
-                    console.log(`Value to update displayStat entry inputted: '${inValue}', updating.`)
+                    encounterLog(`Value to update displayStat entry inputted: '${inValue}', updating.`)
                     state.displayStats[curDisplayStatIndex].value = inValue
                 } else {
-                    console.log(`Value to update displayStat entry inputted: '${inValue}', updating.`)
+                    encounterLog(`Value to update displayStat entry inputted: '${inValue}', updating.`)
                     state.displayStats[curDisplayStatIndex].value = inValue
                 }
             } else {
-                console.log(`No value to update displayStat inputted, removing entry.`)
+                encounterLog(`No value to update displayStat inputted, removing entry.`)
                 state.displayStats.splice(curDisplayStatIndex, 1)
                 displayStatUpdated = true
                 break
@@ -427,11 +427,17 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
         }
     }
     if (displayStatUpdated === false) {
-        console.log(`No ${inKey} displayStats entry found, adding it!`)
+        encounterLog(`No ${inKey} displayStats entry found, adding it!`)
         if (state.displayStats.length > 0) {
             inKey = '\n' + inKey
         }
         state.displayStats.push({'key': inKey, 'value': inValue, 'color': inColor})
+    }
+}
+
+function encounterLog(msg) {
+    if (state.encounterSettings.debugMode === true) {
+        console.log(msg)
     }
 }
 
