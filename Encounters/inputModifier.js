@@ -121,7 +121,6 @@ const modifier = (text) => {
                 encounterLog(`Hit more then ${totalActionDelay} total actions, allowing '${encounter}'!`)
                 if (encounterDB[encounter].triggers) {
                     encounterLog(`'${encounterDB[encounter].encounterID}' has triggers!`)
-                    triggerLoop:
                         for (let triggerStr of encounterDB[encounter].triggers) {
                             let triggerRegEx = new RegExp(triggerStr, "gi")
                             let caughtTrigger = text.match(triggerRegEx)
@@ -170,17 +169,17 @@ const modifier = (text) => {
             }
 
             if (state.currentEncounter.activationDelay) {
-                encounterLog(`Delaying by ${state.currentEncounter.activationDelay} actions before running '${state.currentEncounter.encounterID}'!`)
+                encounterLog(`Delaying by ${state.currentEncounter.activationDelay} actions before activating '${state.currentEncounter.encounterID}'!`)
                 state.currentEncounter.activationDelay -= 1
             } else {
-                encounterLog(`No delay, running '${state.currentEncounter.encounterID}'!`)
+                encounterLog(`No delay, activating '${state.currentEncounter.encounterID}'!`)
                 // activating encounters:
                 updateCurrentEffects()
                 if (!state.currentEncounter.memoryAdded && state.currentEncounter.memoryAdd) {
-                    if (!state.encounterMemories) {
-                        state.encounterMemories = []
+                    if (!state.encounterPersistence.memories) {
+                        state.encounterPersistence.memories = []
                     }
-                    state.encounterMemories.push(state.currentEncounter.memoryAdd)
+                    state.encounterPersistence.memories.push(state.currentEncounter.memoryAdd)
                     state.currentEncounter.memoryAdded = true
                 }
 

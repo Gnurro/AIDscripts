@@ -1,5 +1,10 @@
 // BEGIN Encounters!
 
+// local devving helpers:
+state = {
+    encounterPersistence:{}
+}
+
 const encounterSettings = {
     debugMode: true
 }
