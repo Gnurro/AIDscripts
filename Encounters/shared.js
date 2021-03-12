@@ -18,6 +18,7 @@ const encounterDB = {
     // closed encounters (=encounters without chance) can only become current through chaining
     // there is only one current encounter at a time, and open encounters are only considered if there is no current encounter
     // order in this object determines precedence!
+    /* REMOVE THIS LINE AND THE ONE AT THE END OF encounterDB TO SEE THE EXAMPLE ENCOUNTERS IN ACTION
     waveRedFlag: {
         encounterID: "waveRedFlag",
         triggers: ["redflag"],
@@ -41,7 +42,6 @@ const encounterDB = {
         message: "The blue flag is waved!",
         duration: 0,
     },
-    /* REMOVE THIS LINE AND THE ONE AT THE END OF encounterDB TO SEE THE EXAMPLE ENCOUNTERS IN ACTION
     displayStuff: {
         encounterID:"displayStuff",
         chance:100,
