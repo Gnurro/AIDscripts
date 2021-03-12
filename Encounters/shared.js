@@ -422,10 +422,10 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
     }
     let displayStatUpdated = false
     for (let displayStat of state.displayStats) {
-        encounterLog(`Checking ${displayStat.key} displayStats entry...`)
+        encounterLog(`Checking '${displayStat.key}' displayStats entry...`)
         let curDisplayStatIndex = state.displayStats.indexOf(displayStat)
         if (displayStat.key === inKey || displayStat.key === '\n' + inKey) {
-            encounterLog(`Found ${inKey} displayStats entry: ${state.displayStats[curDisplayStatIndex].key}, ${state.displayStats[curDisplayStatIndex].value}, ${state.displayStats[curDisplayStatIndex].color}, updating!`)
+            encounterLog(`Found '${inKey}' displayStats entry: ${state.displayStats[curDisplayStatIndex].key}, ${state.displayStats[curDisplayStatIndex].value}, ${state.displayStats[curDisplayStatIndex].color}, updating!`)
             if (inValue) {
                 if (typeof (inValue) == 'string') {
                     inValue = fillPlaceholders(inValue)
