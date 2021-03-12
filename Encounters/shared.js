@@ -6,6 +6,7 @@ state = {
     encounterPersistence:{}
 }
 */
+
 const encounterSettings = {
     debugMode: true
 }
@@ -18,27 +19,27 @@ const encounterDB = {
     // there is only one current encounter at a time, and open encounters are only considered if there is no current encounter
     // order in this object determines precedence!
     waveRedFlag: {
-        encounterID:"waveRedFlag",
-        triggers:["redflag"],
-        chance:100,
-        countOccurrence:true, // count how often this encounter ENDED
-        recurrenceLimit:1, // recurrenceLimit is independent of countOccurrence (for now; beta9 dev 11.03.21)
-        message:"The red flag is waved!",
-        duration:0,
+        encounterID: "waveRedFlag",
+        triggers: ["redflag"],
+        chance: 100,
+        countOccurrence: true, // count how often this encounter ENDED
+        recurrenceLimit: 1, // recurrenceLimit is independent of countOccurrence (for now; beta9 dev 11.03.21)
+        message: "The red flag is waved!",
+        duration: 0,
     },
     waveGreenFlag: {
-        encounterID:"waveGreenFlag",
-        chance:100,
-        prerequisite:[['waveRedFlag',1]], // ALL items must have occurred at least the specified number of times to allow encounter to become current
-        message:"The green flag is waved!",
-        duration:0,
+        encounterID: "waveGreenFlag",
+        chance: 100,
+        prerequisite: [['waveRedFlag', 1]], // ALL items must have occurred at least the specified number of times to allow encounter to become current
+        message: "The green flag is waved!",
+        duration: 0,
     },
     waveBlueFlag: {
-        encounterID:"waveBlueFlag",
-        chance:100,
-        blockers:[['waveRedFlag',1]], // if any of the items have occurred at least the specified number of times, do not allow encounter to become current
-        message:"The blue flag is waved!",
-        duration:0,
+        encounterID: "waveBlueFlag",
+        chance: 100,
+        blockers: [['waveRedFlag', 1]], // if any of the items have occurred at least the specified number of times, do not allow encounter to become current
+        message: "The blue flag is waved!",
+        duration: 0,
     },
     /* REMOVE THIS LINE AND THE ONE AT THE END OF encounterDB TO SEE THE EXAMPLE ENCOUNTERS IN ACTION
     displayStuff: {
@@ -247,6 +248,9 @@ function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEn
     // limiting encounter recurrence:
     if (state.currentEncounter) {
         if (state.currentEncounter.recurrenceLimit) {
+            if (!state.encounterPersistence) {
+                state.encounterPersistence = {}
+            }
             if (!state.encounterPersistence.limited) {
                 state.encounterPersistence.limited = []
                 state.encounterPersistence.limited.push([state.currentEncounter.encounterID, state.currentEncounter.recurrenceLimit - 1])
@@ -311,6 +315,9 @@ function updateCurrentEffects() { // 'activates' currentEncounter; or clears enc
             state.message = state.currentEncounter.messageString
         }
         if (state.currentEncounter.contextNotes) {
+            if (!state.encounterPersistence) {
+                state.encounterPersistence = {}
+            }
             state.encounterPersistence.contextNote = getRndFromList(state.currentEncounter.contextNotes)
         }
         if (state.currentEncounter.displayStatNotes) {
@@ -318,7 +325,13 @@ function updateCurrentEffects() { // 'activates' currentEncounter; or clears enc
         }
     } else {
         delete state.message
-        delete state.encounterPersistence.contextNote
+        if (state.encounterPersistence) {
+            if (state.encounterPersistence.contextNote) {
+                delete state.encounterPersistence.contextNote
+            }
+        }
+
+
     }
 }
 
@@ -380,7 +393,7 @@ function getRndFromList(list) {
             return (getRndFromListWeighted(list))
         } else {
             encounterLog(`${list} looks like a plain list with ${list.length} item(s), simply picking from it!`)
-            return (list[getRndInteger(0, list.length-1)])
+            return (list[getRndInteger(0, list.length - 1)])
         }
     } else {
         return ('')
@@ -414,7 +427,7 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
         if (displayStat.key === inKey || displayStat.key === '\n' + inKey) {
             encounterLog(`Found ${inKey} displayStats entry: ${state.displayStats[curDisplayStatIndex].key}, ${state.displayStats[curDisplayStatIndex].value}, ${state.displayStats[curDisplayStatIndex].color}, updating!`)
             if (inValue) {
-                if (typeof(inValue) == 'string') {
+                if (typeof (inValue) == 'string') {
                     inValue = fillPlaceholders(inValue)
                     encounterLog(`Value to update displayStat entry inputted: '${inValue}', updating.`)
                     state.displayStats[curDisplayStatIndex].value = inValue
