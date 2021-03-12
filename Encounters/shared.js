@@ -445,7 +445,7 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
 }
 
 function encounterLog(msg) {
-    if (state.encounterSettings.debugMode === true) {
+    if (encounterSettings.debugMode === true) {
         console.log(msg)
     }
 }
