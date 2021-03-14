@@ -225,20 +225,20 @@ if (encounterSettings.importWI) {
     for (WIentry of worldInfo) {
         // encounters from WI:
         // these will be lower priority then the hardcoded ones above!
-        if (WIentry.keys.includes('!encounterDef')) {
+        if (WIentry.keys.includes('#encounterDef')) {
             let encounterDefFromWI = JSON.parse(WIentry.entry)
             encounterLog(`Found WI encounterDef for '${encounterDefFromWI.encounterID}', adding it to the DB!`)
             encounterDB[encounterDefFromWI.encounterID] = encounterDefFromWI
         }
         // word lists from WI:
-        if (WIentry.keys.includes('!encounterWordListsFull')) {
+        if (WIentry.keys.includes('#encounterWordListsFull')) {
             let encounterWordListsFromWI = JSON.parse(WIentry.entry)
             encounterLog(`Found full WI encounterWordLists entry, adding them to the DB!`)
             for (let encounterSingleWordList in encounterWordListsFromWI) {
                 encounterWordLists[encounterSingleWordList] = Object.values(encounterWordListsFromWI[encounterSingleWordList])
             }
         }
-        if (WIentry.keys.includes('!encounterWordListSingle')) {
+        if (WIentry.keys.includes('#encounterWordListSingle')) {
             let encounterWordListSingleFromWI = JSON.parse(WIentry.entry)
             encounterLog(`Found WI encounterWordList, adding it to the DB!`)
             encounterWordLists[Object.keys(encounterWordListSingleFromWI)[0]] = Object.values(encounterWordListSingleFromWI)
