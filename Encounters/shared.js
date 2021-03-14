@@ -247,7 +247,7 @@ if (encounterSettings.importWI) {
 }
 
 // encounter functions: (DON'T MESS WITH THESE!)
-function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEncounter; if argument empty, clears current encounter
+function updateCurrentEncounter(encounterUpcoming) { // ends, then sets or clears currentEncounter; if argument empty, clears current encounter
     // encounter end effects:
     if (state.currentEncounter) {
         // recurrenceLimit:
