@@ -5,10 +5,12 @@
 state = {
     encounterPersistence:{}
 }
+worldInfo = []
 */
 
 const encounterSettings = {
-    debugMode: true
+    debugMode: true,
+    importWI: true
 }
 
 // encounterDef database:
@@ -219,33 +221,34 @@ const encounterWordLists = {
 }
 
 // WI data imports:
-for (WIentry of worldInfo) {
-    // encounters from WI:
-    // these will be lower priority then the hardcoded ones above!
-    if (WIentry.keys.includes('!encounterDef')) {
-        let encounterDefFromWI = JSON.parse(WIentry.entry)
-        encounterLog(`Found WI encounterDef for '${encounterDefFromWI.encounterID}', adding it to the DB!`)
-        encounterDB[encounterDefFromWI.encounterID] = encounterDefFromWI
-    }
-    // word lists from WI:
-    if (WIentry.keys.includes('!encounterWordListsFull')) {
-        let encounterWordListsFromWI = JSON.parse(WIentry.entry)
-        encounterLog(`Found full WI encounterWordLists entry, adding them to the DB!`)
-        for (let encounterSingleWordList in encounterWordListsFromWI) {
-            encounterWordLists[encounterSingleWordList] = Object.values(encounterWordListsFromWI[encounterSingleWordList])
+if (encounterSettings.importWI) {
+    for (WIentry of worldInfo) {
+        // encounters from WI:
+        // these will be lower priority then the hardcoded ones above!
+        if (WIentry.keys.includes('!encounterDef')) {
+            let encounterDefFromWI = JSON.parse(WIentry.entry)
+            encounterLog(`Found WI encounterDef for '${encounterDefFromWI.encounterID}', adding it to the DB!`)
+            encounterDB[encounterDefFromWI.encounterID] = encounterDefFromWI
         }
-    }
-    if (WIentry.keys.includes('!encounterWordListSingle')) {
-        let encounterWordListSingleFromWI = JSON.parse(WIentry.entry)
-        encounterLog(`Found WI encounterWordList, adding it to the DB!`)
-        encounterWordLists[Object.keys(encounterWordListSingleFromWI)[0]] = Object.values(encounterWordListSingleFromWI)
+        // word lists from WI:
+        if (WIentry.keys.includes('!encounterWordListsFull')) {
+            let encounterWordListsFromWI = JSON.parse(WIentry.entry)
+            encounterLog(`Found full WI encounterWordLists entry, adding them to the DB!`)
+            for (let encounterSingleWordList in encounterWordListsFromWI) {
+                encounterWordLists[encounterSingleWordList] = Object.values(encounterWordListsFromWI[encounterSingleWordList])
+            }
+        }
+        if (WIentry.keys.includes('!encounterWordListSingle')) {
+            let encounterWordListSingleFromWI = JSON.parse(WIentry.entry)
+            encounterLog(`Found WI encounterWordList, adding it to the DB!`)
+            encounterWordLists[Object.keys(encounterWordListSingleFromWI)[0]] = Object.values(encounterWordListSingleFromWI)
+        }
     }
 }
 
-
 // encounter functions: (DON'T MESS WITH THESE!)
 function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEncounter; if argument empty, clears current encounter
-    // limiting encounter recurrence:
+    // encounter end effects:
     if (state.currentEncounter) {
         if (state.currentEncounter.recurrenceLimit) {
             if (!state.encounterPersistence) {
@@ -312,13 +315,13 @@ function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEn
 function updateCurrentEffects() { // 'activates' currentEncounter; or clears encounter effects if there is no active encounter
     if (state.currentEncounter) {
         if (state.currentEncounter.messageString) {
-            state.message = state.currentEncounter.messageString
+            state.message = fillPlaceholders(state.currentEncounter.messageString)
         }
         if (state.currentEncounter.contextNotes) {
             if (!state.encounterPersistence) {
                 state.encounterPersistence = {}
             }
-            state.encounterPersistence.contextNote = getRndFromList(state.currentEncounter.contextNotes)
+            state.encounterPersistence.contextNote = fillPlaceholders(getRndFromList(state.currentEncounter.contextNotes))
         }
         if (state.currentEncounter.displayStatNotes) {
             displayStatsUpdate(getRndFromList(state.currentEncounter.displayStatNotes))

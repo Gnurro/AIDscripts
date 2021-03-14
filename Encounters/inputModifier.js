@@ -186,6 +186,8 @@ const modifier = (text) => {
                 encounterLog(`No delay, activating '${state.currentEncounter.encounterID}'!`)
                 // activating encounters:
                 updateCurrentEffects()
+
+                // memories
                 if (!state.currentEncounter.memoryAdded && state.currentEncounter.memoryAdd) {
                     if (!state.encounterPersistence.memories) {
                         state.encounterPersistence.memories = []
@@ -194,6 +196,7 @@ const modifier = (text) => {
                     state.currentEncounter.memoryAdded = true
                 }
 
+                // textNotes
                 if (!state.currentEncounter.textInserted && state.currentEncounter.textNotes) {
                     let curTextNote = getRndFromList(state.currentEncounter.textNotes)
                     // random wordlist inserts:
@@ -204,6 +207,7 @@ const modifier = (text) => {
                     }
                 }
 
+                // adding WI
                 if (!state.currentEncounter.WIadded && state.currentEncounter.addWI) {
                     for (let WIentry in state.currentEncounter.addWI) {
                         encounterLog(`Adding '${state.currentEncounter.addWI[WIentry].keys}' WI entry.`)
@@ -329,8 +333,8 @@ const modifier = (text) => {
     }
 
     // encounter persistent stuff:
-    if (state.encounterPersistence) {
-        if (state.encounterPersistence.memories) {
+    if (state?.encounterPersistence) {
+        if (state?.encounterPersistence.memories) {
             for (encounterMemory of state.encounterPersistence.memories) {
                 if (encounterMemory.memoryLingerDuration >= 1) {
                     encounterLog(`'${encounterMemory.memoryText}' will stay in memory for ${encounterMemory.memoryLingerDuration} more actions.`)
@@ -349,7 +353,7 @@ const modifier = (text) => {
             }
         }
 
-        if (state.encounterPersistence.cooldowns) {
+        if (state?.encounterPersistence.cooldowns) {
             encounterLog(`Cooldowns detected!`)
             cooldownLoop:
                 for (cooldown in state.encounterPersistence.cooldowns) {
