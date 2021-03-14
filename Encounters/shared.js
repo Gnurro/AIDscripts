@@ -250,6 +250,7 @@ if (encounterSettings.importWI) {
 function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEncounter; if argument empty, clears current encounter
     // encounter end effects:
     if (state.currentEncounter) {
+        // recurrenceLimit:
         if (state.currentEncounter.recurrenceLimit) {
             if (!state.encounterPersistence) {
                 state.encounterPersistence = {}
@@ -270,13 +271,21 @@ function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEn
                 }
             }
         }
+        // cooldowns:
         if (state.currentEncounter.cooldown) {
+            if (!state.encounterPersistence) {
+                state.encounterPersistence = {}
+            }
             if (!state.encounterPersistence.cooldowns) {
                 state.encounterPersistence.cooldowns = []
             }
             state.encounterPersistence.cooldowns.push([state.currentEncounter.encounterID, state.currentEncounter.cooldown])
         }
+        // occurrence counting:
         if (state.currentEncounter.countOccurrence) {
+            if (!state.encounterPersistence) {
+                state.encounterPersistence = {}
+            }
             if (!state.encounterPersistence.counts) {
                 state.encounterPersistence.counts = []
                 state.encounterPersistence.counts.push([state.currentEncounter.encounterID, 1])
@@ -290,6 +299,16 @@ function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEn
                 }
                 state.encounterPersistence.counts.push([state.currentEncounter.encounterID, 1])
             }
+        }
+        // adding memories:
+        if (state.currentEncounter.memoryAdd) {
+            if (!state.encounterPersistence) {
+                state.encounterPersistence = {}
+            }
+            if (!state.encounterPersistence.memories) {
+                state.encounterPersistence.memories = []
+            }
+            state.encounterPersistence.memories.push(state.currentEncounter.memoryAdd)
         }
     }
     if (encounterUpcoming) {

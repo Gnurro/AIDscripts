@@ -187,15 +187,6 @@ const modifier = (text) => {
                 // activating encounters:
                 updateCurrentEffects()
 
-                // memories
-                if (!state.currentEncounter.memoryAdded && state.currentEncounter.memoryAdd) {
-                    if (!state.encounterPersistence.memories) {
-                        state.encounterPersistence.memories = []
-                    }
-                    state.encounterPersistence.memories.push(state.currentEncounter.memoryAdd)
-                    state.currentEncounter.memoryAdded = true
-                }
-
                 // textNotes
                 if (!state.currentEncounter.textInserted && state.currentEncounter.textNotes) {
                     let curTextNote = getRndFromList(state.currentEncounter.textNotes)
