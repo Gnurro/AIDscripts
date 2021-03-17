@@ -21,13 +21,14 @@ const modifier = (text) => {
                     encounterLog(`Input checking disabled on '${encounter}'.`)
                     continue considerLoop
                 }
-                */
+
+                 */
 
                 //for outputMod:
 
                 if (encounterDB[encounter].outputLock) {
-                    encounterLog(`Output checking disabled on '${encounter}'.`)
-                    continue considerLoop
+                  encounterLog(`Output checking disabled on '${encounter}'.`)
+                  continue considerLoop
                 }
 
 
@@ -188,14 +189,8 @@ const modifier = (text) => {
                 encounterLog(`No delay, activating '${state.currentEncounter.encounterID}'!`)
                 // activating encounters:
                 updateCurrentEffects()
-                if (!state.currentEncounter.memoryAdded && state.currentEncounter.memoryAdd) {
-                    if (!state.encounterPersistence.memories) {
-                        state.encounterPersistence.memories = []
-                    }
-                    state.encounterPersistence.memories.push(state.currentEncounter.memoryAdd)
-                    state.currentEncounter.memoryAdded = true
-                }
 
+                // textNotes
                 if (!state.currentEncounter.textInserted && state.currentEncounter.textNotes) {
                     let curTextNote = getRndFromList(state.currentEncounter.textNotes)
                     // random wordlist inserts:
@@ -206,6 +201,7 @@ const modifier = (text) => {
                     }
                 }
 
+                // adding WI
                 if (!state.currentEncounter.WIadded && state.currentEncounter.addWI) {
                     for (let WIentry in state.currentEncounter.addWI) {
                         encounterLog(`Adding '${state.currentEncounter.addWI[WIentry].keys}' WI entry.`)
@@ -217,7 +213,7 @@ const modifier = (text) => {
                 // branching encounters:
                 // for outputMod:
                 if (state.currentEncounter.branches && !state.currentEncounter.outputLock) {
-                    // if (state.currentEncounter.branches && !state.currentEncounter.inputLock) {
+                // if (state.currentEncounter.branches && !state.currentEncounter.inputLock) {
                     branchLoop:
                         for (let chkBranch of state.currentEncounter.branches) {
                             encounterLog(`Checking '${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}'...`)
@@ -331,8 +327,8 @@ const modifier = (text) => {
     }
 
     // encounter persistent stuff:
-    if (state.encounterPersistence) {
-        if (state.encounterPersistence.memories) {
+    if (state?.encounterPersistence) {
+        if (state?.encounterPersistence.memories) {
             for (encounterMemory of state.encounterPersistence.memories) {
                 if (encounterMemory.memoryLingerDuration >= 1) {
                     encounterLog(`'${encounterMemory.memoryText}' will stay in memory for ${encounterMemory.memoryLingerDuration} more actions.`)
@@ -351,7 +347,7 @@ const modifier = (text) => {
             }
         }
 
-        if (state.encounterPersistence.cooldowns) {
+        if (state?.encounterPersistence.cooldowns) {
             encounterLog(`Cooldowns detected!`)
             cooldownLoop:
                 for (cooldown in state.encounterPersistence.cooldowns) {
