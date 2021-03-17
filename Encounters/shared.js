@@ -415,7 +415,7 @@ function getRndFromList(list) {
             return (getRndFromListWeighted(list))
         } else {
             encounterLog(`${list} looks like a plain list with ${list.length} item(s), simply picking from it!`)
-            return (list[getRndInteger(0, list.length - 1)])
+            return (list[getRndInteger(0, list.length)])
         }
     } else {
         return ('')
