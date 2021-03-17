@@ -191,6 +191,7 @@ const modifier = (text) => {
                 // textNotes
                 if (!state.currentEncounter.textInserted && state.currentEncounter.textNotes) {
                     let curTextNote = getRndFromList(state.currentEncounter.textNotes)
+                    encounterLog(`Picked '${curTextNote}' from textNotes.`)
                     // random wordlist inserts:
                     if (typeof (curTextNote) !== 'undefined') {
                         curTextNote = fillPlaceholders(curTextNote)
