@@ -16,6 +16,7 @@ const modifier = (text) => {
                 encounterLog(`Considering '${encounter}'...`)
 
                 // limiting encounter setting:
+
                 if (encounterDB[encounter].inputLock) {
                     encounterLog(`Input checking disabled on '${encounter}'.`)
                     continue considerLoop
@@ -332,7 +333,7 @@ const modifier = (text) => {
                     encounterMemory.memoryLingerDuration -= 1
                 } else {
                     encounterLog(`'${encounterMemory.memoryText}' will no longer stay in memory.`)
-                    state.encounterPersistence?.memories.splice(state.encounterPersistence?.memories.indexOf(encounterMemory), 1)
+                    state.encounterPersistence.memories.splice(state.encounterPersistence?.memories.indexOf(encounterMemory), 1)
                     if (encounterSettings.debugMode) {
                         displayStatsUpdate([`"${encounterMemory.memoryText}" memory`])
                     }
@@ -349,10 +350,10 @@ const modifier = (text) => {
             cooldownLoop:
                 for (cooldown in state.encounterPersistence?.cooldowns) {
                     encounterLog(`'${state.encounterPersistence?.cooldowns[cooldown][0]}' [${cooldown}] cooldown: ${state.encounterPersistence?.cooldowns[cooldown][1]}.`)
-                    state.encounterPersistence?.cooldowns[cooldown][1] -= 1
+                    state.encounterPersistence.cooldowns[cooldown][1] -= 1
                     if (state.encounterPersistence?.cooldowns[cooldown][1] <= 0) {
                         encounterLog(`${state.encounterPersistence?.cooldowns[cooldown][0]} cooldown over, removing.`)
-                        state.encounterPersistence?.cooldowns.splice(cooldown, 1)
+                        state.encounterPersistence.cooldowns.splice(cooldown, 1)
                         if (encounterSettings.debugMode) {
                             displayStatsUpdate([`'${state.encounterPersistence?.cooldowns[cooldown][0]}' cooldown`])
                         }
