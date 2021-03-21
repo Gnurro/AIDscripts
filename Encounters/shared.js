@@ -461,17 +461,22 @@ function flowCheck(encounter) {
 
 function chainHandler(chainedEncounters) {
     let tempChained = [...chainedEncounters]
+    encounterLog(`Created temporary chaining list: '${tempChained}'`)
     for (chainedEncounter of tempChained) {
+        encounterLog(`Checking '${chainedEncounter}'...`)
         if (chainedEncounter.length === 1) {
             if (!flowCheck(chainedEncounter)) {
+                encounterLog(`'${chainedEncounter}' is stopped by flow control!`)
                 tempChained.splice(tempChained.indexOf(chainedEncounter), 1)
             }
         } else if (chainedEncounter.length === 2) {
             if (!flowCheck(chainedEncounter[0])) {
+                encounterLog(`'${chainedEncounter}' is stopped by flow control!`)
                 tempChained.splice(tempChained.indexOf(chainedEncounter), 1)
             }
         }
     }
+    encounterLog(`Temporary chaining list after flow control: '${tempChained}'`)
     let pickedChainedEncounter = getRndFromList(tempChained)
     return (pickedChainedEncounter)
 }

@@ -257,7 +257,7 @@ const modifier = (text) => {
                                             }
 
                                             if (chkBranch.branchChained) {
-                                                updateCurrentEncounter(getRndFromList(chkBranch.branchChained))
+                                                updateCurrentEncounter(chainHandler(chkBranch.branchChained))
                                                 break branchLoop
                                             } else {
                                                 encounterLog(`'${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}' has no chained encounter, but this might be intentional.`)
@@ -280,7 +280,7 @@ const modifier = (text) => {
                                     }
 
                                     if (chkBranch.branchChained) {
-                                        updateCurrentEncounter(getRndFromList(chkBranch.branchChained))
+                                        updateCurrentEncounter(chainHandler(chkBranch.branchChained))
                                         break branchLoop
                                     } else {
                                         encounterLog(`'${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}' has no chained encounter, but this might be intentional.`)
