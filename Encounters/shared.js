@@ -247,7 +247,8 @@ if (encounterSettings.importWI) {
 }
 
 // encounter functions: (DON'T MESS WITH THESE!)
-function updateCurrentEncounter(encounterUpcoming) { // ends, then sets or clears currentEncounter; if argument empty, clears current encounter
+function updateCurrentEncounter(encounterUpcoming) {
+    // ends, then sets or clears currentEncounter; if argument empty, clears current encounter
     // encounter end effects:
     if (state.currentEncounter) {
         // recurrenceLimit:
@@ -357,6 +358,107 @@ function updateCurrentEffects() { // 'activates' currentEncounter; or clears enc
     }
 }
 
+function flowCheck(encounter) {
+    /*
+    if (encounterDB[encounter].inputLock) {
+        encounterLog(`Input checking disabled on '${encounter}'.`)
+        return (false)
+    }
+    */
+
+    //for outputMod:
+    /*
+    if (encounterDB[encounter].outputLock) {
+      encounterLog(`Output checking disabled on '${encounter}'.`)
+      continue considerLoop
+    }
+    */
+
+    if (encounterDB[encounter].cooldown) {
+        if (typeof (state.encounterPersistence?.cooldowns) !== 'undefined') {
+            for (let cooldown of state.encounterPersistence?.cooldowns) {
+                if (cooldown[0] === encounter) {
+                    encounterLog(`'${encounter}' has an active cooldown.`)
+                    return false
+                }
+            }
+        }
+    }
+
+    if (encounterDB[encounter].prerequisite) {
+        encounterLog(`'${encounterDB[encounter].encounterID}' has prerequisites: ${encounterDB[encounter].prerequisite}`)
+        if (typeof (state.encounterPersistence) !== 'undefined') {
+            if (state.encounterPersistence?.counts) {
+                prerequisiteLoop:
+                    for (let prerequisite of encounterDB[encounter].prerequisite) {
+                        encounterLog(`Looking for '${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}'...`)
+                        for (let count of state.encounterPersistence?.counts) {
+                            if (count[0] === prerequisite[0]) {
+                                encounterLog(`Found '${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}', checking count...`)
+                                if (count[1] >= prerequisite[1]) {
+                                    encounterLog(`'${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}' count high enough!`)
+                                    continue prerequisiteLoop
+                                } else {
+                                    encounterLog(`'${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}' count too low!`)
+                                    return false
+                                }
+                            }
+                        }
+                        encounterLog(`Couldn't find '${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}'.`)
+                        return false
+                    }
+            } else {
+                encounterLog(`'${encounterDB[encounter].encounterID}' has prerequisites, but there are no counted occurrences.`)
+                return false
+            }
+        } else {
+            encounterLog(`'${encounterDB[encounter].encounterID}' has prerequisites, but there is no encounter persistence.`)
+            return false
+        }
+    }
+
+    if (encounterDB[encounter].blockers) {
+        encounterLog(`'${encounterDB[encounter].encounterID}' has blockers: ${encounterDB[encounter].blockers}`)
+        if (typeof (state.encounterPersistence) !== 'undefined') {
+            if (state.encounterPersistence?.counts) {
+                for (let blocker of encounterDB[encounter].blockers) {
+                    encounterLog(`Looking for '${encounterDB[encounter].encounterID}' blocker '${blocker[0]}'...`)
+                    for (let count of state.encounterPersistence?.counts) {
+                        if (count[0] === blocker[0]) {
+                            encounterLog(`Found '${encounterDB[encounter].encounterID}' blocker '${blocker[0]}', checking count...`)
+                            if (count[1] >= blocker[1]) {
+                                encounterLog(`'${encounterDB[encounter].encounterID}' blocker '${blocker[0]}' count too high!`)
+                                return false
+                            } else {
+                                encounterLog(`'${encounterDB[encounter].encounterID}' blocker '${blocker[0]}' count low enough!`)
+                            }
+                        }
+                    }
+                    encounterLog(`Couldn't find '${encounterDB[encounter].encounterID}' blocker '${blocker[0]}'.`)
+                }
+            } else {
+                encounterLog(`'${encounterDB[encounter].encounterID}' not blocked, as there are no counted occurrences.`)
+            }
+        } else {
+            encounterLog(`'${encounterDB[encounter].encounterID}' not blocked, as there is no encounter persistence.`)
+        }
+    }
+
+    if (typeof (encounterDB[encounter].totalActionDelay) == 'undefined') {
+        encounterLog(`No global delay on '${encounterDB[encounter].encounterID}'!`)
+        totalActionDelay = 0
+    } else {
+        totalActionDelay = encounterDB[encounter].totalActionDelay
+    }
+    if (info.actionCount < totalActionDelay) {
+        encounterLog(`It's too early for '${encounterDB[encounter].encounterID}'.`)
+        return false
+    }
+    encounterLog(`Hit more then ${totalActionDelay} total actions, allowing '${encounter}'!`)
+
+    return true
+}
+
 function fillPlaceholders(placeHolderString) {
     let curPlaceholderMatches = placeHolderString.match(/\{(.*?)\}/g)
     if (curPlaceholderMatches) {
@@ -399,6 +501,12 @@ function fillPlaceholders(placeHolderString) {
         delete tempWordLists
     }
     return (placeHolderString)
+}
+
+function encounterLog(msg) {
+    if (encounterSettings.debugMode === true) {
+        console.log(msg)
+    }
 }
 
 // misc helper functions:
@@ -479,10 +587,6 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
     }
 }
 
-function encounterLog(msg) {
-    if (encounterSettings.debugMode === true) {
-        console.log(msg)
-    }
-}
+
 
 // END Encounters

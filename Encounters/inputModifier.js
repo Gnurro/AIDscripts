@@ -15,7 +15,7 @@ const modifier = (text) => {
             for (let encounter in encounterDB) { // go through encounters
                 encounterLog(`Considering '${encounter}'...`)
 
-                // limiting encounter setting:
+                // flow control start:
 
                 if (encounterDB[encounter].inputLock) {
                     encounterLog(`Input checking disabled on '${encounter}'.`)
@@ -30,6 +30,11 @@ const modifier = (text) => {
                 }
                 */
 
+                if (!flowCheck(encounter)) {
+                    continue considerLoop
+                }
+
+                /*
                 if (encounterDB[encounter].recurrenceLimit) {
                     if (typeof (state.encounterPersistence) !== 'undefined') {
                         if (typeof (state.encounterPersistence?.limited) !== 'undefined') {
@@ -131,6 +136,13 @@ const modifier = (text) => {
                     continue considerLoop
                 }
                 encounterLog(`Hit more then ${totalActionDelay} total actions, allowing '${encounter}'!`)
+
+                */
+
+                // flow control end
+
+                // open encounters start:
+
                 if (encounterDB[encounter].triggers) {
                     encounterLog(`'${encounterDB[encounter].encounterID}' has triggers!`)
                     for (let triggerStr of encounterDB[encounter].triggers) {
@@ -169,6 +181,8 @@ const modifier = (text) => {
                         continue considerLoop
                     }
                 }
+
+                // open encounters end
             }
     }
 
