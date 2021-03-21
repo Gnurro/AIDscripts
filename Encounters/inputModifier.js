@@ -306,7 +306,7 @@ const modifier = (text) => {
                                     encounterLog(`Detected chained encounter(s) on ${state.currentEncounter.encounterID}!`)
                                     delete state.message
                                     delete state.encounterPersistence?.contextNote
-                                    updateCurrentEncounter(getRndFromList(state.currentEncounter.chained))
+                                    updateCurrentEncounter(chainHandler(state.currentEncounter.chained))
                                 } else {
                                     updateCurrentEncounter()
                                     updateCurrentEffects()
@@ -325,7 +325,7 @@ const modifier = (text) => {
                                 encounterLog(`Detected chained encounter(s) on ${state.currentEncounter.encounterID}!`)
                                 delete state.message
                                 delete state.encounterPersistence?.contextNote
-                                updateCurrentEncounter(getRndFromList(state.currentEncounter.chained))
+                                updateCurrentEncounter(chainHandler(state.currentEncounter.chained))
                             } else {
                                 updateCurrentEncounter()
                                 updateCurrentEffects()
