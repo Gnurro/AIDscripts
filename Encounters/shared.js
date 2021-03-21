@@ -478,7 +478,7 @@ function chainHandler(chainedEncounters) {
     }
     encounterLog(`Temporary chaining list after flow control: '${tempChained}'`)
     if (tempChained === []) {
-        encounterLog(`Warning: Temporary chained list '${tempChained}' is empty, thus ending current encounter without chaining!`)
+        encounterLog(`Warning: Temporary chained list '${tempChained}' is empty, thus ending current encounter without chaining! This can happen if all chained encounters are stopped by flow control.`)
     }
     let pickedChainedEncounter = getRndFromList(tempChained)
     return (pickedChainedEncounter)
