@@ -459,6 +459,23 @@ function flowCheck(encounter) {
     return true
 }
 
+function chainHandler(chainedEncounters) {
+    let tempChained = [...chainedEncounters]
+    for (chainedEncounter of tempChained) {
+        if (chainedEncounter.length === 1) {
+            if (!flowCheck(chainedEncounter)) {
+                tempChained.splice(tempChained.indexOf(chainedEncounter), 1)
+            }
+        } else if (chainedEncounter.length === 2) {
+            if (!flowCheck(chainedEncounter[0])) {
+                tempChained.splice(tempChained.indexOf(chainedEncounter), 1)
+            }
+        }
+    }
+    let pickedChainedEncounter = getRndFromList(tempChained)
+    return (pickedChainedEncounter)
+}
+
 function fillPlaceholders(placeHolderString) {
     let curPlaceholderMatches = placeHolderString.match(/\{(.*?)\}/g)
     if (curPlaceholderMatches) {
