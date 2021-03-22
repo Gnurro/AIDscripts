@@ -359,20 +359,6 @@ function updateCurrentEffects() { // 'activates' currentEncounter; or clears enc
 }
 
 function flowCheck(encounter) {
-    /*
-    if (encounterDB[encounter].inputLock) {
-        encounterLog(`Input checking disabled on '${encounter}'.`)
-        return (false)
-    }
-    */
-
-    //for outputMod:
-    /*
-    if (encounterDB[encounter].outputLock) {
-      encounterLog(`Output checking disabled on '${encounter}'.`)
-      continue considerLoop
-    }
-    */
 
     if (encounterDB[encounter].cooldown) {
         if (typeof (state.encounterPersistence?.cooldowns) !== 'undefined') {
