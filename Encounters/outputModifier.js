@@ -15,14 +15,13 @@ const modifier = (text) => {
             for (let encounter in encounterDB) { // go through encounters
                 encounterLog(`Considering '${encounter}'...`)
 
-                // limiting encounter setting:
+                // flow control start:
                 /*
                 if (encounterDB[encounter].inputLock) {
                     encounterLog(`Input checking disabled on '${encounter}'.`)
                     continue considerLoop
                 }
-
-                 */
+                */
 
                 //for outputMod:
 
@@ -32,6 +31,11 @@ const modifier = (text) => {
                 }
 
 
+                if (!flowCheck(encounter)) {
+                    continue considerLoop
+                }
+
+                /*
                 if (encounterDB[encounter].recurrenceLimit) {
                     if (typeof (state.encounterPersistence) !== 'undefined') {
                         if (typeof (state.encounterPersistence?.limited) !== 'undefined') {
@@ -133,6 +137,13 @@ const modifier = (text) => {
                     continue considerLoop
                 }
                 encounterLog(`Hit more then ${totalActionDelay} total actions, allowing '${encounter}'!`)
+
+                */
+
+                // flow control end
+
+                // open encounters start:
+
                 if (encounterDB[encounter].triggers) {
                     encounterLog(`'${encounterDB[encounter].encounterID}' has triggers!`)
                     for (let triggerStr of encounterDB[encounter].triggers) {
@@ -171,6 +182,8 @@ const modifier = (text) => {
                         continue considerLoop
                     }
                 }
+
+                // open encounters end
             }
     }
 
@@ -193,6 +206,7 @@ const modifier = (text) => {
                 // textNotes
                 if (!state.currentEncounter.textInserted && state.currentEncounter.textNotes) {
                     let curTextNote = getRndFromList(state.currentEncounter.textNotes)
+                    encounterLog(`Picked '${curTextNote}' from textNotes.`)
                     // random wordlist inserts:
                     if (typeof (curTextNote) !== 'undefined') {
                         curTextNote = fillPlaceholders(curTextNote)
@@ -244,7 +258,7 @@ const modifier = (text) => {
                                             }
 
                                             if (chkBranch.branchChained) {
-                                                updateCurrentEncounter(getRndFromList(chkBranch.branchChained))
+                                                updateCurrentEncounter(chainHandler(chkBranch.branchChained))
                                                 break branchLoop
                                             } else {
                                                 encounterLog(`'${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}' has no chained encounter, but this might be intentional.`)
@@ -267,7 +281,7 @@ const modifier = (text) => {
                                     }
 
                                     if (chkBranch.branchChained) {
-                                        updateCurrentEncounter(getRndFromList(chkBranch.branchChained))
+                                        updateCurrentEncounter(chainHandler(chkBranch.branchChained))
                                         break branchLoop
                                     } else {
                                         encounterLog(`'${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}' has no chained encounter, but this might be intentional.`)
@@ -293,7 +307,7 @@ const modifier = (text) => {
                                     encounterLog(`Detected chained encounter(s) on ${state.currentEncounter.encounterID}!`)
                                     delete state.message
                                     delete state.encounterPersistence?.contextNote
-                                    updateCurrentEncounter(getRndFromList(state.currentEncounter.chained))
+                                    updateCurrentEncounter(chainHandler(state.currentEncounter.chained))
                                 } else {
                                     updateCurrentEncounter()
                                     updateCurrentEffects()
@@ -312,7 +326,7 @@ const modifier = (text) => {
                                 encounterLog(`Detected chained encounter(s) on ${state.currentEncounter.encounterID}!`)
                                 delete state.message
                                 delete state.encounterPersistence?.contextNote
-                                updateCurrentEncounter(getRndFromList(state.currentEncounter.chained))
+                                updateCurrentEncounter(chainHandler(state.currentEncounter.chained))
                             } else {
                                 updateCurrentEncounter()
                                 updateCurrentEffects()
