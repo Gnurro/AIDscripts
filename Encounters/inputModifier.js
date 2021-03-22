@@ -34,111 +34,6 @@ const modifier = (text) => {
                     continue considerLoop
                 }
 
-                /*
-                if (encounterDB[encounter].recurrenceLimit) {
-                    if (typeof (state.encounterPersistence) !== 'undefined') {
-                        if (typeof (state.encounterPersistence?.limited) !== 'undefined') {
-                            limitLoop:
-                                for (let limiter of state.encounterPersistence?.limited) {
-                                    if (limiter[0] === encounter) {
-                                        encounterLog(`'${encounter}' recurrence has an active limit.`)
-                                        if (limiter[1] > 0) {
-                                            encounterLog(`'${limiter[0]}' can still happen ${limiter[1]} times.`)
-                                            break limitLoop
-                                        } else {
-                                            encounterLog(`'${limiter[0]}' can't happen anymore.`)
-                                            continue considerLoop
-                                        }
-                                    }
-                                }
-                        }
-                    }
-                }
-
-                if (encounterDB[encounter].cooldown) {
-                    if (typeof (state.encounterPersistence?.cooldowns) !== 'undefined') {
-                        for (let cooldown of state.encounterPersistence?.cooldowns) {
-                            if (cooldown[0] === encounter) {
-                                encounterLog(`'${encounter}' has an active cooldown.`)
-                                continue considerLoop
-                            }
-                        }
-                    }
-                }
-
-                if (encounterDB[encounter].prerequisite) {
-                    encounterLog(`'${encounterDB[encounter].encounterID}' has prerequisites: ${encounterDB[encounter].prerequisite}`)
-                    if (typeof (state.encounterPersistence) !== 'undefined') {
-                        if (state.encounterPersistence?.counts) {
-                            prerequisiteLoop:
-                                for (let prerequisite of encounterDB[encounter].prerequisite) {
-                                    encounterLog(`Looking for '${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}'...`)
-                                    for (let count of state.encounterPersistence?.counts) {
-                                        if (count[0] === prerequisite[0]) {
-                                            encounterLog(`Found '${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}', checking count...`)
-                                            if (count[1] >= prerequisite[1]) {
-                                                encounterLog(`'${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}' count high enough!`)
-                                                continue prerequisiteLoop
-                                            } else {
-                                                encounterLog(`'${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}' count too low!`)
-                                                continue considerLoop
-                                            }
-                                        }
-                                    }
-                                    encounterLog(`Couldn't find '${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}'.`)
-                                    continue considerLoop
-                                }
-                        } else {
-                            encounterLog(`'${encounterDB[encounter].encounterID}' has prerequisites, but there are no counted occurrences.`)
-                            continue considerLoop
-                        }
-                    } else {
-                        encounterLog(`'${encounterDB[encounter].encounterID}' has prerequisites, but there is no encounter persistence.`)
-                        continue considerLoop
-                    }
-                }
-
-                if (encounterDB[encounter].blockers) {
-                    encounterLog(`'${encounterDB[encounter].encounterID}' has blockers: ${encounterDB[encounter].blockers}`)
-                    if (typeof (state.encounterPersistence) !== 'undefined') {
-                        if (state.encounterPersistence?.counts) {
-                            for (let blocker of encounterDB[encounter].blockers) {
-                                encounterLog(`Looking for '${encounterDB[encounter].encounterID}' blocker '${blocker[0]}'...`)
-                                for (let count of state.encounterPersistence?.counts) {
-                                    if (count[0] === blocker[0]) {
-                                        encounterLog(`Found '${encounterDB[encounter].encounterID}' blocker '${blocker[0]}', checking count...`)
-                                        if (count[1] >= blocker[1]) {
-                                            encounterLog(`'${encounterDB[encounter].encounterID}' blocker '${blocker[0]}' count too high!`)
-                                            continue considerLoop
-                                        } else {
-                                            encounterLog(`'${encounterDB[encounter].encounterID}' blocker '${blocker[0]}' count low enough!`)
-                                        }
-                                    }
-                                }
-                                encounterLog(`Couldn't find '${encounterDB[encounter].encounterID}' blocker '${blocker[0]}'.`)
-                            }
-                        } else {
-                            encounterLog(`'${encounterDB[encounter].encounterID}' not blocked, as there are no counted occurrences.`)
-                        }
-                    } else {
-                        encounterLog(`'${encounterDB[encounter].encounterID}' not blocked, as there is no encounter persistence.`)
-                    }
-                }
-
-                if (typeof (encounterDB[encounter].totalActionDelay) == 'undefined') {
-                    encounterLog(`No global delay on '${encounterDB[encounter].encounterID}'!`)
-                    totalActionDelay = 0
-                } else {
-                    totalActionDelay = encounterDB[encounter].totalActionDelay
-                }
-                if (info.actionCount < totalActionDelay) {
-                    encounterLog(`It's too early for '${encounterDB[encounter].encounterID}'.`)
-                    continue considerLoop
-                }
-                encounterLog(`Hit more then ${totalActionDelay} total actions, allowing '${encounter}'!`)
-
-                */
-
                 // flow control end
 
                 // open encounters start:
@@ -322,7 +217,7 @@ const modifier = (text) => {
                         } else {
                             encounterLog(`Duration of ${state.currentEncounter.encounterID} over!`)
                             if (state.currentEncounter.chained) {
-                                encounterLog(`Detected chained encounter(s) on ${state.currentEncounter.encounterID}!`)
+                                encounterLog(`Detected chained encounter(s) on current '${state.currentEncounter.encounterID}'!`)
                                 delete state.message
                                 delete state.encounterPersistence?.contextNote
                                 updateCurrentEncounter(chainHandler(state.currentEncounter.chained))

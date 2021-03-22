@@ -121,7 +121,7 @@ const encounterDB = {
       // CHAINING
       // list of follow-up encounters! BD
       // chained:['goblinAttackRocks', 'goblinAttackHorde'] <- example for non-weighted list
-      chainedWeighted:[['goblinAttackRocks',60], ['goblinAttackHorde',100]]
+      chained:[['goblinAttackRocks',60], ['goblinAttackHorde',100]]
     },
     goblinAttackRocks:{
       encounterID:"goblinAttackRocks", // to indentify type of current encounter
