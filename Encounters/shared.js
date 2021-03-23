@@ -9,12 +9,12 @@ worldInfo = []
 */
 
 const encounterSettings = {
-    debugMode: true,
+    debugMode: false,
     importWI: true
 }
 
 // encounterDef database:
-const encounterDB = {
+var encounterDB = {
     // hardcoded encounters:
     // one open encounter (=encounters that have chance) will be made current at a time only (from consideration, branches might do more)
     // closed encounters (=encounters without chance) can only become current through chaining
@@ -211,7 +211,7 @@ const encounterDB = {
 }
 
 // word list stuff like gauntlet script:
-const encounterWordLists = {
+var encounterWordLists = {
     /* Remove this line (and the one below) to enable the example word lists
     charClass:["mage","fighter","valkyrie"],
     pattern:["sprinkles", "dots", "lines"],
