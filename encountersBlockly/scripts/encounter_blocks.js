@@ -890,7 +890,7 @@ Blockly.JavaScript['rndactionrange'] = function(block) {
 
 Blockly.JavaScript['branches'] = function(block) {
   var statements_brancheslist = Blockly.JavaScript.statementToCode(block, 'branchesList');
-  var code = 'branches:[' + statements_brancheslist + '],\n';
+  var code = 'branches:[\n' + statements_brancheslist + '],\n';
   return code;
 };
 
