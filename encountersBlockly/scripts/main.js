@@ -19,7 +19,21 @@
 
   document.body.removeChild(element);
 }
- 
+
+function saveBlocklySpace() {
+	console.log('Trying to save workspace...')
+	var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);	
+	localStorage.setItem("encountersBlocklyWorkspace", Blockly.Xml.domToText(xml));
+	console.log('Saved workspace XML:' + xml);
+}
+
+function loadBlocklySpace() {
+	console.log('Trying to load workspace...')
+	var xml = Blockly.Xml.textToDom(localStorage.getItem("encountersBlocklyWorkspace"));
+	console.log('Loading workspace:' + xml);
+	Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, xml);	
+}
+
  (function() {
 
   let currentButton;

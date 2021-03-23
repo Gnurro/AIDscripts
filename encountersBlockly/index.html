@@ -20,10 +20,12 @@
 </header>
 
 <main>
+	Blockly workspace:
+	<button id="saveBlocklyWS" onclick="saveBlocklySpace()">Save</button>	
+	<button id="loadBlocklyWS" onclick="loadBlocklySpace()">Load</button>
 	Output to:
-    <button id="save" onclick="consoleCheck()">Console</button>
-	
-	<button id="save" onclick="download('encounterDefs.js', Blockly.JavaScript.workspaceToCode())">JavaScript File</button>
+    <button id="toConsole" onclick="consoleCheck()">Console</button>	
+	<button id="downloadJS" onclick="download('encounterDefs.js', Blockly.JavaScript.workspaceToCode())">JavaScript File</button>
 
     <div class="blockly-editor">
         <div id="blocklyDiv" style="height: 800px; width: 1900px;"></div>
