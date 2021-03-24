@@ -23,11 +23,11 @@ const modifier = (text) => {
   }
   
   if (lowered.includes("/showdc")) { // /showDC command
-    if(state.showDC == true) {
+    if(state.showDC === true) {
       state.showDC = false
       state.message = "Turned DC display off."
     }
-    if(state.showDC == false) {
+    if(state.showDC === false) {
       state.showDC = true
       state.message = "Turned DC display on."
     }
@@ -54,16 +54,7 @@ const modifier = (text) => {
     console.log("[story] triggered!")
   }
   
-  // "character classes"/skillsets:
-  // These must follow this format to work as intended!
-  // witch:
-  witch = ['cackle', 'potBrew', 'dance', 'petHandle']
-  // barbarian:
-  barbarian = ['rockThrow', 'rage', 'intimidate', 'heavyLift']
-  //barbarian = {'Rock Throwing':0, 'Rageing':0, 'Heavy Lifting':0, 'Intimidating':0}
-  // kobold:
-  kobold = ['buildTraps', 'hide', 'dragon', 'mining']
-  //kobold = {'Trap Building':0, 'Hiding':0, 'Dragon Imitating':0, 'Mining':0}
+
   
   if (info.actionCount < 1) { // Only on first input
     classString = state.charClassType.toLowerCase() // make sure that any capitalization works
@@ -83,7 +74,16 @@ const modifier = (text) => {
   // initialize all the things!
   if (!state.init) { // but only if they aren't, yet
       // initialize stats fitting with InputDCattributeBot:
-      state.stats = {stats:{Strength:{level: 0, cost:1}, Dexterity:{level: 0, cost:1}, Constitution:{level: 0, cost:1}, Intelligence:{level: 0, cost:1}, Wisdom:{level: 0, cost:1}, Charisma:{level: 0, cost:1},}, statPoints:5}
+      state.stats = {
+        stats:{
+          Strength:{level: 0, cost:1},
+          Dexterity:{level: 0, cost:1},
+          Constitution:{level: 0, cost:1},
+          Intelligence:{level: 0, cost:1},
+          Wisdom:{level: 0, cost:1},
+          Charisma:{level: 0, cost:1},
+        },
+        statPoints:5}
       // initialize skills:
       state.skills = {} // state.skills enables the skills menu; class skills object must fit with it!; definitions above
       for (curSkillID of state.charClass) {
@@ -113,13 +113,13 @@ const modifier = (text) => {
   }
   
   // skill processing
-  for (skill in state.skills) { // go through skills
+  for (let skill in state.skills) { // go through skills
     // console.log("Skill: " + skill)
-    skillMod = state.skills[skill] // get skill modifier from menu
+    let skillMod = state.skills[skill] // get skill modifier from menu
     
-    for (skillDef in skillDB) {
+    for (let skillDef in skillDB) {
 
-          if (skillDB[skillDef].menuString == skill) {
+          if (skillDB[skillDef].menuString === skill) {
             
             for (triggerStr of skillDB[skillDef].triggers) {
               
@@ -142,7 +142,7 @@ const modifier = (text) => {
       }
   
   if (!stopInput && info.actionCount > 1) { // if the AI gets used
-    state.inputBot = 'InputDCattributeBot' // let InputDCattributeBot do her job
+    state.inputBot = 'BIGinputDCattributeBot5' // let BIGinputDCattributeBot5 do her job
   }
   // END RPG mechanics
    

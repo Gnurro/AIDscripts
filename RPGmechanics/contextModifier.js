@@ -92,15 +92,15 @@ const modifier = (text) => {
       chkCurSit = chkCurAtt + state.chkSitBonus // ...add it to the attribute modifier to get the full check modifier
       
       // get skill-dependent result strings:
-      for (skillDef in skillDB) {
-        if (skillDef == state.chkSitSkill) {
+      for (let skillDef in skillDB) {
+        if (skillDef === state.chkSitSkill) {
           console.log("found skillDef for current skill:" + skillDef)
-          if (skillDB[skillDef].overrideAtt == true) {
+          if (skillDB[skillDef].overrideAtt === true) {
             overrideAtt = true
             chkSkillPosStr = skillDB[skillDef].results['positive']
             chkSkillNegStr = skillDB[skillDef].results['negative']
           }
-          if (skillDB[skillDef].overrideAtt == false) {
+          if (skillDB[skillDef].overrideAtt === false) {
             overrideAtt = false
             chkSkillPosStr = skillDB[skillDef].results['positive']
             chkSkillNegStr = skillDB[skillDef].results['negative']
