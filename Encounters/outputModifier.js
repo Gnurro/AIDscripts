@@ -15,7 +15,7 @@ const modifier = (text) => {
             for (let encounter in encounterDB) { // go through encounters
                 encounterLog(`Considering '${encounter}'...`)
 
-                // limiting encounter setting:
+                // flow control start:
                 /*
                 if (encounterDB[encounter].inputLock) {
                     encounterLog(`Input checking disabled on '${encounter}'.`)
@@ -26,112 +26,19 @@ const modifier = (text) => {
                 //for outputMod:
 
                 if (encounterDB[encounter].outputLock) {
-                    encounterLog(`Output checking disabled on '${encounter}'.`)
+                  encounterLog(`Output checking disabled on '${encounter}'.`)
+                  continue considerLoop
+                }
+
+
+                if (!flowCheck(encounter)) {
                     continue considerLoop
                 }
 
+                // flow control end
 
-                if (encounterDB[encounter].recurrenceLimit) {
-                    if (typeof (state.encounterPersistence) !== 'undefined') {
-                        if (typeof (state.encounterPersistence.limited) !== 'undefined') {
-                            limitLoop:
-                                for (let limiter of state.encounterPersistence.limited) {
-                                    if (limiter[0] === encounter) {
-                                        encounterLog(`'${encounter}' recurrence has an active limit.`)
-                                        if (limiter[1] > 0) {
-                                            encounterLog(`'${limiter[0]}' can still happen ${limiter[1]} times.`)
-                                            break limitLoop
-                                        } else {
-                                            encounterLog(`'${limiter[0]}' can't happen anymore.`)
-                                            continue considerLoop
-                                        }
-                                    }
-                                }
-                        }
-                    }
-                }
+                // open encounters start:
 
-                if (encounterDB[encounter].cooldown) {
-                    if (typeof (state.encounterPersistence.cooldowns) !== 'undefined') {
-                        for (let cooldown of state.encounterPersistence.cooldowns) {
-                            if (cooldown[0] === encounter) {
-                                encounterLog(`'${encounter}' has an active cooldown.`)
-                                continue considerLoop
-                            }
-                        }
-                    }
-                }
-
-                if (encounterDB[encounter].prerequisite) {
-                    encounterLog(`'${encounterDB[encounter].encounterID}' has prerequisites: ${encounterDB[encounter].prerequisite}`)
-                    if (typeof (state.encounterPersistence) !== 'undefined') {
-                        if (state.encounterPersistence.counts) {
-                            prerequisiteLoop:
-                                for (let prerequisite of encounterDB[encounter].prerequisite) {
-                                    encounterLog(`Looking for '${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}'...`)
-                                    for (let count of state.encounterPersistence.counts) {
-                                        if (count[0] === prerequisite[0]) {
-                                            encounterLog(`Found '${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}', checking count...`)
-                                            if (count[1] >= prerequisite[1]) {
-                                                encounterLog(`'${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}' count high enough!`)
-                                                continue prerequisiteLoop
-                                            } else {
-                                                encounterLog(`'${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}' count too low!`)
-                                                continue considerLoop
-                                            }
-                                        }
-                                    }
-                                    encounterLog(`Couldn't find '${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}'.`)
-                                    continue considerLoop
-                                }
-                        } else {
-                            encounterLog(`'${encounterDB[encounter].encounterID}' has prerequisites, but there are no counted occurrences.`)
-                            continue considerLoop
-                        }
-                    } else {
-                        encounterLog(`'${encounterDB[encounter].encounterID}' has prerequisites, but there is no encounter persistence.`)
-                        continue considerLoop
-                    }
-                }
-
-                if (encounterDB[encounter].blockers) {
-                    encounterLog(`'${encounterDB[encounter].encounterID}' has blockers: ${encounterDB[encounter].blockers}`)
-                    if (typeof (state.encounterPersistence) !== 'undefined') {
-                        if (state.encounterPersistence.counts) {
-                            for (let blocker of encounterDB[encounter].blockers) {
-                                encounterLog(`Looking for '${encounterDB[encounter].encounterID}' blocker '${blocker[0]}'...`)
-                                for (let count of state.encounterPersistence.counts) {
-                                    if (count[0] === blocker[0]) {
-                                        encounterLog(`Found '${encounterDB[encounter].encounterID}' blocker '${blocker[0]}', checking count...`)
-                                        if (count[1] >= blocker[1]) {
-                                            encounterLog(`'${encounterDB[encounter].encounterID}' blocker '${blocker[0]}' count too high!`)
-                                            continue considerLoop
-                                        } else {
-                                            encounterLog(`'${encounterDB[encounter].encounterID}' blocker '${blocker[0]}' count low enough!`)
-                                        }
-                                    }
-                                }
-                                encounterLog(`Couldn't find '${encounterDB[encounter].encounterID}' blocker '${blocker[0]}'.`)
-                            }
-                        } else {
-                            encounterLog(`'${encounterDB[encounter].encounterID}' not blocked, as there are no counted occurrences.`)
-                        }
-                    } else {
-                        encounterLog(`'${encounterDB[encounter].encounterID}' not blocked, as there is no encounter persistence.`)
-                    }
-                }
-
-                if (typeof (encounterDB[encounter].totalActionDelay) == 'undefined') {
-                    encounterLog(`No global delay on '${encounterDB[encounter].encounterID}'!`)
-                    totalActionDelay = 0
-                } else {
-                    totalActionDelay = encounterDB[encounter].totalActionDelay
-                }
-                if (info.actionCount < totalActionDelay) {
-                    encounterLog(`It's too early for '${encounterDB[encounter].encounterID}'.`)
-                    continue considerLoop
-                }
-                encounterLog(`Hit more then ${totalActionDelay} total actions, allowing '${encounter}'!`)
                 if (encounterDB[encounter].triggers) {
                     encounterLog(`'${encounterDB[encounter].encounterID}' has triggers!`)
                     for (let triggerStr of encounterDB[encounter].triggers) {
@@ -170,6 +77,8 @@ const modifier = (text) => {
                         continue considerLoop
                     }
                 }
+
+                // open encounters end
             }
     }
 
@@ -188,16 +97,11 @@ const modifier = (text) => {
                 encounterLog(`No delay, activating '${state.currentEncounter.encounterID}'!`)
                 // activating encounters:
                 updateCurrentEffects()
-                if (!state.currentEncounter.memoryAdded && state.currentEncounter.memoryAdd) {
-                    if (!state.encounterPersistence.memories) {
-                        state.encounterPersistence.memories = []
-                    }
-                    state.encounterPersistence.memories.push(state.currentEncounter.memoryAdd)
-                    state.currentEncounter.memoryAdded = true
-                }
 
+                // textNotes
                 if (!state.currentEncounter.textInserted && state.currentEncounter.textNotes) {
                     let curTextNote = getRndFromList(state.currentEncounter.textNotes)
+                    encounterLog(`Picked '${curTextNote}' from textNotes.`)
                     // random wordlist inserts:
                     if (typeof (curTextNote) !== 'undefined') {
                         curTextNote = fillPlaceholders(curTextNote)
@@ -206,6 +110,7 @@ const modifier = (text) => {
                     }
                 }
 
+                // adding WI
                 if (!state.currentEncounter.WIadded && state.currentEncounter.addWI) {
                     for (let WIentry in state.currentEncounter.addWI) {
                         encounterLog(`Adding '${state.currentEncounter.addWI[WIentry].keys}' WI entry.`)
@@ -217,7 +122,7 @@ const modifier = (text) => {
                 // branching encounters:
                 // for outputMod:
                 if (state.currentEncounter.branches && !state.currentEncounter.outputLock) {
-                    // if (state.currentEncounter.branches && !state.currentEncounter.inputLock) {
+                // if (state.currentEncounter.branches && !state.currentEncounter.inputLock) {
                     branchLoop:
                         for (let chkBranch of state.currentEncounter.branches) {
                             encounterLog(`Checking '${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}'...`)
@@ -248,7 +153,7 @@ const modifier = (text) => {
                                             }
 
                                             if (chkBranch.branchChained) {
-                                                updateCurrentEncounter(getRndFromList(chkBranch.branchChained))
+                                                updateCurrentEncounter(chainHandler(chkBranch.branchChained))
                                                 break branchLoop
                                             } else {
                                                 encounterLog(`'${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}' has no chained encounter, but this might be intentional.`)
@@ -271,7 +176,7 @@ const modifier = (text) => {
                                     }
 
                                     if (chkBranch.branchChained) {
-                                        updateCurrentEncounter(getRndFromList(chkBranch.branchChained))
+                                        updateCurrentEncounter(chainHandler(chkBranch.branchChained))
                                         break branchLoop
                                     } else {
                                         encounterLog(`'${state.currentEncounter.encounterID}' branch '${chkBranch.branchID}' has no chained encounter, but this might be intentional.`)
@@ -296,8 +201,8 @@ const modifier = (text) => {
                                 if (state.currentEncounter.chained) {
                                     encounterLog(`Detected chained encounter(s) on ${state.currentEncounter.encounterID}!`)
                                     delete state.message
-                                    delete state.encounterPersistence.contextNote
-                                    updateCurrentEncounter(getRndFromList(state.currentEncounter.chained))
+                                    delete state.encounterPersistence?.contextNote
+                                    updateCurrentEncounter(chainHandler(state.currentEncounter.chained))
                                 } else {
                                     updateCurrentEncounter()
                                     updateCurrentEffects()
@@ -313,10 +218,10 @@ const modifier = (text) => {
                         } else {
                             encounterLog(`Duration of ${state.currentEncounter.encounterID} over!`)
                             if (state.currentEncounter.chained) {
-                                encounterLog(`Detected chained encounter(s) on ${state.currentEncounter.encounterID}!`)
+                                encounterLog(`Detected chained encounter(s) on current '${state.currentEncounter.encounterID}'!`)
                                 delete state.message
-                                delete state.encounterPersistence.contextNote
-                                updateCurrentEncounter(getRndFromList(state.currentEncounter.chained))
+                                delete state.encounterPersistence?.contextNote
+                                updateCurrentEncounter(chainHandler(state.currentEncounter.chained))
                             } else {
                                 updateCurrentEncounter()
                                 updateCurrentEffects()
@@ -332,14 +237,14 @@ const modifier = (text) => {
 
     // encounter persistent stuff:
     if (state.encounterPersistence) {
-        if (state.encounterPersistence.memories) {
-            for (encounterMemory of state.encounterPersistence.memories) {
+        if (state.encounterPersistence?.memories) {
+            for (encounterMemory of state.encounterPersistence?.memories) {
                 if (encounterMemory.memoryLingerDuration >= 1) {
                     encounterLog(`'${encounterMemory.memoryText}' will stay in memory for ${encounterMemory.memoryLingerDuration} more actions.`)
                     encounterMemory.memoryLingerDuration -= 1
                 } else {
                     encounterLog(`'${encounterMemory.memoryText}' will no longer stay in memory.`)
-                    state.encounterPersistence.memories.splice(state.encounterPersistence.memories.indexOf(encounterMemory), 1)
+                    state.encounterPersistence.memories.splice(state.encounterPersistence?.memories.indexOf(encounterMemory), 1)
                     if (encounterSettings.debugMode) {
                         displayStatsUpdate([`"${encounterMemory.memoryText}" memory`])
                     }
@@ -351,27 +256,27 @@ const modifier = (text) => {
             }
         }
 
-        if (state.encounterPersistence.cooldowns) {
+        if (state.encounterPersistence?.cooldowns) {
             encounterLog(`Cooldowns detected!`)
             cooldownLoop:
-                for (cooldown in state.encounterPersistence.cooldowns) {
-                    encounterLog(`'${state.encounterPersistence.cooldowns[cooldown][0]}' [${cooldown}] cooldown: ${state.encounterPersistence.cooldowns[cooldown][1]}.`)
+                for (cooldown in state.encounterPersistence?.cooldowns) {
+                    encounterLog(`'${state.encounterPersistence?.cooldowns[cooldown][0]}' [${cooldown}] cooldown: ${state.encounterPersistence?.cooldowns[cooldown][1]}.`)
                     state.encounterPersistence.cooldowns[cooldown][1] -= 1
-                    if (state.encounterPersistence.cooldowns[cooldown][1] <= 0) {
-                        encounterLog(`${state.encounterPersistence.cooldowns[cooldown][0]} cooldown over, removing.`)
+                    if (state.encounterPersistence?.cooldowns[cooldown][1] <= 0) {
+                        encounterLog(`${state.encounterPersistence?.cooldowns[cooldown][0]} cooldown over, removing.`)
                         state.encounterPersistence.cooldowns.splice(cooldown, 1)
                         if (encounterSettings.debugMode) {
-                            displayStatsUpdate([`'${state.encounterPersistence.cooldowns[cooldown][0]}' cooldown`])
+                            displayStatsUpdate([`'${state.encounterPersistence?.cooldowns[cooldown][0]}' cooldown`])
                         }
                         continue cooldownLoop
                     }
                     if (encounterSettings.debugMode) {
-                        displayStatsUpdate([`'${state.encounterPersistence.cooldowns[cooldown][0]}' cooldown`, `${state.encounterPersistence.cooldowns[cooldown][1]} actions remaining`])
+                        displayStatsUpdate([`'${state.encounterPersistence?.cooldowns[cooldown][0]}' cooldown`, `${state.encounterPersistence?.cooldowns[cooldown][1]} actions remaining`])
                     }
                 }
-            if (state.encounterPersistence.cooldowns[0] == null) {
+            if (state.encounterPersistence?.cooldowns[0] == null) {
                 encounterLog(`No more cooldowns, removing array.`)
-                delete state.encounterPersistence.cooldowns
+                delete state.encounterPersistence?.cooldowns
             }
         }
     }

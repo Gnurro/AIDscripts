@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Encounters Blockly</title>
+
+    <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.indigo-pink.min.css">
+    <link rel="stylesheet" href="styles/index.css">
+	<! improved stylesheet provided by 'l i o n' on AID Discord>
+</head>
+
+<body>
+
+
+<header>
+    <h1>Blockly encounterDef Maker</h1>
+</header>
+
+<main>
+	Blockly workspace:
+	<button id="saveBlocklyWS" onclick="saveBlocklySpace()">Save</button>	
+	<button id="loadBlocklyWS" onclick="loadBlocklySpace()">Load</button>
+	Output to:
+    <button id="toConsole" onclick="consoleCheck()">Console</button>	
+	<button id="downloadJS" onclick="download('encounterDefs.js', Blockly.JavaScript.workspaceToCode())">JavaScript File</button>
+
+    <div class="blockly-editor">
+        <div id="blocklyDiv" style="height: 800px; width: 1900px;"></div>
+        <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+            <category name="Basics">
+                <block type="encounterdef">
+                    <field name="encounterID">encounterID</field>
+                </block>
+                <block type="opener">
+                    <field name="encounterChance">1</field>
+                </block>
+                <block type="triggers">
+                    <statement name="triggers">
+                        <block type="trigger">
+                            <field name="trigger">...</field>
+                        </block>
+                    </statement>
+                </block>
+                <block type="inputlock"></block>
+                <block type="outputlock"></block>
+            </category>
+            <category name="Flow control">
+                <block type="prerequisite">
+                    <statement name="prereqEncs">
+                        <block type="encountercount">
+                            <field name="encounterCountID">encounterID</field>
+                            <field name="encounterCountNumber">1</field>
+                        </block>
+                    </statement>
+                </block>
+                <block type="blockers">
+                    <statement name="blockersEncs">
+                        <block type="encountercount">
+                            <field name="encounterCountID">encounterID</field>
+                            <field name="encounterCountNumber">1</field>
+                        </block>
+                    </statement>
+                </block>
+                <block type="totalactiondelay">
+                    <field name="totalActionDelayNumber">1</field>
+                </block>
+            </category>
+            <category name="Activation effects">
+                <block type="activationdelay"></block>
+                <block type="actionnumber">
+                    <field name="actionNumberNumber">0</field>
+                </block>
+                <block type="rndactionrange">
+                    <field name="rndActionRangeMin">0</field>
+                    <field name="rndActionRangeMax">1</field>
+                </block>
+                <block type="textnotes"></block>
+                <block type="contextnotes"></block>
+                <block type="stringnote">
+                    <field name="stringNoteText">Note Text</field>
+                </block>
+                <block type="stringnoteweighted">
+                    <field name="stringNoteText">Note Text</field>
+                    <field name="stringNoteThreshold">1</field>
+                </block>
+                <block type="messagestring">
+                    <field name="messageStringText">Some info.</field>
+                </block>
+                <block type="addwi">
+                    <statement name="addWIentries">
+                        <block type="wientry">
+                            <field name="WIentryKeys">...</field>
+                            <field name="WIentryText">...</field>
+                        </block>
+                    </statement>
+                </block>
+                <block type="displaynotes">
+                    <statement name="displayNoteList">
+                        <block type="displaynote">
+                            <field name="displayNoteKeyText">...</field>
+                            <field name="displayNoteValueText">...</field>
+                            <field name="displayNoteColor">#ffffff</field>
+                        </block>
+                    </statement>
+                </block>
+            </category>
+            <category name="Branching">
+                <block type="branches">
+                    <statement name="branchesList">
+                        <block type="branchdef">
+                            <field name="branchDefID">branchID</field>
+                            <field name="branchDefChanceNumber">1</field>
+                        </block>
+                    </statement>
+                </block>
+                <block type="branchtriggers">
+                    <statement name="branchTriggerList">
+                        <block type="trigger">
+                            <field name="trigger">...</field>
+                        </block>
+                    </statement>
+                </block>
+                <block type="branchtextnotes"></block>
+                <block type="stringnote">
+                    <field name="stringNoteText">Note Text</field>
+                </block>
+                <block type="stringnoteweighted">
+                    <field name="stringNoteText">Note Text</field>
+                    <field name="stringNoteThreshold">1</field>
+                </block>
+                <block type="branchchained"></block>
+                <block type="encounterlink">
+                    <field name="encounterLinkID">encounterID</field>
+                </block>
+                <block type="encounterlinkthreshold">
+                    <field name="encounterLinkID">encounterID</field>
+                    <field name="encounterLinkThresholdNumber">1</field>
+                </block>
+            </category>
+            <category name="Ending encounters">
+                <block type="duration"></block>
+                <block type="actionnumber">
+                    <field name="actionNumberNumber">0</field>
+                </block>
+                <block type="rndactionrange">
+                    <field name="rndActionRangeMin">0</field>
+                    <field name="rndActionRangeMax">1</field>
+                </block>
+                <block type="endtriggers">
+                    <statement name="endTriggersList">
+                        <block type="trigger">
+                            <field name="trigger">...</field>
+                        </block>
+                    </statement>
+                </block>
+            </category>
+            <category name="End effects">
+                <block type="countoccurrence"></block>
+                <block type="cooldown"></block>
+                <block type="actionnumber">
+                    <field name="actionNumberNumber">0</field>
+                </block>
+                <block type="rndactionrange">
+                    <field name="rndActionRangeMin">0</field>
+                    <field name="rndActionRangeMax">1</field>
+                </block>
+                <block type="memoryadd">
+                    <field name="memoryText">...</field>
+                    <field name="memoryLocation">OPTIONNAME</field>
+                    <field name="memoryLingerDuration">1</field>
+                </block>
+                <block type="chained"></block>
+                <block type="encounterlink">
+                    <field name="encounterLinkID">encounterID</field>
+                </block>
+                <block type="encounterlinkthreshold">
+                    <field name="encounterLinkID">encounterID</field>
+                    <field name="encounterLinkThresholdNumber">1</field>
+                </block>
+            </category>
+            <category name="Example Templates">
+                <block type="encounterdef">
+                    <field name="encounterID">simpleTriggeredEncounter</field>
+                    <statement name="encounterKeys">
+                        <block type="opener">
+                            <field name="encounterChance">100</field>
+                            <statement name="conditions">
+                                <block type="triggers">
+                                    <statement name="triggers">
+                                        <block type="trigger">
+                                            <field name="trigger">You enter</field>
+                                            <next>
+                                                <block type="trigger">
+                                                    <field name="trigger">You go into</field>
+                                                </block>
+                                            </next>
+                                        </block>
+                                    </statement>
+                                </block>
+                            </statement>
+                            <next>
+                                <block type="contextnotes">
+                                    <statement name="contextNotesList">
+                                        <block type="stringnote">
+                                            <field name="stringNoteText">You are inside.</field>
+                                        </block>
+                                    </statement>
+                                    <next>
+                                        <block type="endtriggers">
+                                            <statement name="endTriggersList">
+                                                <block type="trigger">
+                                                    <field name="trigger">You exit</field>
+                                                    <next>
+                                                        <block type="trigger">
+                                                            <field name="trigger">You leave</field>
+                                                        </block>
+                                                    </next>
+                                                </block>
+                                            </statement>
+                                        </block>
+                                    </next>
+                                </block>
+                            </next>
+                        </block>
+                    </statement>
+                </block>
+            </category>
+        </xml>
+    </div>
+</main>
+
+<script src="https://unpkg.com/blockly"></script>
+<script src="scripts/encounter_blocks.js"></script>
+<script src="scripts/main.js"></script>
+
+</body>
+</html>

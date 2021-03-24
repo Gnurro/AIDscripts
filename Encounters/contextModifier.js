@@ -4,9 +4,9 @@ const modifier = (text) => {
     // for mashing with other context scripts, keep this codeblock before 'const contextMemory'
     // encounter memory stuff:
     if (state.encounterPersistence) {
-        if (state.encounterPersistence.memories) {
+        if (state.encounterPersistence?.memories) {
             memoryLoop:
-                for (let encounterMemory of state.encounterPersistence.memories) {
+                for (let encounterMemory of state.encounterPersistence?.memories) {
                     // take care to not overload memory, unless forced:
                     if (!encounterMemory.memoryGreed && (encounterMemory.memoryText.length + memory.length) > 1000) {
                         encounterLog(`Non-greedy encounterMemory too long, not inserting it!`)

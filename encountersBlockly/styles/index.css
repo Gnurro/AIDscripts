@@ -1,0 +1,30 @@
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  background-color: green;
+}
+
+h1 {
+  margin: 0 auto;
+  font-size: 1.8em;
+  line-height: 2.4em;
+  text-align: center;
+  color: #fff;
+}
+
+blockly-editor {
+  background-color: #eee;
+}
+
+button {
+  color: #000000;
+  font-size: 1em;
+}
+
+#blocklyDiv {
+  height: 80vh;
+}

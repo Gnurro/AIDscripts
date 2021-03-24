@@ -5,14 +5,16 @@
 state = {
     encounterPersistence:{}
 }
+worldInfo = []
 */
 
 const encounterSettings = {
-    debugMode: true
+    debugMode: false,
+    importWI: true
 }
 
 // encounterDef database:
-const encounterDB = {
+var encounterDB = {
     // hardcoded encounters:
     // one open encounter (=encounters that have chance) will be made current at a time only (from consideration, branches might do more)
     // closed encounters (=encounters without chance) can only become current through chaining
@@ -119,7 +121,7 @@ const encounterDB = {
       // CHAINING
       // list of follow-up encounters! BD
       // chained:['goblinAttackRocks', 'goblinAttackHorde'] <- example for non-weighted list
-      chainedWeighted:[['goblinAttackRocks',60], ['goblinAttackHorde',100]]
+      chained:[['goblinAttackRocks',60], ['goblinAttackHorde',100]]
     },
     goblinAttackRocks:{
       encounterID:"goblinAttackRocks", // to indentify type of current encounter
@@ -209,7 +211,7 @@ const encounterDB = {
 }
 
 // word list stuff like gauntlet script:
-const encounterWordLists = {
+var encounterWordLists = {
     /* Remove this line (and the one below) to enable the example word lists
     charClass:["mage","fighter","valkyrie"],
     pattern:["sprinkles", "dots", "lines"],
@@ -219,34 +221,37 @@ const encounterWordLists = {
 }
 
 // WI data imports:
-for (WIentry of worldInfo) {
-    // encounters from WI:
-    // these will be lower priority then the hardcoded ones above!
-    if (WIentry.keys.includes('!encounterDef')) {
-        let encounterDefFromWI = JSON.parse(WIentry.entry)
-        encounterLog(`Found WI encounterDef for '${encounterDefFromWI.encounterID}', adding it to the DB!`)
-        encounterDB[encounterDefFromWI.encounterID] = encounterDefFromWI
-    }
-    // word lists from WI:
-    if (WIentry.keys.includes('!encounterWordListsFull')) {
-        let encounterWordListsFromWI = JSON.parse(WIentry.entry)
-        encounterLog(`Found full WI encounterWordLists entry, adding them to the DB!`)
-        for (let encounterSingleWordList in encounterWordListsFromWI) {
-            encounterWordLists[encounterSingleWordList] = Object.values(encounterWordListsFromWI[encounterSingleWordList])
+if (encounterSettings.importWI) {
+    for (WIentry of worldInfo) {
+        // encounters from WI:
+        // these will be lower priority then the hardcoded ones above!
+        if (WIentry.keys.includes('#encounterDef')) {
+            let encounterDefFromWI = JSON.parse(WIentry.entry)
+            encounterLog(`Found WI encounterDef for '${encounterDefFromWI.encounterID}', adding it to the DB!`)
+            encounterDB[encounterDefFromWI.encounterID] = encounterDefFromWI
         }
-    }
-    if (WIentry.keys.includes('!encounterWordListSingle')) {
-        let encounterWordListSingleFromWI = JSON.parse(WIentry.entry)
-        encounterLog(`Found WI encounterWordList, adding it to the DB!`)
-        encounterWordLists[Object.keys(encounterWordListSingleFromWI)[0]] = Object.values(encounterWordListSingleFromWI)
+        // word lists from WI:
+        if (WIentry.keys.includes('#encounterWordListsFull')) {
+            let encounterWordListsFromWI = JSON.parse(WIentry.entry)
+            encounterLog(`Found full WI encounterWordLists entry, adding them to the DB!`)
+            for (let encounterSingleWordList in encounterWordListsFromWI) {
+                encounterWordLists[encounterSingleWordList] = Object.values(encounterWordListsFromWI[encounterSingleWordList])
+            }
+        }
+        if (WIentry.keys.includes('#encounterWordListSingle')) {
+            let encounterWordListSingleFromWI = JSON.parse(WIentry.entry)
+            encounterLog(`Found WI encounterWordList, adding it to the DB!`)
+            encounterWordLists[Object.keys(encounterWordListSingleFromWI)[0]] = Object.values(encounterWordListSingleFromWI)
+        }
     }
 }
 
-
 // encounter functions: (DON'T MESS WITH THESE!)
-function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEncounter; if argument empty, clears current encounter
-    // limiting encounter recurrence:
+function updateCurrentEncounter(encounterUpcoming) {
+    // ends, then sets or clears currentEncounter; if argument empty, clears current encounter
+    // encounter end effects:
     if (state.currentEncounter) {
+        // recurrenceLimit:
         if (state.currentEncounter.recurrenceLimit) {
             if (!state.encounterPersistence) {
                 state.encounterPersistence = {}
@@ -267,13 +272,21 @@ function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEn
                 }
             }
         }
+        // cooldowns:
         if (state.currentEncounter.cooldown) {
+            if (!state.encounterPersistence) {
+                state.encounterPersistence = {}
+            }
             if (!state.encounterPersistence.cooldowns) {
                 state.encounterPersistence.cooldowns = []
             }
             state.encounterPersistence.cooldowns.push([state.currentEncounter.encounterID, state.currentEncounter.cooldown])
         }
+        // occurrence counting:
         if (state.currentEncounter.countOccurrence) {
+            if (!state.encounterPersistence) {
+                state.encounterPersistence = {}
+            }
             if (!state.encounterPersistence.counts) {
                 state.encounterPersistence.counts = []
                 state.encounterPersistence.counts.push([state.currentEncounter.encounterID, 1])
@@ -287,6 +300,16 @@ function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEn
                 }
                 state.encounterPersistence.counts.push([state.currentEncounter.encounterID, 1])
             }
+        }
+        // adding memories:
+        if (state.currentEncounter.memoryAdd) {
+            if (!state.encounterPersistence) {
+                state.encounterPersistence = {}
+            }
+            if (!state.encounterPersistence.memories) {
+                state.encounterPersistence.memories = []
+            }
+            state.encounterPersistence.memories.push(state.currentEncounter.memoryAdd)
         }
     }
     if (encounterUpcoming) {
@@ -312,13 +335,13 @@ function updateCurrentEncounter(encounterUpcoming) { // sets or clears currentEn
 function updateCurrentEffects() { // 'activates' currentEncounter; or clears encounter effects if there is no active encounter
     if (state.currentEncounter) {
         if (state.currentEncounter.messageString) {
-            state.message = state.currentEncounter.messageString
+            state.message = fillPlaceholders(state.currentEncounter.messageString)
         }
         if (state.currentEncounter.contextNotes) {
             if (!state.encounterPersistence) {
                 state.encounterPersistence = {}
             }
-            state.encounterPersistence.contextNote = getRndFromList(state.currentEncounter.contextNotes)
+            state.encounterPersistence.contextNote = fillPlaceholders(getRndFromList(state.currentEncounter.contextNotes))
         }
         if (state.currentEncounter.displayStatNotes) {
             displayStatsUpdate(getRndFromList(state.currentEncounter.displayStatNotes))
@@ -333,6 +356,118 @@ function updateCurrentEffects() { // 'activates' currentEncounter; or clears enc
 
 
     }
+}
+
+function flowCheck(encounter) {
+
+    if (encounterDB[encounter].cooldown) {
+        if (typeof (state.encounterPersistence?.cooldowns) !== 'undefined') {
+            for (let cooldown of state.encounterPersistence?.cooldowns) {
+                if (cooldown[0] === encounter) {
+                    encounterLog(`'${encounter}' has an active cooldown.`)
+                    return false
+                }
+            }
+        }
+    }
+
+    if (encounterDB[encounter].prerequisite) {
+        encounterLog(`'${encounterDB[encounter].encounterID}' has prerequisites: ${encounterDB[encounter].prerequisite}`)
+        if (typeof (state.encounterPersistence) !== 'undefined') {
+            if (state.encounterPersistence?.counts) {
+                prerequisiteLoop:
+                    for (let prerequisite of encounterDB[encounter].prerequisite) {
+                        encounterLog(`Looking for '${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}'...`)
+                        for (let count of state.encounterPersistence?.counts) {
+                            if (count[0] === prerequisite[0]) {
+                                encounterLog(`Found '${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}', checking count...`)
+                                if (count[1] >= prerequisite[1]) {
+                                    encounterLog(`'${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}' count high enough!`)
+                                    continue prerequisiteLoop
+                                } else {
+                                    encounterLog(`'${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}' count too low!`)
+                                    return false
+                                }
+                            }
+                        }
+                        encounterLog(`Couldn't find '${encounterDB[encounter].encounterID}' prerequisite '${prerequisite[0]}'.`)
+                        return false
+                    }
+            } else {
+                encounterLog(`'${encounterDB[encounter].encounterID}' has prerequisites, but there are no counted occurrences.`)
+                return false
+            }
+        } else {
+            encounterLog(`'${encounterDB[encounter].encounterID}' has prerequisites, but there is no encounter persistence.`)
+            return false
+        }
+    }
+
+    if (encounterDB[encounter].blockers) {
+        encounterLog(`'${encounterDB[encounter].encounterID}' has blockers: ${encounterDB[encounter].blockers}`)
+        if (typeof (state.encounterPersistence) !== 'undefined') {
+            if (state.encounterPersistence?.counts) {
+                for (let blocker of encounterDB[encounter].blockers) {
+                    encounterLog(`Looking for '${encounterDB[encounter].encounterID}' blocker '${blocker[0]}'...`)
+                    for (let count of state.encounterPersistence?.counts) {
+                        if (count[0] === blocker[0]) {
+                            encounterLog(`Found '${encounterDB[encounter].encounterID}' blocker '${blocker[0]}', checking count...`)
+                            if (count[1] >= blocker[1]) {
+                                encounterLog(`'${encounterDB[encounter].encounterID}' blocker '${blocker[0]}' count too high!`)
+                                return false
+                            } else {
+                                encounterLog(`'${encounterDB[encounter].encounterID}' blocker '${blocker[0]}' count low enough!`)
+                            }
+                        }
+                    }
+                    encounterLog(`Couldn't find '${encounterDB[encounter].encounterID}' blocker '${blocker[0]}'.`)
+                }
+            } else {
+                encounterLog(`'${encounterDB[encounter].encounterID}' not blocked, as there are no counted occurrences.`)
+            }
+        } else {
+            encounterLog(`'${encounterDB[encounter].encounterID}' not blocked, as there is no encounter persistence.`)
+        }
+    }
+
+    if (typeof (encounterDB[encounter].totalActionDelay) == 'undefined') {
+        encounterLog(`No global delay on '${encounterDB[encounter].encounterID}'!`)
+        totalActionDelay = 0
+    } else {
+        totalActionDelay = encounterDB[encounter].totalActionDelay
+    }
+    if (info.actionCount < totalActionDelay) {
+        encounterLog(`It's too early for '${encounterDB[encounter].encounterID}'.`)
+        return false
+    }
+    encounterLog(`Hit more then ${totalActionDelay} total actions, allowing '${encounter}'!`)
+
+    return true
+}
+
+function chainHandler(chainedEncounters) {
+    let tempChained = [...chainedEncounters]
+    encounterLog(`Created temporary chaining list: '${tempChained}'`)
+    for (chainedEncounter of tempChained) {
+        encounterLog(`Checking '${chainedEncounter}'...`)
+        if (chainedEncounter.length === 1) {
+            if (!flowCheck(chainedEncounter)) {
+                encounterLog(`'${chainedEncounter}' is stopped by flow control!`)
+                tempChained.splice(tempChained.indexOf(chainedEncounter), 1)
+            }
+        } else if (chainedEncounter.length === 2) {
+            if (!flowCheck(chainedEncounter[0])) {
+                encounterLog(`'${chainedEncounter}' is stopped by flow control!`)
+                tempChained.splice(tempChained.indexOf(chainedEncounter), 1)
+            }
+        }
+    }
+    encounterLog(`Temporary chaining list after flow control: '${tempChained}'`)
+    if (tempChained === []) {
+        encounterLog(`Warning: Temporary chained list '${tempChained}' is empty, thus ending current encounter without chaining! This can happen if all chained encounters are stopped by flow control.`)
+    }
+    let pickedChainedEncounter = getRndFromList(tempChained)
+    return (pickedChainedEncounter)
 }
 
 function fillPlaceholders(placeHolderString) {
@@ -379,6 +514,12 @@ function fillPlaceholders(placeHolderString) {
     return (placeHolderString)
 }
 
+function encounterLog(msg) {
+    if (encounterSettings.debugMode === true) {
+        console.log(msg)
+    }
+}
+
 // misc helper functions:
 // get random
 function getRndInteger(min, max) {
@@ -393,7 +534,7 @@ function getRndFromList(list) {
             return (getRndFromListWeighted(list))
         } else {
             encounterLog(`${list} looks like a plain list with ${list.length} item(s), simply picking from it!`)
-            return (list[getRndInteger(0, list.length - 1)])
+            return (list[getRndInteger(0, list.length)])
         }
     } else {
         return ('')
@@ -457,10 +598,6 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
     }
 }
 
-function encounterLog(msg) {
-    if (encounterSettings.debugMode === true) {
-        console.log(msg)
-    }
-}
+
 
 // END Encounters

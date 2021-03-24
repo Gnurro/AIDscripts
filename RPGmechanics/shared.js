@@ -16,7 +16,7 @@ function grabAllBrackets() {
   for (entry of text.match(bracketed)) { // regExing return array, go through each entry in it
     entry = entry.replace(/\[|\]/g, '') // and remove the brackets
     if (!state.placeholders) { // if there isn't an array for this yet
-      state.placeholders = new Array() // make it
+      state.placeholders = [] // make it
     }
     state.placeholders.push(entry) // put the entries into array in state
   }
@@ -30,20 +30,10 @@ function grabBracket(index) {
 // END of placeholder grab thing
 
 // BEGIN RPG mechanic stuff
-function makeModString(int) { // makes neat modifier strings with adaptive +/- depending on given value
-  if (Number.isInteger(int)) {
-    if (int >= 0) {
-      string = "+" + int
-    } else {
-      string = "-" + Math.abs(int)
-    }
-  } else {
-    string = ""
-  }
-  return (string)
-}
+
 
 if (info.actionCount < 1) { // Only on first input
+  // TODO: make this frameworky:
   grabAllBrackets() // get bracket contents into state.placeholders
   console.log("Grabbed brackets:" + state.placeholders.join(", "))
   
@@ -55,9 +45,55 @@ if (info.actionCount < 1) { // Only on first input
   delete state.placeholders
 }
 
+// stats + bot setup:
+
+const statList = {
+  intelligence:{
+    name:"Intelligence",
+    tag:"INT",
+    icon:"🧠"},
+  wisdom:{
+    name:"Wisdom",
+    tag:"WIS",
+    icon:"🤔"},
+  charisma:{
+    name:"Charisma",
+    tag:"CHA",
+    icon:"😎"},
+  strength:{
+    name:"Strength",
+    tag:"STR",
+    icon:"💪"},
+  dexterity:{
+    name:"Dexterity",
+    tag:"DEX",
+    icon:"💃"},
+  constitution:{
+    name:"Constitution",
+    tag:"CON",
+    icon:"😣"},
+}
+
+// classes:
+
+const classDB = {
+  // "character classes"/skillsets:
+  // These must follow this format to work as intended!
+  // witch:
+  witch:{skills:['cackle', 'potBrew', 'dance', 'petHandle'],},
+  // barbarian:
+  barbarian:{skills:['rockThrow', 'rage', 'intimidate', 'heavyLift'],},
+  //barbarian = {'Rock Throwing':0, 'Rageing':0, 'Heavy Lifting':0, 'Intimidating':0}
+  // kobold:
+  kobold:{skills:['buildTraps', 'hide', 'dragon', 'mining'],},
+  //kobold = {'Trap Building':0, 'Hiding':0, 'Dragon Imitating':0, 'Mining':0}
+
+}
+
+
 // skills:
 // new, fancy skills!
-skillDB = {
+const skillDB = {
   
   // kobold = ['buildTraps', 'hide', 'dragon', 'mining']
   
@@ -76,8 +112,8 @@ skillDB = {
   heavyLift:{
     menuString:"Heavy Lifting",
     triggers:["\\b(lift(ing)*|heav(e|ing)*|heft(ing)*|hoist(ing)*|grab(bing)*)",] // to be regEx'd
-    }
-  },
+    },
+
   
   rage:{
     menuString:"Rage",
@@ -151,12 +187,25 @@ skillDB = {
 // Feats!
 // Stuff that does context notes independent of skill use or checks and prolly sth for checks as well
 
-featDB = {
+const featDB = {
   
 
 
 }
 
+// Utility functions:
+function makeModString(int) { // makes neat modifier strings with adaptive +/- depending on given value
+  if (Number.isInteger(int)) {
+    if (int >= 0) {
+      string = "+" + int
+    } else {
+      string = "-" + Math.abs(int)
+    }
+  } else {
+    string = ""
+  }
+  return (string)
+}
 
 // END RPG mechanic stuff
 

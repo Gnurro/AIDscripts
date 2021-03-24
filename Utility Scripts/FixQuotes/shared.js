@@ -18,12 +18,10 @@ fixQuotes: {
         let newLines = []
         for (let line of lines) {
             if (line.includes('\"')) {
-                let checkLine = line.replace(quoted, "") + "%%%"// Remove legit quotes from check; add end marker for open quote matching
-                if (checkLine.match(openQuote)) {
+                let checkLine = `${line.replace(quoted, "")}%%%`.match(openQuote)// Remove legit quotes from check; add end marker for open quote matching
+                if (checkLine) {
                     fixQuotesLog(`'${line}' has open quote!`)
-                    checkLine = checkLine.match(openQuote)[checkLine.match(openQuote).length - 1]
-                    checkLine = checkLine.replace('%%%', "")
-                    checkLine = checkLine.replace('\"', "")
+                    checkLine = checkLine[checkLine.length - 1].replace(/(%%%|\\")/g, "")
                     if (checkLine) {// null ~= false, so only trigger if the open quote contains anything
                         fixQuotesLog(`Added missing end quote to '${line}'!`)
                         newLines.push(line + '\"')
