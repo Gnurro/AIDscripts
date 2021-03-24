@@ -60,13 +60,13 @@ const modifier = (text) => {
     classString = state.charClassType.toLowerCase() // make sure that any capitalization works
     state.charClass = kobold // default to kobold :D
     // assign typed-in class, if it's defined: --FIX: do this smarter/dynamically
-    if (classString == "witch") {
+    if (classString === "witch") {
       state.charClass = witch
     }
-    if (classString == "barbarian") {
+    if (classString === "barbarian") {
       state.charClass = barbarian
     }
-    if (classString == "kobold") {
+    if (classString === "kobold") {
       state.charClass = kobold
     }
   }
@@ -90,7 +90,7 @@ const modifier = (text) => {
         console.log("current ID checked: " + curSkillID)
         for (skillDef in skillDB) {
           console.log("current skillDB skilldef: " + skillDef)
-          if (skillDef == curSkillID) {
+          if (skillDef === curSkillID) {
             console.log(skillDB[skillDef].menuString)
             state.skills[skillDB[skillDef].menuString] = 0
           }
