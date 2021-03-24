@@ -19,7 +19,7 @@ const modifier = (text) => {
   // BEGIN RPG mechanics
   // still utility:
   if(!state.showDC) {
-    state.showDC = false
+    state.showDC = true
   }
   
   if (lowered.includes("/showdc")) { // /showDC command
