@@ -708,14 +708,14 @@ Blockly.JavaScript['triggers'] = function(block) {
 
 Blockly.JavaScript['trigger'] = function(block) {
   var text_trigger = block.getFieldValue('trigger');
-  var code = '"' + text_trigger + '",';
+  var code = '`' + text_trigger + '`,';
   return code;
 };
 
 Blockly.JavaScript['encounterdef'] = function(block) {
   var text_encounterid = block.getFieldValue('encounterID');
   var statements_encounterkeys = Blockly.JavaScript.statementToCode(block, 'encounterKeys');
-  var code = text_encounterid + ':{encounterID:"' +  text_encounterid + '",\n' + statements_encounterkeys + '},\n';
+  var code = text_encounterid + ':{encounterID:`' +  text_encounterid + '`,\n' + statements_encounterkeys + '},\n';
   return code;
 };
 
@@ -745,7 +745,7 @@ Blockly.JavaScript['prerequisite'] = function(block) {
 Blockly.JavaScript['encountercount'] = function(block) {
   var text_encountercountid = block.getFieldValue('encounterCountID');
   var number_encountercountnumber = block.getFieldValue('encounterCountNumber');
-  var code = '["' + text_encountercountid + '",' + number_encountercountnumber + '],';
+  var code = '[`' + text_encountercountid + '`,' + number_encountercountnumber + '],';
   return code;
 };
 
@@ -775,7 +775,7 @@ Blockly.JavaScript['contextnotes'] = function(block) {
 
 Blockly.JavaScript['messagestring'] = function(block) {
   var text_messagestringtext = block.getFieldValue('messageStringText');
-  var code = 'messageString:"' + text_messagestringtext + '",\n';
+  var code = 'messageString:`' + text_messagestringtext + '`,\n';
   return code;
 };
 
@@ -788,7 +788,7 @@ Blockly.JavaScript['addwi'] = function(block) {
 Blockly.JavaScript['wientry'] = function(block) {
   var text_wientrykeys = block.getFieldValue('WIentryKeys');
   var text_wientrytext = block.getFieldValue('WIentryText');
-  var code = '{keys:"' + text_wientrykeys + '", entry:"' + text_wientrytext + '"},';
+  var code = '{keys:`' + text_wientrykeys + '`, entry:`' + text_wientrytext + '`},';
   return code;
 };
 
@@ -806,14 +806,14 @@ Blockly.JavaScript['displaynotes'] = function(block) {
 
 Blockly.JavaScript['stringnote'] = function(block) {
   var text_stringnotetext = block.getFieldValue('stringNoteText');
-  var code = '"' + text_stringnotetext + '",';
+  var code = '`' + text_stringnotetext + '`,';
   return code;
 };
 
 Blockly.JavaScript['stringnoteweighted'] = function(block) {
   var text_stringnotetext = block.getFieldValue('stringNoteText');
   var number_stringnotethreshold = block.getFieldValue('stringNoteThreshold');
-  var code = '["' + text_stringnotetext + '",' + number_stringnotethreshold + '],';
+  var code = '[`' + text_stringnotetext + '`,' + number_stringnotethreshold + '],';
   return code;
 };
 
@@ -821,7 +821,7 @@ Blockly.JavaScript['displaynote'] = function(block) {
   var text_displaynotekeytext = block.getFieldValue('displayNoteKeyText');
   var text_displaynotevaluetext = block.getFieldValue('displayNoteValueText');
   var colour_displaynotecolor = block.getFieldValue('displayNoteColor');
-  var code = '["' + text_displaynotekeytext + '", "' + text_displaynotevaluetext + '", ' + colour_displaynotecolor + '],';
+  var code = '[`' + text_displaynotekeytext + '`, `' + text_displaynotevaluetext + '`, ' + colour_displaynotecolor + '],';
   return code;
 };
 
@@ -834,7 +834,7 @@ Blockly.JavaScript['memoryadd'] = function(block) {
   var text_memorytext = block.getFieldValue('memoryText');
   var dropdown_memorylocation = block.getFieldValue('memoryLocation');
   var number_memorylingerduration = block.getFieldValue('memoryLingerDuration');
-  var code = 'memoryAdd:{"' + text_memorytext + '", "' + dropdown_memorylocation + '", ' + number_memorylingerduration + '},\n';
+  var code = 'memoryAdd:{`' + text_memorytext + '`, `' + dropdown_memorylocation + '`, ' + number_memorylingerduration + '},\n';
   return code;
 };
 
@@ -864,14 +864,14 @@ Blockly.JavaScript['chained'] = function(block) {
 
 Blockly.JavaScript['encounterlink'] = function(block) {
   var text_encounterlinkid = block.getFieldValue('encounterLinkID');
-  var code = '"' + text_encounterlinkid + '",';
+  var code = '`' + text_encounterlinkid + '`,';
   return code;
 };
 
 Blockly.JavaScript['encounterlinkthreshold'] = function(block) {
   var text_encounterlinkid = block.getFieldValue('encounterLinkID');
   var number_encounterlinkthresholdnumber = block.getFieldValue('encounterLinkThresholdNumber');
-  var code = '["' + text_encounterlinkid + '", ' + number_encounterlinkthresholdnumber + '],';
+  var code = '[`' + text_encounterlinkid + '`, ' + number_encounterlinkthresholdnumber + '],';
   return code;
 };
 
@@ -898,7 +898,7 @@ Blockly.JavaScript['branchdef'] = function(block) {
   var text_branchdefid = block.getFieldValue('branchDefID');
   var number_branchdefchancenumber = block.getFieldValue('branchDefChanceNumber');
   var statements_branchdefkeylist = Blockly.JavaScript.statementToCode(block, 'branchDefKeyList');
-  var code = '{branchID:"' + text_branchdefid + '", branchChance:' + number_branchdefchancenumber + ', ' + statements_branchdefkeylist + '},\n';
+  var code = '{branchID:`' + text_branchdefid + '`, branchChance:' + number_branchdefchancenumber + ', ' + statements_branchdefkeylist + '},\n';
   return code;
 };
 
