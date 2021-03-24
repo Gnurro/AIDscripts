@@ -45,6 +45,35 @@ if (info.actionCount < 1) { // Only on first input
   delete state.placeholders
 }
 
+// stats + bot setup:
+
+const statList = {
+  intelligence:{
+    name:"Intelligence",
+    tag:"INT",
+    icon:"🧠"},
+  wisdom:{
+    name:"Wisdom",
+    tag:"WIS",
+    icon:"🤔"},
+  charisma:{
+    name:"Charisma",
+    tag:"CHA",
+    icon:"🧠"},
+  strength:{
+    name:"Strength",
+    tag:"STR",
+    icon:"💪"},
+  dexterity:{
+    name:"Dexterity",
+    tag:"DEX",
+    icon:"💃"},
+  constitution:{
+    name:"Constitution",
+    tag:"CON",
+    icon:"😣"},
+}
+
 // classes:
 
 const classDB = {

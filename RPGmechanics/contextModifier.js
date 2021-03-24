@@ -30,7 +30,7 @@ const modifier = (text) => {
     console.log(info?.inputEvaluation) // log what the bot came up with
   
   // put bot output into handy variables:
-  chkAtt = info?.inputEvaluation["attribute"]
+  chkAtt = info?.inputEvaluation["Attribute"]
   chkDC = info?.inputEvaluation["DC"]
   chkCuz = info?.inputEvaluation["reason"]
   
@@ -42,7 +42,7 @@ const modifier = (text) => {
   
   // optional DC display:
   if (state.showDC) { // if the display is on (iE, state.showDC == true)...
-    state.message = chkAtt + " DC " + chkDC + ": " + chkCuz // ...show the attribute, DC and reason in state.message
+    state.message = statList[chkAtt].icon + " DC " + chkDC + ": " + chkCuz // ...show the attribute, DC and reason in state.message
   } else { // if the display is off (iE, state.showDC == false)...
     state.message = chkCuz // ...show only the reason
   }

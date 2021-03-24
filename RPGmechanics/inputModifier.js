@@ -58,10 +58,10 @@ const modifier = (text) => {
   
   if (info.actionCount < 1) { // Only on first input
     classString = state.charClassType.toLowerCase() // make sure that any capitalization works
-    state.charClass = kobold // default to kobold :D
+    // state.charClass = kobold // default to kobold :D
     // assign typed-in class, if it's defined: --FIX: do this smarter/dynamically
     if (classString === "witch") {
-      state.charClass = witch
+      state.charClass = classDB.witch.skills
     }
     if (classString === "barbarian") {
       state.charClass = barbarian
