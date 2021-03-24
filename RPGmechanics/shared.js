@@ -59,7 +59,7 @@ const statList = {
   charisma:{
     name:"Charisma",
     tag:"CHA",
-    icon:"🧠"},
+    icon:"😎"},
   strength:{
     name:"Strength",
     tag:"STR",
