@@ -16,7 +16,7 @@ if (!RPGstate?.doLog) {
     RPGstate.doLog = true
 }
 
-// generic character sheet initializer:
+// MANDATORY generic character sheet initializer:
 if (!RPGstate?.charSheet) {
     RPGstate.charSheet = {
         name: "",
@@ -29,7 +29,7 @@ if (!RPGstate?.charSheet) {
     }
 }
 
-// prompt processing setup:
+// MANDATORY prompt processing setup:
 const introBracketConfig = {
     brackets: [
         // NOTE: order in this array MUST match the order of brackets in the intro prompt!
@@ -41,7 +41,7 @@ const introBracketConfig = {
     ]
 }
 
-// classes:
+// MANDATORY classes:
 const classDB = {
     // "character classes" - currently only skillsets:
 
@@ -52,7 +52,7 @@ const classDB = {
     kobold: {skills: ['buildTraps', 'hide', 'dragon', 'mining'],},
 }
 
-// grab character info from placeholders:
+// OPTIONAL grab character info from placeholders:
 if (info.actionCount < 1) {
     // convenience swap:
     charSheet = RPGstate.charSheet
@@ -75,11 +75,11 @@ if (info.actionCount < 1) {
     RPGstate.charSheet = charSheet
 }
 
-// stats + bot setup:
+// MANDATORY stats + bot setup:
 const statConfig = {
-    // the inputBot that is used for general actions:
+    // MANDATORY the inputBot that is used for general actions:
     inputBot: "BIGinputDCattributeBot5",
-    // the stats/attributes it can output:
+    // MANDATORY the stats/attributes it can output:
     statList: {
         intelligence: {
             name: "Intelligence",
@@ -112,22 +112,32 @@ const statConfig = {
             icon: "😣"
         },
     },
+    // MANDATORY starting values for menus:
     starting: {
         level: 0,
         points: 5,
         cost: 1,
-    }
+    },
+    // OPTIONAL raise statPoint costs:
+    raise: [
+        // threshold is INCLUSIVE, as current level is checked BEFORE raising:
+        {threshold:4, newCost:2}, // this means going from 4 to 5 costs 2
+        {threshold:9, newCost:3}, // this means going from 9 to 10 costs 3
+    ]
 }
 
+// MANDATORY configure skill menu setup:
 const skillConfig = {
+    // MANDATORY starting menu values:
     starting: {
         points: 10,
         level: 0,
     },
-    forbidRandom: true,
+    // OPTIONAL, BUT REALLY REALLY WEIRD AND REMOVAL DISCOURAGED stopping random skill generation:
+    forbidRandom: true, // letting it do this will not create fully set-up skills, which WILL break this framework
 }
 
-// skills:
+// MANDATORY skills:
 const skillDB = {
 
     // kobold = ['buildTraps', 'hide', 'dragon', 'mining']
@@ -193,12 +203,12 @@ const skillDB = {
 
     petHandle: {
         // TODO: make stuff like this frameworky!
-        menuString: state.petString.charAt(0).toUpperCase() + state.petString.slice(1) + " Handling",
-        triggers: [`\\b${state.petString}(?<=your)`, `\\b${state.petName}`], // to be regEx'd
+        menuString: RPGstate.charSheet.petType.charAt(0).toUpperCase() + RPGstate.charSheet.petType.slice(1) + " Handling",
+        triggers: [`\\b${RPGstate.charSheet.petType}(?<=your)`, `\\b${RPGstate.charSheet.petName}`], // to be regEx'd
         overrideAtt: true, // if this skills result strings override the att string
         results: {
-            positive: [`You have great rapport with your ${state.petString}.`],
-            negative: [`Your ${state.petString} doesn't follow your commands!`]
+            positive: [`You have great rapport with your ${RPGstate.charSheet.petType}.`],
+            negative: [`Your ${RPGstate.charSheet.petType} doesn't follow your commands!`]
         }
     },
 
@@ -218,12 +228,15 @@ const skillDB = {
     }
 }
 
+// Feats!
+// Stuff that does context notes independent of skill use or checks and prolly sth for checks as well
+const featDB = {}
+
 // initialize all the things!
 if (!state.RPGstate.init) { // but only if they aren't, yet
-    RPGmechsLog(`Initializing menus...`)
 
     // BEGIN vanilla menu initializations:
-
+    RPGmechsLog(`Initializing menus...`)
     // initialize stats menu as defined in statSet:
     for (let statID in statConfig.statList) {
         state.stats.stats[statConfig.statList[statID].name] = {level: statConfig.starting.level, cost: statConfig.starting.cost}
@@ -264,22 +277,33 @@ if (!state.RPGstate.init) { // but only if they aren't, yet
     state.RPGstate.init = true // so it knows it's been initialized
 }
 
-// backswap ... may be redundant, but better safe than sorry:
-state.RPGstate = RPGstate
-
-// iterate over stats, raise costs if 4 or over:
-// TODO: make this a framework option
-for (let stat in state.stats.stats) {
-    if (state.stats.stats[stat]["level"] >= 4) {
-        RPGmechsLog(stat + " over 3, setting cost to 2")
-        state.stats.stats[stat]["cost"] = 2
+// iterate over stats, raise costs:
+if (statConfig.raise) {
+    RPGmechsLog(`Found stat cost raising in statConfig.`)
+    for (let stat in state.stats.stats) {
+        RPGmechsLog(`Raising stat costs: Checking level of '${stat}'.`)
+        for (let curRaise of statConfig.raise) {
+            RPGmechsLog(`Raising stat costs: Checking level '${curRaise.threshold}' raise.`)
+            if (state.stats.stats[stat].level >= curRaise.threshold) {
+                RPGmechsLog(`'${stat}' level (${state.stats.stats[stat].level}) at or over ${curRaise.threshold} threshold, setting cost to ${curRaise.newCost}`)
+                state.stats.stats[stat]["cost"] = 2
+            } else {
+                RPGmechsLog(`Raising stat costs: Level of '${stat}' below threshold.`)
+            }
+        }
     }
 }
 
 
-// Feats!
-// Stuff that does context notes independent of skill use or checks and prolly sth for checks as well
-const featDB = {}
+
+
+// backswap ... may be redundant, but better safe than sorry:
+state.RPGstate = RPGstate
+
+
+
+
+
 
 // Utility functions:
 function makeModString(int) { // makes neat modifier strings with adaptive +/- depending on given value
