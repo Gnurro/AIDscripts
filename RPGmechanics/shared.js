@@ -19,6 +19,7 @@ if (!RPGstate?.doLog) {
 const miscConfig = {
     successMessage: `Success!`,
     failMessage: `Fail!`,
+    messageStatIcon: true,
 }
 
 // MANDATORY generic character sheet initializer:
@@ -26,7 +27,7 @@ if (!RPGstate?.charSheet) {
     RPGstate.charSheet = {
         name: "",
         class: "",
-        stats: [],
+        stats: [], // TBD - might not be needed, as state.stats can act like this
         skills: [],
         // specific:
         petType: "",
@@ -48,7 +49,10 @@ const introBracketConfig = {
 
 // MANDATORY classes:
 const classDB = {
-    witch: {skills: ['cackle', 'potBrew', 'dance', 'petHandle'],},
+    witch: {
+        skills: ['cackle', 'potBrew', 'dance', 'petHandle'],
+        feats: ['jolly']
+    },
     barbarian: {skills: ['rockThrow', 'rage', 'intimidate', 'heavyLift'],},
     kobold: {skills: ['buildTraps', 'hide', 'dragon', 'mining'],},
 }
