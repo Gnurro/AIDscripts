@@ -49,9 +49,7 @@ if (info.actionCount < 1) {
     RPGmechsLog(charSheet)
 
     modifiedText = text.replace(/\[|\]/g, '') // clean up the text that goes into history
-}
 
-if (info.actionCount < 1) { // Only on first input
     classString = state.charClassType.toLowerCase() // make sure that any capitalization works
     // state.charClass = kobold // default to kobold :D
     // assign typed-in class, if it's defined: --FIX: do this smarter/dynamically
@@ -69,7 +67,7 @@ if (info.actionCount < 1) { // Only on first input
 // initialize all the things!
 if (!state.RPGstate.init) { // but only if they aren't, yet
 
-    // initialize stats as defined in statSet
+    // initialize stats menu as defined in statSet:
     // TODO: make this a function thing that dynamically builds the state.stats object
     state.stats = {
         stats:{
@@ -82,7 +80,7 @@ if (!state.RPGstate.init) { // but only if they aren't, yet
         },
         statPoints:5}
 
-    // initialize skills:
+    // initialize skills menu according to charSheet:
     // TODO: make this a function thing that dynamically builds the state.skills object
     state.skills = {} // state.skills enables the skills menu; class skills object must fit with it!; definitions above
     for (let curSkillID of charSheet.skills) {
@@ -100,8 +98,9 @@ if (!state.RPGstate.init) { // but only if they aren't, yet
 
     // specific:
 
-    state.XP = 0
-    state.charFeats = ['flatchest']
+    state.RPGstate.XP = 0
+
+    // state.RPGstate.charSheet.feats = ['flatchest']
 
     state.init = true // so it knows it's been initialized
 }

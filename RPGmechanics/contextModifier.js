@@ -3,22 +3,24 @@ const modifier = (text) => {
   // BEGIN rpg mechanics
   
   // progression:
-  if (state.XP >= 100) { // if player got more then 100 XP...
-    state.XP -= 100 // ...substract 100 XP,...
-    state.stats["statPoints"] += 1 // ...add a stat point,...
+  // TODO: use generic+safe displayStatsUpdate function!
+  if (state.RPGstate.XP >= 100) { // if player got more then 100 XP...
+    state.RPGstate.XP -= 100 // ...substract 100 XP,...
+    state.stats.statPoints += 1 // ...add a stat point,...
     state.skillPoints += 10 // ...add ten skill points...
     state.displayStats.push({key:'\nLevel up', value: 'Points added!', color: 'yellow'}) // ...and tell the player in the info box.
   }
   
   // infobox at the top right:
-  if (state.stats["statPoints"] > 0 || state.skillPoints > 0) { // if there are unspent points...
+  if (state.stats.statPoints > 0 || state.skillPoints > 0) { // if there are unspent points...
     state.displayStats = [{key:'You have unspent points! Open the menus to the right', value: '--->', color: 'red'}] // ...show people that they have points to spend and POINT AT MENUS
-    state.displayStats.push({key:'\nXP', value: state.XP, color: 'green'}) // also show current XP
+    state.displayStats.push({key:'\nXP', value: state.RPGstate.XP, color: 'green'}) // also show current XP
   } else {
-    state.displayStats = [{key:'XP', value: state.XP, color: 'green'}] // show current XP
+    state.displayStats = [{key:'XP', value: state.RPGstate.XP, color: 'green'}] // show current XP
   }
   
   // reading in stats from menu:
+  // TODO: make this work based on statSet
   intMod = state.stats["stats"]["Intelligence"]["level"]
   chaMod = state.stats["stats"]["Charisma"]["level"]
   wisMod = state.stats["stats"]["Wisdom"]["level"]
@@ -27,7 +29,7 @@ const modifier = (text) => {
   conMod = state.stats["stats"]["Constitution"]["level"]
   
   if (info.actionCount > 1 && state.inputBot) {
-    console.log(info?.inputEvaluation) // log what the bot came up with
+    RPGmechsLog(info?.inputEvaluation) // log what the bot came up with
   
   // put bot output into handy variables:
   chkAtt = info?.inputEvaluation["Attribute"]
