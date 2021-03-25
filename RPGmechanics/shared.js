@@ -7,6 +7,8 @@ RPGmechs:{
         state.RPGstate = {}
     }
 
+    state.RPGstate.doLog = true
+
     RPGstate = state.RPGstate
 
     // generic character sheet initializer:
@@ -35,8 +37,8 @@ RPGmechs:{
         charSheet.petType = grabBracket(2)
         charSheet.petName = grabBracket(3)
 
-        console.log(`Taken from intro prompt:`)
-        console.log(charSheet)
+        RPGmechsLog(`Taken from intro prompt:`)
+        RPGmechsLog(charSheet)
 
         modifiedText = text.replace(/\[|\]/g, '') // clean up the text that goes into history
     }
@@ -202,6 +204,58 @@ RPGmechs:{
         }
         return (string)
     }
+
+    function inputTypeCheck(inputText) {
+        // toggles for when to check; redundant by now, keeping for possible later use
+        /*
+        sayCheck = true
+        doCheck = true
+        greaterCheck = true // to check [story] inputs with '>' at the start
+        storyCheck = true
+
+        doTriggered = inputText.match(/> You /gi)
+        sayTriggered = inputText.match(/> You (say|ask)/gi)
+        greaterTriggered = inputText.match(/> /gi)
+
+        if (sayTriggered && sayCheck) {
+            RPGmechsLog("[say] triggered!")
+            return (`say`)
+        } else if (doTriggered && doCheck) {
+            RPGmechsLog("[do] triggered!")
+            return (`do`)
+        } else if (greaterTriggered && greaterCheck) {
+            RPGmechsLog("[>] triggered!")
+            return (`greater`)
+        } else if (storyCheck) {
+            RPGmechsLog("[story] triggered!")
+            return (`story`)
+        }
+        */
+        doTriggered = inputText.match(/> You /gi)
+        sayTriggered = inputText.match(/> You (say|ask)/gi)
+        greaterTriggered = inputText.match(/> /gi)
+
+        if (sayTriggered) {
+            RPGmechsLog("'> You say' in input - [say] triggered!")
+            return (`say`)
+        } else if (doTriggered) {
+            RPGmechsLog("'> You' in input - [do] triggered!")
+            return (`do`)
+        } else if (greaterTriggered) {
+            RPGmechsLog("'>' in input - [>story] triggered!")
+            return (`greater`)
+        } else {
+            RPGmechsLog("No '>' or '> You' in input - [story] triggered!")
+            return (`story`)
+        }
+    }
+
+    function RPGmechsLog(msg) {
+        if (state.RPGstate.doLog) {
+            console.log(msg)
+        }
+    }
+
 }
 // END RPG mechanic stuff
 

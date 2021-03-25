@@ -5,54 +5,32 @@ const modifier = (text) => {
   // BEGIN custom script
   
   // utility stuff:
-  stopInput = false // good to have
+  let stopInput = false // good to have
   
   if (lowered.includes("/r")) { // /r command - this will reset ALL stats and skills!
-    delete state.init // init block will run again
+    delete state.RPGstate.init // init block will run again
     state.message = "Init reset done."
     stopInput = true // no model call
   }
   
   // BEGIN RPG mechanics
   // still utility:
-  if(!state.showDC) {
-    state.showDC = true
+  if(!state.RPGstate.showDC) {
+    state.RPGstate.showDC = true
   }
   
   if (lowered.includes("/showdc")) { // /showDC command
-    if(state.showDC === true) {
-      state.showDC = false
+    if(state.RPGstate.showDC === true) {
+      state.RPGstate.showDC = false
       state.message = "Turned DC display off."
     }
-    if(state.showDC === false) {
-      state.showDC = true
+    if(state.RPGstate.showDC === false) {
+      state.RPGstate.showDC = true
       state.message = "Turned DC display on."
     }
     stopInput = true // no model call
   }
-  
-  // toggles for when to check
-  sayCheck = true
-  doCheck = true
-  greaterCheck = true // to check [story] inputs with '>' at the start
-  storyCheck = true
-  
-  doTriggered = text.match(/> You /gi)
-  sayTriggered = text.match(/> You (say|ask)/gi)
-  greaterTriggered = text.match(/> /gi)
-  
-  if (sayTriggered && sayCheck) {
-    console.log("[say] triggered!")
-  } else if (doTriggered && doCheck) {
-    console.log("[do] triggered!")
-  } else if (greaterTriggered && greaterCheck) {
-    console.log("[>] triggered!")
-  } else if (storyCheck) {
-    console.log("[story] triggered!")
-  }
-  
 
-  
   if (info.actionCount < 1) { // Only on first input
     classString = state.charClassType.toLowerCase() // make sure that any capitalization works
     // state.charClass = kobold // default to kobold :D
