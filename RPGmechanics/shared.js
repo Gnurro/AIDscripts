@@ -1,11 +1,11 @@
 // BEGIN RPG mechanic stuff
 
-
 // base init stuff:
 if (!state.RPGstate) {
     state.RPGstate = {}
 }
 
+// swap for neater code - backswap needed! (or not...? JS is weird...)
 RPGstate = state.RPGstate
 
 if(!RPGstate?.showDC) {
@@ -30,7 +30,7 @@ if (!RPGstate?.charSheet) {
 }
 
 // prompt processing setup:
-const introProcSet = {
+const introBracketSet = {
     brackets:[
         "name",
         "class",
@@ -42,34 +42,24 @@ const introProcSet = {
 
 // grab character info from placeholders:
 if (info.actionCount < 1) {
-    // TODO: make this frameworky
-    // TODO: make object format for this; should be easy to set up!
-    // TODO: promptDef object!
-
-    // the following needs to be set up fitting the intro prompt
-    // unmatched placeholders WILL produce errors!
-
+    // convenience swap:
     charSheet = RPGstate.charSheet
 
-    for (let bracket in introProcSet.brackets) {
-        charSheet[introProcSet.brackets[bracket]] = grabBracket(bracket)
+    // use the introBracketSet to get character info from intro prompt:
+    for (let bracket in introBracketSet.brackets) {
+        charSheet[introBracketSet.brackets[bracket]] = grabBracket(bracket)
     }
 
-    /*
-    charSheet.name = grabBracket(0)
-    charSheet.class = grabBracket(1).toLowerCase() // make sure that any capitalization works
-    // specific:
-    charSheet.petType = grabBracket(2)
-    charSheet.petName = grabBracket(3)
-    */
+    // clean up the text that goes into history:
+    modifiedText = text.replace(/\[|\]/g, '')
+
+    // add class skills to charSheet:
+    charSheet.skills = classDB[charSheet.class].skills
 
     RPGmechsLog(`Read character information from intro prompt:`)
     RPGmechsLog(charSheet)
 
-    modifiedText = text.replace(/\[|\]/g, '') // clean up the text that goes into history
-
-    charSheet.skills = classDB[charSheet.class].skills
-
+    // convenience backswap:
     RPGstate.charSheet = charSheet
 }
 
