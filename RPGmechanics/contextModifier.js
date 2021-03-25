@@ -8,20 +8,28 @@ const modifier = (text) => {
         state.RPGstate.XP -= 100 // ...substract 100 XP,...
         state.stats.statPoints += 1 // ...add a stat point,...
         state.skillPoints += 10 // ...add ten skill points...
-        state.displayStats.push({key: '\nLevel up', value: 'Points added!', color: 'yellow'}) // ...and tell the player in the info box.
+        displayStatsUpdate(['Level up', 'Points added!', 'yellow'])
+        // state.displayStats.push({key: 'Level up', value: 'Points added!', color: 'yellow'}) // ...and tell the player in the info box.
+    } else {
+        displayStatsUpdate(['Level up'])
     }
 
     // infobox at the top right:
     if (state.stats.statPoints > 0 || state.skillPoints > 0) { // if there are unspent points...
+        displayStatsUpdate(['You have unspent points! Open the menus to the right', '--->', 'red'])
+        /*
         state.displayStats = [{
             key: 'You have unspent points! Open the menus to the right',
             value: '--->',
             color: 'red'
         }] // ...show people that they have points to spend and POINT AT MENUS
-        state.displayStats.push({key: '\nXP', value: state.RPGstate.XP, color: 'green'}) // also show current XP
+        */
+        // state.displayStats.push({key: '\nXP', value: state.RPGstate.XP, color: 'green'}) // also show current XP
     } else {
-        state.displayStats = [{key: 'XP', value: state.RPGstate.XP, color: 'green'}] // show current XP
+        displayStatsUpdate(['You have unspent points! Open the menus to the right'])
+        //state.displayStats = [{key: 'XP', value: state.RPGstate.XP, color: 'green'}] // show current XP
     }
+    displayStatsUpdate(['XP', state.RPGstate.XP, 'green'])
 
     /*
     // reading in stats from menu:
@@ -202,7 +210,7 @@ const modifier = (text) => {
             }
 
             // update XP display:
-            state.displayStats = [{key: 'XP', value: state.RPGstate.XP, color: 'green'}]
+            displayStatsUpdate(['XP', state.RPGstate.XP, 'green'])
 
             // display the full line at the bottom:
             if (info.actionCount >= 2) { // but only if it's useful and possible

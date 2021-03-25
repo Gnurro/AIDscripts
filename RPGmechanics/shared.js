@@ -379,6 +379,49 @@ function getRndFromList(list) {
     return (list[getRndInteger(0, list.length)])
 }
 
+// displayStats handling:
+function displayStatsUpdate([inKey, inValue, inColor]) {
+    // if key already exists, update; else push new entry; if no value given, removes displayStat entry matching key, if it exists
+    if (!state.displayStats) {
+        state.displayStats = []
+    }
+    let displayStatUpdated = false
+    for (let displayStat of state.displayStats) {
+        encounterLog(`Checking '${displayStat.key}' displayStats entry...`)
+        let curDisplayStatIndex = state.displayStats.indexOf(displayStat)
+        if (displayStat.key === inKey || displayStat.key === '\n' + inKey) {
+            encounterLog(`Found '${inKey}' displayStats entry: ${state.displayStats[curDisplayStatIndex].key}, ${state.displayStats[curDisplayStatIndex].value}, ${state.displayStats[curDisplayStatIndex].color}, updating!`)
+            if (inValue) {
+                if (typeof (inValue) == 'string') {
+                    inValue = fillPlaceholders(inValue)
+                    encounterLog(`Value to update displayStat entry inputted: '${inValue}', updating.`)
+                    state.displayStats[curDisplayStatIndex].value = inValue
+                } else {
+                    encounterLog(`Value to update displayStat entry inputted: '${inValue}', updating.`)
+                    state.displayStats[curDisplayStatIndex].value = inValue
+                }
+            } else {
+                encounterLog(`No value to update displayStat inputted, removing entry.`)
+                state.displayStats.splice(curDisplayStatIndex, 1)
+                displayStatUpdated = true
+                break
+            }
+            if (inColor) {
+                state.displayStats[curDisplayStatIndex].color = fillPlaceholders(inColor)
+            }
+            displayStatUpdated = true
+            break
+        }
+    }
+    if (displayStatUpdated === false) {
+        encounterLog(`No ${inKey} displayStats entry found, adding it!`)
+        if (state.displayStats.length > 0) {
+            inKey = '\n' + inKey
+        }
+        state.displayStats.push({'key': inKey, 'value': inValue, 'color': inColor})
+    }
+}
+
 // START of placeholder grab thing
 const bracketed = /\[(.*?)\]/g // bracket definition; replace [ ] with symbol of choice - must match smybol used to encapsulate the placeholders in intro prompt!
 
