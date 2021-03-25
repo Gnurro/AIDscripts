@@ -58,7 +58,7 @@ const modifier = (text) => {
       }
   
   if (!stopInput && info.actionCount > 1) { // if the AI gets used
-    state.inputBot = statSet.inputBot // let the inputBot do her job
+    state.inputBot = statConfig.inputBot // let the inputBot do her job
   }
   // END RPG mechanics
    

@@ -30,7 +30,7 @@ if (!RPGstate?.charSheet) {
 }
 
 // prompt processing setup:
-const introBracketSet = {
+const introBracketConfig = {
     brackets: [
         // NOTE: order in this array MUST match the order of brackets in the intro prompt!
         "name",
@@ -41,14 +41,25 @@ const introBracketSet = {
     ]
 }
 
+// classes:
+const classDB = {
+    // "character classes" - currently only skillsets:
+
+    witch: {skills: ['cackle', 'potBrew', 'dance', 'petHandle'],},
+
+    barbarian: {skills: ['rockThrow', 'rage', 'intimidate', 'heavyLift'],},
+
+    kobold: {skills: ['buildTraps', 'hide', 'dragon', 'mining'],},
+}
+
 // grab character info from placeholders:
 if (info.actionCount < 1) {
     // convenience swap:
     charSheet = RPGstate.charSheet
 
     // use the introBracketSet to get character info from intro prompt:
-    for (let bracket in introBracketSet.brackets) {
-        charSheet[introBracketSet.brackets[bracket]] = grabBracket(bracket)
+    for (let bracket in introBracketConfig.brackets) {
+        charSheet[introBracketConfig.brackets[bracket]] = grabBracket(bracket)
     }
 
     // clean up the text that goes into history:
@@ -65,7 +76,7 @@ if (info.actionCount < 1) {
 }
 
 // stats + bot setup:
-const statSet = {
+const statConfig = {
     // the inputBot that is used for general actions:
     inputBot: "BIGinputDCattributeBot5",
     // the stats/attributes it can output:
@@ -108,66 +119,12 @@ const statSet = {
     }
 }
 
-// initialize all the things!
-if (!state.RPGstate.init) { // but only if they aren't, yet
-    RPGmechsLog(`Initializing menus...`)
-
-    // BEGIN vanilla menu initializations:
-
-    // initialize stats menu as defined in statSet:
-    for (let statID in statSet.statList) {
-        state.stats.stats[statSet.statList[statID].name] = {level: statSet.starting.level, cost: statSet.starting.cost}
-        RPGmechsLog(`Added '${statID}' stat to stats menu as '${statSet.statList[statID].name}'.`)
-    }
-    state.stats.statPoints = statSet.starting.points
-
-    // initialize skills menu according to charSheet:
-    // TODO: make this a function thing that dynamically builds the state.skills object
-    state.skills = {} // state.skills enables the skills menu; class skills object must fit with it!; definitions above
-    for (let curSkillID of charSheet.skills) {
-        RPGmechsLog("current skill checked: " + curSkillID)
-        for (let skillDef in skillDB) {
-            RPGmechsLog("current skillDB skilldef: " + skillDef)
-            if (skillDef === curSkillID) {
-                RPGmechsLog(skillDB[skillDef].menuString)
-                state.skills[skillDB[skillDef].menuString] = 0
-            }
-        }
-    }
-    state.skillPoints = 10
-    state.disableRandomSkill = true
-
-    // END vanilla menu initializations.
-
-    state.RPGstate.XP = 0
-
-    // state.RPGstate.charSheet.feats = ['flatchest']
-
-    state.RPGstate.init = true // so it knows it's been initialized
-}
-
-// backswap ... may be redundant, but better safe than sorry:
-state.RPGstate = RPGstate
-
-// iterate over stats, raise costs if 4 or over:
-// TODO: make this a framework option
-for (let stat in state.stats.stats) {
-    if (state.stats.stats[stat]["level"] >= 4) {
-        RPGmechsLog(stat + " over 3, setting cost to 2")
-        state.stats.stats[stat]["cost"] = 2
-    }
-}
-
-
-// classes:
-const classDB = {
-    // "character classes" - currently only skillsets:
-
-    witch: {skills: ['cackle', 'potBrew', 'dance', 'petHandle'],},
-
-    barbarian: {skills: ['rockThrow', 'rage', 'intimidate', 'heavyLift'],},
-
-    kobold: {skills: ['buildTraps', 'hide', 'dragon', 'mining'],},
+const skillConfig = {
+    starting: {
+        points: 10,
+        level: 0,
+    },
+    forbidRandom: true,
 }
 
 // skills:
@@ -260,6 +217,65 @@ const skillDB = {
         triggers: ["\\bcackl(e|ing)"] // to be regEx'd
     }
 }
+
+// initialize all the things!
+if (!state.RPGstate.init) { // but only if they aren't, yet
+    RPGmechsLog(`Initializing menus...`)
+
+    // BEGIN vanilla menu initializations:
+
+    // initialize stats menu as defined in statSet:
+    for (let statID in statConfig.statList) {
+        state.stats.stats[statConfig.statList[statID].name] = {level: statConfig.starting.level, cost: statConfig.starting.cost}
+        RPGmechsLog(`Added '${statID}' stat to stats menu as '${statConfig.statList[statID].name}'.`)
+    }
+    state.stats.statPoints = statConfig.starting.points
+
+    // initialize skills menu according to charSheet:
+
+    // state.skills enables the skills menu; class skills object must fit with it!
+    state.skills = {}
+
+    sheetSkillLoop:
+        for (let curSkillID of charSheet.skills) {
+            RPGmechsLog(`Trying to add '${curSkillID}' skill from character sheet to menu.`)
+            for (let skillDef in skillDB) {
+                // RPGmechsLog(`Looking at '${skillDef}' in skillsDB...`)
+                if (skillDef === curSkillID) {
+                    RPGmechsLog(`Found fitting skill definition '${skillDef}' matching '${curSkillID}' in skillDB.`)
+                    // add skill to menu using skillDB menustring and skillConfig starting level:
+                    state.skills[skillDB[skillDef].menuString] = skillConfig.starting.level
+                    RPGmechsLog(`Added '${skillDB[skillDef].menuString}' to skills menu.`)
+                    continue sheetSkillLoop
+                }
+            }
+            RPGmechsLog(`ERROR: Couldn't find fitting skill definition for '${curSkillID}' in skillDB!`)
+        }
+
+    state.skillPoints = skillConfig.starting.points
+    state.disableRandomSkill = skillConfig.forbidRandom
+
+    // END vanilla menu initializations.
+
+    state.RPGstate.XP = 0
+
+    // state.RPGstate.charSheet.feats = ['jolly']
+
+    state.RPGstate.init = true // so it knows it's been initialized
+}
+
+// backswap ... may be redundant, but better safe than sorry:
+state.RPGstate = RPGstate
+
+// iterate over stats, raise costs if 4 or over:
+// TODO: make this a framework option
+for (let stat in state.stats.stats) {
+    if (state.stats.stats[stat]["level"] >= 4) {
+        RPGmechsLog(stat + " over 3, setting cost to 2")
+        state.stats.stats[stat]["cost"] = 2
+    }
+}
+
 
 // Feats!
 // Stuff that does context notes independent of skill use or checks and prolly sth for checks as well
