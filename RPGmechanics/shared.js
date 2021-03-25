@@ -227,7 +227,7 @@ const skillDB = {
 
     petHandle: {
         // requires pet stuff on character sheet!
-        menuString: RPGstate.charSheet.petType.charAt(0).toUpperCase() + RPGstate.charSheet.petType.slice(1) + " Handling",
+        menuString: capFirstLetter(RPGstate.charSheet.petType) + " Handling",
         triggers: [`\\b${RPGstate.charSheet.petType}(?<=your)`, `\\b${RPGstate.charSheet.petName}`], // to be regEx'd
         overrideAtt: true, // if this skills result strings override the att string
         results: {
@@ -375,6 +375,11 @@ function RPGmechsLog(msg) {
 
 
 // misc helper functions:
+
+function capFirstLetter(string) {
+    return (string.charAt(0).toUpperCase() + string.slice(1))
+}
+
 function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min)) + min
 }
