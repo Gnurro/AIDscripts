@@ -79,37 +79,55 @@ if (info.actionCount < 1) {
 const statConfig = {
     // MANDATORY the inputBot that is used for general actions:
     inputBot: "BIGinputDCattributeBot5",
+    botOutputs: {
+        // these MUST match the exact bot output value names!
+        stat:`Attribute`,
+        dc: `DC`,
+        cuz: `reason`, // ...might change this to something better. 😏
+    },
     // MANDATORY the stats/attributes it can output:
     statList: {
         intelligence: {
             name: "Intelligence",
             tag: "INT",
-            icon: "🧠"
+            icon: "🧠",
+            successAdjective: "smart",
+            failAdjective: "dumb",
         },
         wisdom: {
             name: "Wisdom",
             tag: "WIS",
-            icon: "🤔"
+            icon: "🤔",
+            successAdjective: "wise",
+            failAdjective: "oblivious",
         },
         charisma: {
             name: "Charisma",
             tag: "CHA",
-            icon: "😎"
+            icon: "😎",
+            successAdjective: "impressive",
+            failAdjective: "annoying",
         },
         strength: {
             name: "Strength",
             tag: "STR",
-            icon: "💪"
+            icon: "💪",
+            successAdjective: "strong",
+            failAdjective: "weak",
         },
         dexterity: {
             name: "Dexterity",
             tag: "DEX",
-            icon: "💃"
+            icon: "💃",
+            successAdjective: "nimble",
+            failAdjective: "clumsy",
         },
         constitution: {
             name: "Constitution",
             tag: "CON",
-            icon: "😣"
+            icon: "😣",
+            successAdjective: "tough",
+            failAdjective: "scrawny",
         },
     },
     // MANDATORY starting values for menus:
