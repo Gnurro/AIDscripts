@@ -7,6 +7,8 @@ const modifier = (text) => {
     // utility stuff:
     let stopInput = false // good to have
 
+    // const bracketed = /\[(.*?)\]/g
+
     // /r command - this will reset ALL stats and skills!
     if (lowered.includes("/r")) {
         delete state.RPGstate.init // init block will run again

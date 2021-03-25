@@ -1,5 +1,7 @@
 // BEGIN RPG mechanic stuff
 
+var bracketed = /\[(.*?)\]/g
+
 // base init stuff:
 if (!state.RPGstate) {
     state.RPGstate = {}
@@ -262,7 +264,11 @@ if (!state.RPGstate.init) { // but only if they aren't, yet
     // BEGIN vanilla menu initializations:
     RPGmechsLog(`Initializing menus...`)
     // initialize stats menu as defined in statSet:
+    if (!state.stats) {
+        state.stats = {stats:{}}
+    }
     for (let statID in statConfig.statList) {
+
         state.stats.stats[statConfig.statList[statID].name] = {level: statConfig.starting.level, cost: statConfig.starting.cost}
         RPGmechsLog(`Added '${statID}' stat to stats menu as '${statConfig.statList[statID].name}'.`)
     }
@@ -387,21 +393,21 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
     }
     let displayStatUpdated = false
     for (let displayStat of state.displayStats) {
-        encounterLog(`Checking '${displayStat.key}' displayStats entry...`)
+        RPGmechsLog(`Checking '${displayStat.key}' displayStats entry...`)
         let curDisplayStatIndex = state.displayStats.indexOf(displayStat)
         if (displayStat.key === inKey || displayStat.key === '\n' + inKey) {
-            encounterLog(`Found '${inKey}' displayStats entry: ${state.displayStats[curDisplayStatIndex].key}, ${state.displayStats[curDisplayStatIndex].value}, ${state.displayStats[curDisplayStatIndex].color}, updating!`)
+            RPGmechsLog(`Found '${inKey}' displayStats entry: ${state.displayStats[curDisplayStatIndex].key}, ${state.displayStats[curDisplayStatIndex].value}, ${state.displayStats[curDisplayStatIndex].color}, updating!`)
             if (inValue) {
                 if (typeof (inValue) == 'string') {
                     inValue = fillPlaceholders(inValue)
-                    encounterLog(`Value to update displayStat entry inputted: '${inValue}', updating.`)
+                    RPGmechsLog(`Value to update displayStat entry inputted: '${inValue}', updating.`)
                     state.displayStats[curDisplayStatIndex].value = inValue
                 } else {
-                    encounterLog(`Value to update displayStat entry inputted: '${inValue}', updating.`)
+                    RPGmechsLog(`Value to update displayStat entry inputted: '${inValue}', updating.`)
                     state.displayStats[curDisplayStatIndex].value = inValue
                 }
             } else {
-                encounterLog(`No value to update displayStat inputted, removing entry.`)
+                RPGmechsLog(`No value to update displayStat inputted, removing entry.`)
                 state.displayStats.splice(curDisplayStatIndex, 1)
                 displayStatUpdated = true
                 break
@@ -414,7 +420,7 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
         }
     }
     if (displayStatUpdated === false) {
-        encounterLog(`No ${inKey} displayStats entry found, adding it!`)
+        RPGmechsLog(`No ${inKey} displayStats entry found, adding it!`)
         if (state.displayStats.length > 0) {
             inKey = '\n' + inKey
         }
@@ -423,7 +429,9 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
 }
 
 // START of placeholder grab thing
-const bracketed = /\[(.*?)\]/g // bracket definition; replace [ ] with symbol of choice - must match smybol used to encapsulate the placeholders in intro prompt!
+// const bracketed = /\[(.*?)\]/g // bracket definition; replace [ ] with symbol of choice - must match smybol used to encapsulate the placeholders in intro prompt!
+
+
 
 // grab all bracketed things, put them into array in state
 function grabAllBrackets() {
@@ -439,6 +447,7 @@ function grabAllBrackets() {
 
 //grab only one specific bracketed thing, by count; use above function for longterm storage
 function grabBracket(index) {
+    console.log(text.match(bracketed))
     return (text.match(bracketed)[index].replace(/\[|\]/g, ''))
 }
 

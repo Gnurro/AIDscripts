@@ -74,155 +74,155 @@ const modifier = (text) => {
 
         // get check attribute from bot output and assign appropriate attribute modifiers:
         checkBit:
-        if (chkStat != null) { // if the bot does come up with anything
+            if (chkStat != null) { // if the bot does come up with anything
 
-            // bot derpness safety:
-            // TODO: make this more generic + more useful
-            if (chkStat.includes("Any")) { // bot sometimes gives that one; just take it as 'too generic'
-                chkStatLvl = 0 // so it gets no attribute bonus
-                chkStatPosAdj = "good" // this is the crucial bit for generation, but since the bot said it's generic...
-                chkStatNegAdj = "bad" // ...AI is told generic things below
-                break checkBit
-            }
+                // bot derpness safety:
+                // TODO: make this more generic + more useful
+                if (chkStat.includes("Any")) { // bot sometimes gives that one; just take it as 'too generic'
+                    chkStatLvl = 0 // so it gets no attribute bonus
+                    chkStatPosAdj = "good" // this is the crucial bit for generation, but since the bot said it's generic...
+                    chkStatNegAdj = "bad" // ...AI is told generic things below
+                    break checkBit
+                }
 
-            // get the corresponding modifier from stat menu:
-            chkStatLvl = state.stats.stats[chkStat].level
+                // get the corresponding modifier from stat menu:
+                chkStatLvl = state.stats.stats[chkStat].level
 
-            // get adjectives from statConfig:
-            chkStatPosAdj = statConfig.statList[chkStat.toLowerCase()].successAdjective // this is the crucial bit for generation, but since the bot said it's generic...
-            chkStatNegAdj = statConfig.statList[chkStat.toLowerCase()].failAdjective // ...AI is told generic things below
-
-            /*
-            if (chkStat.includes("Intelligence")) { // when the bot comes up with an attribute...
-                chkStatLvl = intMod // ...assign the appropriate attribute modifier...
-                chkStatPosAdj = "smart" // ...and use a fitting positive word...
-                chkStatNegAdj = "dumb" // ...or negative word to let the AI know for generation below
-            }
-            // same as above, for all attributes:
-            if (chkStat.includes("Wisdom")) {
-                chkStatLvl = wisMod
-                chkStatPosAdj = "wise"
-                chkStatNegAdj = "oblivious"
-            }
-            if (chkStat.includes("Charisma")) {
-                chkStatLvl = chaMod
-                chkStatPosAdj = "charming"
-                chkStatNegAdj = "annoying"
-            }
-            if (chkStat.includes("Strength")) {
-                chkStatLvl = strMod
-                chkStatPosAdj = "strong"
-                chkStatNegAdj = "weak"
-            }
-            if (chkStat.includes("Dexterity")) {
-                chkStatLvl = dexMod
-                chkStatPosAdj = "nimble"
-                chkStatNegAdj = "clumsy"
-            }
-            if (chkStat.includes("Constitution")) {
-                chkStatLvl = conMod
-                chkStatPosAdj = "tough"
-                chkStatNegAdj = "scrawny"
-            }
-            */
-
-            // skill handling:
-            if (typeof (state.RPGstate?.chkSkillBonus) !== 'undefined') { // if there's a skill bonus...
-                chkSitBonus = chkStatLvl + state.RPGstate.chkSkillBonus // ...add it to the attribute modifier to get the full check modifier
+                // get adjectives from statConfig:
+                chkStatPosAdj = statConfig.statList[chkStat.toLowerCase()].successAdjective // this is the crucial bit for generation, but since the bot said it's generic...
+                chkStatNegAdj = statConfig.statList[chkStat.toLowerCase()].failAdjective // ...AI is told generic things below
 
                 /*
-                // get skill-dependent result strings:
-                for (let skillDef in skillDB) {
-                    if (skillDef === state.RPGstate.chkSitSkill) {
-                        RPGmechsLog("Found skillDef for current skill:" + skillDef)
-
-
-                        if (skillDB[skillDef].overrideAtt === true) {
-                            overrideAtt = true
-                            chkSkillPosStr = state.RPGstate.chkSitSkill.results.positive
-                            chkSkillNegStr = state.RPGstate.chkSitSkill.results.negative
-                        }
-                        if (skillDB[skillDef].overrideAtt === false) {
-                            overrideAtt = false
-                            chkSkillPosStr = skillDB[skillDef].results.positive
-                            chkSkillNegStr = skillDB[skillDef].results.negative
-                        }
-                    }
+                if (chkStat.includes("Intelligence")) { // when the bot comes up with an attribute...
+                    chkStatLvl = intMod // ...assign the appropriate attribute modifier...
+                    chkStatPosAdj = "smart" // ...and use a fitting positive word...
+                    chkStatNegAdj = "dumb" // ...or negative word to let the AI know for generation below
+                }
+                // same as above, for all attributes:
+                if (chkStat.includes("Wisdom")) {
+                    chkStatLvl = wisMod
+                    chkStatPosAdj = "wise"
+                    chkStatNegAdj = "oblivious"
+                }
+                if (chkStat.includes("Charisma")) {
+                    chkStatLvl = chaMod
+                    chkStatPosAdj = "charming"
+                    chkStatNegAdj = "annoying"
+                }
+                if (chkStat.includes("Strength")) {
+                    chkStatLvl = strMod
+                    chkStatPosAdj = "strong"
+                    chkStatNegAdj = "weak"
+                }
+                if (chkStat.includes("Dexterity")) {
+                    chkStatLvl = dexMod
+                    chkStatPosAdj = "nimble"
+                    chkStatNegAdj = "clumsy"
+                }
+                if (chkStat.includes("Constitution")) {
+                    chkStatLvl = conMod
+                    chkStatPosAdj = "tough"
+                    chkStatNegAdj = "scrawny"
                 }
                 */
 
-            } else { // if there's no skill bonus...
-                chkSitBonus = chkStatLvl // ...just use the attribute modifier
-            }
+                // skill handling:
+                if (typeof (state.RPGstate?.chkSkillBonus) !== 'undefined') { // if there's a skill bonus...
+                    chkSitBonus = chkStatLvl + state.RPGstate.chkSkillBonus // ...add it to the attribute modifier to get the full check modifier
 
-            // Feats handling:
-            /*
-            for (feat of state.charFeats) {
-                console.log(feat)
-            }
-            */
+                    /*
+                    // get skill-dependent result strings:
+                    for (let skillDef in skillDB) {
+                        if (skillDef === state.RPGstate.chkSitSkill) {
+                            RPGmechsLog("Found skillDef for current skill:" + skillDef)
 
 
-            // the actual check:
-            // TODO: make most of this configurable!
-
-            // pretend to 'roll a twenty-sided die':
-            // TODO: allow other dice!; +different dice for different things: could go into skillDef!
-            let roll = getRndInteger(1, 20)
-
-            // add the check modifier to the roll to get the result:
-            let chkModRoll = roll + chkSitBonus
-
-            if (chkModRoll >= chkDC) { // if the result beats the DC...
-
-                chkMessageResult = miscConfig.successMessage // ...put the result in words for the player...
-
-                if (typeof (state.RPGstate.chkSitSkill.results.positive) !== 'undefined') {
-                    if (state.RPGstate.chkSitSkill.overrideAtt === true) {
-                        resultContextString = `[${state.RPGstate.chkSitSkill.results.positive}]` // ...and in words for the AI, as well,...
+                            if (skillDB[skillDef].overrideAtt === true) {
+                                overrideAtt = true
+                                chkSkillPosStr = state.RPGstate.chkSitSkill.results.positive
+                                chkSkillNegStr = state.RPGstate.chkSitSkill.results.negative
+                            }
+                            if (skillDB[skillDef].overrideAtt === false) {
+                                overrideAtt = false
+                                chkSkillPosStr = skillDB[skillDef].results.positive
+                                chkSkillNegStr = skillDB[skillDef].results.negative
+                            }
+                        }
                     }
-                    if (state.RPGstate.chkSitSkill.overrideAtt === false) {
-                        resultContextString = `[You are ${chkStatPosAdj} enough for that right now, and ${state.RPGstate.chkSitSkill.results.positive}.]` // ...and in words for the AI, as well,...
-                    }
-                } else {
-                    resultContextString = `[You are ${chkStatPosAdj} enough for that right now.]`
+                    */
+
+                } else { // if there's no skill bonus...
+                    chkSitBonus = chkStatLvl // ...just use the attribute modifier
                 }
-                state.RPGstate.XP += chkXP // ...then add appropriate XP
 
-            } else { // if the result does NOT beat the DC...
-
-                chkMessageResult = miscConfig.failMessage // ...put the result in words for the player...
-
-                if (typeof (state.RPGstate.chkSitSkill.results.negative) !== 'undefined') {
-                    if (state.RPGstate.chkSitSkill.overrideAtt === true) {
-                        resultContextString = `[${state.RPGstate.chkSitSkill.results.negative}]` // ...and in words for the AI, as well,...
-                    }
-                    if (state.RPGstate.chkSitSkill.overrideAtt === false) {
-                        resultContextString = `[You are too ${chkStatNegAdj} for that right now, and ${state.RPGstate.chkSitSkill.results.negative}.]` // ...and in words for the AI, as well,...
-                    }
-                } else {
-                    resultContextString = `[You are too ${chkStatNegAdj} for that right now.]`
+                // Feats handling:
+                /*
+                for (feat of state.charFeats) {
+                    console.log(feat)
                 }
-                if (chkXP > 1) { // ...make sure to not add half XP...
-                    chkXP = Math.floor(chkXP / 2) // ...by rounding up after halving...
+                */
+
+
+                // the actual check:
+                // TODO: make most of this configurable!
+
+                // pretend to 'roll a twenty-sided die':
+                // TODO: allow other dice!; +different dice for different things: could go into skillDef!
+                let roll = getRndInteger(1, 20)
+
+                // add the check modifier to the roll to get the result:
+                let chkModRoll = roll + chkSitBonus
+
+                if (chkModRoll >= chkDC) { // if the result beats the DC...
+
+                    chkMessageResult = miscConfig.successMessage // ...put the result in words for the player...
+
+                    if (typeof (state.RPGstate.chkSitSkill.results.positive) !== 'undefined') {
+                        if (state.RPGstate.chkSitSkill.overrideAtt === true) {
+                            resultContextString = `[${state.RPGstate.chkSitSkill.results.positive}]` // ...and in words for the AI, as well,...
+                        }
+                        if (state.RPGstate.chkSitSkill.overrideAtt === false) {
+                            resultContextString = `[You are ${chkStatPosAdj} enough for that right now, and ${state.RPGstate.chkSitSkill.results.positive}.]` // ...and in words for the AI, as well,...
+                        }
+                    } else {
+                        resultContextString = `[You are ${chkStatPosAdj} enough for that right now.]`
+                    }
+                    state.RPGstate.XP += chkXP // ...then add appropriate XP
+
+                } else { // if the result does NOT beat the DC...
+
+                    chkMessageResult = miscConfig.failMessage // ...put the result in words for the player...
+
+                    if (typeof (state.RPGstate.chkSitSkill.results.negative) !== 'undefined') {
+                        if (state.RPGstate.chkSitSkill.overrideAtt === true) {
+                            resultContextString = `[${state.RPGstate.chkSitSkill.results.negative}]` // ...and in words for the AI, as well,...
+                        }
+                        if (state.RPGstate.chkSitSkill.overrideAtt === false) {
+                            resultContextString = `[You are too ${chkStatNegAdj} for that right now, and ${state.RPGstate.chkSitSkill.results.negative}.]` // ...and in words for the AI, as well,...
+                        }
+                    } else {
+                        resultContextString = `[You are too ${chkStatNegAdj} for that right now.]`
+                    }
+                    if (chkXP > 1) { // ...make sure to not add half XP...
+                        chkXP = Math.floor(chkXP / 2) // ...by rounding up after halving...
+                    }
+                    state.RPGstate.XP += chkXP // ...then add appropriate XP
                 }
-                state.RPGstate.XP += chkXP // ...then add appropriate XP
-            }
 
-            // update XP display:
-            displayStatsUpdate(['XP', state.RPGstate.XP, 'green'])
+                // update XP display:
+                displayStatsUpdate(['XP', state.RPGstate.XP, 'green'])
 
-            // display the full line at the bottom:
-            if (info.actionCount >= 2) { // but only if it's useful and possible
-                state.message += ` ${chkStat} roll: ${chkModRoll} (${roll}${makeModString(chkStatLvl)}${makeModString(state.RPGstate.chkSkillBonus)}), ${chkMessageResult} XP gained: ${chkXP}` // add all the check stuff to the message
-            }
+                // display the full line at the bottom:
+                if (info.actionCount >= 2) { // but only if it's useful and possible
+                    state.message += ` ${chkStat} roll: ${chkModRoll} (${roll}${makeModString(chkStatLvl)}${makeModString(state.RPGstate.chkSkillBonus)}), ${chkMessageResult} XP gained: ${chkXP}` // add all the check stuff to the message
+                }
 
-            // clean up:
-            if (typeof (state.RPGstate?.chkSkillBonus) !== 'undefined') { // if there's a skill bonus...
-                delete state.RPGstate.chkSkillBonus // ...get rid of it, so it doesn't go into next check
-                delete state.RPGstate.chkSitSkill
+                // clean up:
+                if (typeof (state.RPGstate?.chkSkillBonus) !== 'undefined') { // if there's a skill bonus...
+                    delete state.RPGstate.chkSkillBonus // ...get rid of it, so it doesn't go into next check
+                    delete state.RPGstate.chkSitSkill
+                }
             }
-        }
 
         /*
         for (feat of state.charFeats) {
