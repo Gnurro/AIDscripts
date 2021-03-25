@@ -202,7 +202,7 @@ const skillDB = {
     },
 
     petHandle: {
-        // TODO: make stuff like this frameworky!
+        // requires pet stuff on character sheet!
         menuString: RPGstate.charSheet.petType.charAt(0).toUpperCase() + RPGstate.charSheet.petType.slice(1) + " Handling",
         triggers: [`\\b${RPGstate.charSheet.petType}(?<=your)`, `\\b${RPGstate.charSheet.petName}`], // to be regEx'd
         overrideAtt: true, // if this skills result strings override the att string

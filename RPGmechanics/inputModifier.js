@@ -28,7 +28,6 @@ const modifier = (text) => {
   }
   
   // skill processing:
-  // TODO: fit this into new framework things
   for (let skill in state.skills) { // go through skills
 
     let skillMod = state.skills[skill] // get skill modifier from menu
@@ -43,7 +42,7 @@ const modifier = (text) => {
               let caughtTrigger = text.match(triggerRegEx)
               
               if (caughtTrigger) {
-                console.log(`Caught '${caughtTrigger}' of '${skillDB[skillDef].menuString}'!`)
+                RPGmechsLog(`Caught '${caughtTrigger}' of '${skillDB[skillDef].menuString}'!`)
                 if (!state.RPGstate.chkSitBonus) { // make state.var to grab in contextMod
                   state.RPGstate.chkSitBonus = 0
                 }
