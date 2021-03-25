@@ -16,6 +16,11 @@ if (!RPGstate?.doLog) {
     RPGstate.doLog = true
 }
 
+const miscConfig = {
+    successMessage: `Success!`,
+    failMessage: `Fail!`,
+}
+
 // MANDATORY generic character sheet initializer:
 if (!RPGstate?.charSheet) {
     RPGstate.charSheet = {
@@ -27,12 +32,6 @@ if (!RPGstate?.charSheet) {
         petType: "",
         petName: ""
     }
-}
-
-const miscConfig = {
-    successMessage: `Success!`,
-    failMessage: `Fail!`,
-
 }
 
 // MANDATORY prompt processing setup:
@@ -49,12 +48,8 @@ const introBracketConfig = {
 
 // MANDATORY classes:
 const classDB = {
-    // "character classes" - currently only skillsets:
-
     witch: {skills: ['cackle', 'potBrew', 'dance', 'petHandle'],},
-
     barbarian: {skills: ['rockThrow', 'rage', 'intimidate', 'heavyLift'],},
-
     kobold: {skills: ['buildTraps', 'hide', 'dragon', 'mining'],},
 }
 
@@ -319,15 +314,8 @@ if (statConfig.raise) {
     }
 }
 
-
-
-
 // backswap ... may be redundant, but better safe than sorry:
 state.RPGstate = RPGstate
-
-
-
-
 
 
 // Utility functions:
@@ -369,7 +357,6 @@ function RPGmechsLog(msg) {
         console.log(msg)
     }
 }
-
 
 // END RPG mechanic stuff
 
