@@ -3,9 +3,6 @@ const modifier = (text) => {
   const lowered = text.toLowerCase()
   
   // BEGIN custom script
-  if (info.actionCount < 1) { // Only on first input
-    modifiedText = text.replace(/\[|\]/g, '') // clean up the text that goes into history
-  }
   
   // utility stuff:
   stopInput = false // good to have
@@ -142,7 +139,7 @@ const modifier = (text) => {
       }
   
   if (!stopInput && info.actionCount > 1) { // if the AI gets used
-    state.inputBot = 'BIGinputDCattributeBot5' // let BIGinputDCattributeBot5 do her job
+    state.inputBot = statSet.inputBot // let the inputBot do her job
   }
   // END RPG mechanics
    
