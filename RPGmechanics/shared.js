@@ -29,6 +29,12 @@ if (!RPGstate?.charSheet) {
     }
 }
 
+const miscConfig = {
+    successMessage: `Success!`,
+    failMessage: `Fail!`,
+
+}
+
 // MANDATORY prompt processing setup:
 const introBracketConfig = {
     brackets: [
@@ -248,6 +254,7 @@ const skillDB = {
 
 // Feats!
 // Stuff that does context notes independent of skill use or checks and prolly sth for checks as well
+// TODO: ...feats.
 const featDB = {}
 
 // initialize all the things!
