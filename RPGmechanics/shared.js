@@ -21,47 +21,56 @@ if (!RPGstate?.charSheet) {
     RPGstate.charSheet = {
         name: "",
         class: "",
-        skills:[],
+        stats: [],
+        skills: [],
         // specific:
         petType: "",
         petName: ""
     }
 }
 
+// prompt processing setup:
+const introProcSet = {
+    brackets:[
+        "name",
+        "class",
+        // specific:
+        "petType",
+        "petName"
+    ]
+}
 
 // grab character info from placeholders:
 if (info.actionCount < 1) {
     // TODO: make this frameworky
     // TODO: make object format for this; should be easy to set up!
+    // TODO: promptDef object!
 
     // the following needs to be set up fitting the intro prompt
     // unmatched placeholders WILL produce errors!
 
     charSheet = RPGstate.charSheet
 
+    for (let bracket in introProcSet.brackets) {
+        charSheet[introProcSet.brackets[bracket]] = grabBracket(bracket)
+    }
+
+    /*
     charSheet.name = grabBracket(0)
-    charSheet.class = grabBracket(1)
+    charSheet.class = grabBracket(1).toLowerCase() // make sure that any capitalization works
     // specific:
     charSheet.petType = grabBracket(2)
     charSheet.petName = grabBracket(3)
+    */
 
-    RPGmechsLog(`Taken from intro prompt:`)
+    RPGmechsLog(`Read character information from intro prompt:`)
     RPGmechsLog(charSheet)
 
     modifiedText = text.replace(/\[|\]/g, '') // clean up the text that goes into history
 
-    classString = state.charClassType.toLowerCase() // make sure that any capitalization works
-    // state.charClass = kobold // default to kobold :D
-    // assign typed-in class, if it's defined: --FIX: do this smarter/dynamically
-    if (classString === "witch") {
-        state.charClass = classDB.witch.skills
-    }
-    if (classString === "barbarian") {
-        state.charClass = barbarian
-    }
-    if (classString === "kobold") {
-        state.charClass = kobold
-    }
+    charSheet.skills = classDB[charSheet.class].skills
+
+    RPGstate.charSheet = charSheet
 }
 
 // initialize all the things!
@@ -84,7 +93,7 @@ if (!state.RPGstate.init) { // but only if they aren't, yet
     // TODO: make this a function thing that dynamically builds the state.skills object
     state.skills = {} // state.skills enables the skills menu; class skills object must fit with it!; definitions above
     for (let curSkillID of charSheet.skills) {
-        RPGmechsLog("current ID checked: " + curSkillID)
+        RPGmechsLog("current skill checked: " + curSkillID)
         for (let skillDef in skillDB) {
             RPGmechsLog("current skillDB skilldef: " + skillDef)
             if (skillDef === curSkillID) {
@@ -105,13 +114,18 @@ if (!state.RPGstate.init) { // but only if they aren't, yet
     state.init = true // so it knows it's been initialized
 }
 
+state.RPGstate = RPGstate
+
 // iterate over stats, raise costs if 4 or over:
-for (att in state.stats["stats"]) {
-    if (state.stats["stats"][att]["level"] >= 4) {
-        RPGmechsLog(att + " over 3, setting cost to 2")
-        state.stats["stats"][att]["cost"] = 2
+// TODO: make this a framework option
+for (let stat in state.stats.stats) {
+    if (state.stats.stats[stat]["level"] >= 4) {
+        RPGmechsLog(stat + " over 3, setting cost to 2")
+        state.stats.stats[stat]["cost"] = 2
     }
 }
+
+
 
 // stats + bot setup:
 const statSet = {
