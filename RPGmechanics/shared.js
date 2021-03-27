@@ -83,7 +83,7 @@ if (info.actionCount < 1) {
 }
 
 // MANDATORY stats + bot setup:
-const statConfig = {
+statConfig = {
     // MANDATORY the inputBot that is used for general actions:
     inputBot: "BIGinputDCattributeBot5",
     botOutputs: {
@@ -94,6 +94,14 @@ const statConfig = {
     },
     // MANDATORY the stats/attributes it can output:
     statList: {
+        unknown: {
+            // safety measure for DCbot derpiness
+            name: "Unknown",
+            tag: "UNK",
+            icon: "???",
+            successAdjective: "good",
+            failAdjective: "bad",
+        },
         intelligence: {
             name: "Intelligence",
             tag: "INT",
@@ -399,7 +407,6 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
             RPGmechsLog(`Found '${inKey}' displayStats entry: ${state.displayStats[curDisplayStatIndex].key}, ${state.displayStats[curDisplayStatIndex].value}, ${state.displayStats[curDisplayStatIndex].color}, updating!`)
             if (inValue) {
                 if (typeof (inValue) == 'string') {
-                    inValue = fillPlaceholders(inValue)
                     RPGmechsLog(`Value to update displayStat entry inputted: '${inValue}', updating.`)
                     state.displayStats[curDisplayStatIndex].value = inValue
                 } else {
@@ -413,7 +420,7 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
                 break
             }
             if (inColor) {
-                state.displayStats[curDisplayStatIndex].color = fillPlaceholders(inColor)
+                state.displayStats[curDisplayStatIndex].color = inColor
             }
             displayStatUpdated = true
             break

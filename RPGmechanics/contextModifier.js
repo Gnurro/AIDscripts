@@ -11,7 +11,7 @@ const modifier = (text) => {
         displayStatsUpdate(['Level up', 'Points added!', 'yellow'])
         // state.displayStats.push({key: 'Level up', value: 'Points added!', color: 'yellow'}) // ...and tell the player in the info box.
     } else {
-        displayStatsUpdate(['Level up'])
+        displayStatsUpdate(['Level up', ''])
     }
 
     // infobox at the top right:
@@ -53,9 +53,20 @@ const modifier = (text) => {
 
         // put bot output into handy variables:
         // TODO: this needs to be configurable!
-        let chkStat = info?.inputEvaluation[statConfig.botOutputs.stat]
-        let chkDC = info?.inputEvaluation[statConfig.botOutputs.dc]
-        let chkCuz = info?.inputEvaluation[statConfig.botOutputs.cuz]
+        chkStat = info?.inputEvaluation[statConfig.botOutputs.stat]
+        chkDC = info?.inputEvaluation[statConfig.botOutputs.dc]
+        chkCuz = info?.inputEvaluation[statConfig.botOutputs.cuz]
+
+        if (chkStat == null) {
+            chkStat = 'unknown'
+        } else if (!statConfig.statList[chkStat]) {
+            RPGmechsLog(`DCbot got creative and said this is ${chkStat}, but that isn't a configured stat - setting it to 'unknown' for processing.`)
+            chkStat = 'unknown'
+        }
+
+        if (chkDC == null) {
+            chkDC = 0
+        }
 
         // turn off bot; cleanup
         delete state.inputBot
@@ -66,8 +77,8 @@ const modifier = (text) => {
 
         // optional DC display:
         // TODO: make this more configurable; framework options
-        if (state.RPGstate.showDC) { // if the display is on (iE, state.showDC == true)...
-            state.message = `${miscConfig.messageStatIcon ? statConfig.statList[chkStat].icon : statConfig.statList[chkStat].name} DC${chkDC}: ${chkCuz}` // ...show the attribute, DC and reason in state.message
+        if (state.RPGstate?.showDC) { // if the display is on (iE, state.showDC == true)...
+            state.message = `${miscConfig.messageStatIcon ? statConfig.statList[chkStat.toLowerCase()].icon : statConfig.statList[chkStat.toLowerCase()].name} DC${chkDC}: ${chkCuz}` // ...show the attribute, DC and reason in state.message
         } else { // if the display is off (iE, state.showDC == false)...
             state.message = chkCuz // ...show only the reason
         }
@@ -86,7 +97,11 @@ const modifier = (text) => {
                 }
 
                 // get the corresponding modifier from stat menu:
-                chkStatLvl = state.stats.stats[chkStat].level
+                if (!chkStat == 'unknown') {
+                    chkStatLvl = state.stats.stats[chkStat].level
+                } else {
+                    chkStatLvl = 0
+                }
 
                 // get adjectives from statConfig:
                 chkStatPosAdj = statConfig.statList[chkStat.toLowerCase()].successAdjective // this is the crucial bit for generation, but since the bot said it's generic...
@@ -177,11 +192,11 @@ const modifier = (text) => {
 
                     chkMessageResult = miscConfig.successMessage // ...put the result in words for the player...
 
-                    if (typeof (state.RPGstate.chkSitSkill.results.positive) !== 'undefined') {
-                        if (state.RPGstate.chkSitSkill.overrideAtt === true) {
+                    if (typeof (state.RPGstate?.chkSitSkill?.results?.positive) !== 'undefined') {
+                        if (state.RPGstate?.chkSitSkill?.overrideAtt === true) {
                             resultContextString = `[${state.RPGstate.chkSitSkill.results.positive}]` // ...and in words for the AI, as well,...
                         }
-                        if (state.RPGstate.chkSitSkill.overrideAtt === false) {
+                        if (state.RPGstate?.chkSitSkill?.overrideAtt === false) {
                             resultContextString = `[You are ${chkStatPosAdj} enough for that right now, and ${state.RPGstate.chkSitSkill.results.positive}.]` // ...and in words for the AI, as well,...
                         }
                     } else {
@@ -193,11 +208,11 @@ const modifier = (text) => {
 
                     chkMessageResult = miscConfig.failMessage // ...put the result in words for the player...
 
-                    if (typeof (state.RPGstate.chkSitSkill.results.negative) !== 'undefined') {
-                        if (state.RPGstate.chkSitSkill.overrideAtt === true) {
+                    if (typeof (state.RPGstate?.chkSitSkill?.results?.negative) !== 'undefined') {
+                        if (state.RPGstate?.chkSitSkill?.overrideAtt === true) {
                             resultContextString = `[${state.RPGstate.chkSitSkill.results.negative}]` // ...and in words for the AI, as well,...
                         }
-                        if (state.RPGstate.chkSitSkill.overrideAtt === false) {
+                        if (state.RPGstate?.chkSitSkill?.overrideAtt === false) {
                             resultContextString = `[You are too ${chkStatNegAdj} for that right now, and ${state.RPGstate.chkSitSkill.results.negative}.]` // ...and in words for the AI, as well,...
                         }
                     } else {
