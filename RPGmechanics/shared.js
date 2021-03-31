@@ -1,6 +1,6 @@
 // BEGIN RPG mechanic stuff
 
-var bracketed = /\[(.*?)\]/g
+var bracketed = /\[(.*?)\]/g // somehow needs to go here, due to AID scope being super-weird...
 
 // base init stuff:
 if (!state.RPGstate) {
@@ -69,9 +69,6 @@ if (info.actionCount < 1) {
         charSheet[introBracketConfig.brackets[bracket]] = grabBracket(bracket)
     }
 
-    // clean up the text that goes into history:
-    modifiedText = text.replace(/\[|\]/g, '')
-
     // add class skills to charSheet:
     charSheet.skills = classDB[charSheet.class.toLowerCase()].skills
 
@@ -101,6 +98,7 @@ statConfig = {
             icon: "???",
             successAdjective: "good",
             failAdjective: "bad",
+            ignoreForMenu: true
         },
         intelligence: {
             name: "Intelligence",
@@ -276,9 +274,13 @@ if (!state.RPGstate.init) { // but only if they aren't, yet
         state.stats = {stats:{}}
     }
     for (let statID in statConfig.statList) {
+        if (!statConfig.statList[statID].ignoreForMenu == true) {
+            state.stats.stats[statConfig.statList[statID].name] = {level: statConfig.starting.level, cost: statConfig.starting.cost}
+            RPGmechsLog(`Added '${statID}' stat to stats menu as '${statConfig.statList[statID].name}'.`)
+        } else {
+            RPGmechsLog(`Ignored '${statID}' stat for stats menu adding.`)
+        }
 
-        state.stats.stats[statConfig.statList[statID].name] = {level: statConfig.starting.level, cost: statConfig.starting.cost}
-        RPGmechsLog(`Added '${statID}' stat to stats menu as '${statConfig.statList[statID].name}'.`)
     }
     state.stats.statPoints = statConfig.starting.points
 
@@ -317,16 +319,16 @@ if (!state.RPGstate.init) { // but only if they aren't, yet
 
 // iterate over stats, raise costs:
 if (statConfig.raise) {
-    RPGmechsLog(`Found stat cost raising in statConfig.`)
+    // RPGmechsLog(`Found stat cost raising in statConfig.`)
     for (let stat in state.stats.stats) {
-        RPGmechsLog(`Raising stat costs: Checking level of '${stat}'.`)
+        // RPGmechsLog(`Raising stat costs: Checking level of '${stat}'.`)
         for (let curRaise of statConfig.raise) {
-            RPGmechsLog(`Raising stat costs: Checking level '${curRaise.threshold}' raise.`)
+            // RPGmechsLog(`Raising stat costs: Checking level '${curRaise.threshold}' raise.`)
             if (state.stats.stats[stat].level >= curRaise.threshold) {
-                RPGmechsLog(`'${stat}' level (${state.stats.stats[stat].level}) at or over ${curRaise.threshold} threshold, setting cost to ${curRaise.newCost}`)
+                // RPGmechsLog(`'${stat}' level (${state.stats.stats[stat].level}) at or over ${curRaise.threshold} threshold, setting cost to ${curRaise.newCost}`)
                 state.stats.stats[stat]["cost"] = 2
             } else {
-                RPGmechsLog(`Raising stat costs: Level of '${stat}' below threshold.`)
+                // RPGmechsLog(`Raising stat costs: Level of '${stat}' below threshold.`)
             }
         }
     }
@@ -426,7 +428,7 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
             break
         }
     }
-    if (displayStatUpdated === false) {
+    if (displayStatUpdated === false && inValue?.length > 0) {
         RPGmechsLog(`No ${inKey} displayStats entry found, adding it!`)
         if (state.displayStats.length > 0) {
             inKey = '\n' + inKey

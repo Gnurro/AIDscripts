@@ -9,6 +9,13 @@ const modifier = (text) => {
 
     // const bracketed = /\[(.*?)\]/g
 
+
+    if (info.actionCount < 1) {
+        // clean up the text that goes into history:
+        modifiedText = text.replace(/\[|\]/g, '')
+    }
+
+
     // /r command - this will reset ALL stats and skills!
     if (lowered.includes("/r")) {
         delete state.RPGstate.init // init block will run again
