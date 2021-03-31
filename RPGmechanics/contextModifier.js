@@ -3,13 +3,11 @@ const modifier = (text) => {
     // BEGIN rpg mechanics
 
     // progression:
-    // TODO: use generic+safe displayStatsUpdate function!
     if (state.RPGstate.XP >= 100) { // if player got more then 100 XP...
         state.RPGstate.XP -= 100 // ...substract 100 XP,...
         state.stats.statPoints += 1 // ...add a stat point,...
         state.skillPoints += 10 // ...add ten skill points...
-        displayStatsUpdate(['Level up', 'Points added!', 'yellow'])
-        // state.displayStats.push({key: 'Level up', value: 'Points added!', color: 'yellow'}) // ...and tell the player in the info box.
+        displayStatsUpdate(['Level up', 'Points added!', 'yellow']) // ...and tell the player in the info box.
     } else {
         displayStatsUpdate(['Level up', ''])
     }
@@ -17,31 +15,10 @@ const modifier = (text) => {
     // infobox at the top right:
     if (state.stats.statPoints > 0 || state.skillPoints > 0) { // if there are unspent points...
         displayStatsUpdate(['You have unspent points! Open the menus to the right', '--->', 'red'])
-        /*
-        state.displayStats = [{
-            key: 'You have unspent points! Open the menus to the right',
-            value: '--->',
-            color: 'red'
-        }] // ...show people that they have points to spend and POINT AT MENUS
-        */
-        // state.displayStats.push({key: '\nXP', value: state.RPGstate.XP, color: 'green'}) // also show current XP
     } else {
         displayStatsUpdate(['You have unspent points! Open the menus to the right'])
-        //state.displayStats = [{key: 'XP', value: state.RPGstate.XP, color: 'green'}] // show current XP
     }
     displayStatsUpdate(['XP', state.RPGstate.XP, 'green'])
-
-    /*
-    // reading in stats from menu:
-    // TODO: make this work based on statConfig || smarter?
-    // TODO: just integrate into check below!
-    intMod = state.stats["stats"]["Intelligence"]["level"]
-    chaMod = state.stats["stats"]["Charisma"]["level"]
-    wisMod = state.stats["stats"]["Wisdom"]["level"]
-    strMod = state.stats["stats"]["Strength"]["level"]
-    dexMod = state.stats["stats"]["Dexterity"]["level"]
-    conMod = state.stats["stats"]["Constitution"]["level"]
-    */
 
     if (info.actionCount > 1 && state.inputBot) {
 
@@ -107,65 +84,9 @@ const modifier = (text) => {
                 chkStatPosAdj = statConfig.statList[chkStat.toLowerCase()].successAdjective // this is the crucial bit for generation, but since the bot said it's generic...
                 chkStatNegAdj = statConfig.statList[chkStat.toLowerCase()].failAdjective // ...AI is told generic things below
 
-                /*
-                if (chkStat.includes("Intelligence")) { // when the bot comes up with an attribute...
-                    chkStatLvl = intMod // ...assign the appropriate attribute modifier...
-                    chkStatPosAdj = "smart" // ...and use a fitting positive word...
-                    chkStatNegAdj = "dumb" // ...or negative word to let the AI know for generation below
-                }
-                // same as above, for all attributes:
-                if (chkStat.includes("Wisdom")) {
-                    chkStatLvl = wisMod
-                    chkStatPosAdj = "wise"
-                    chkStatNegAdj = "oblivious"
-                }
-                if (chkStat.includes("Charisma")) {
-                    chkStatLvl = chaMod
-                    chkStatPosAdj = "charming"
-                    chkStatNegAdj = "annoying"
-                }
-                if (chkStat.includes("Strength")) {
-                    chkStatLvl = strMod
-                    chkStatPosAdj = "strong"
-                    chkStatNegAdj = "weak"
-                }
-                if (chkStat.includes("Dexterity")) {
-                    chkStatLvl = dexMod
-                    chkStatPosAdj = "nimble"
-                    chkStatNegAdj = "clumsy"
-                }
-                if (chkStat.includes("Constitution")) {
-                    chkStatLvl = conMod
-                    chkStatPosAdj = "tough"
-                    chkStatNegAdj = "scrawny"
-                }
-                */
-
                 // skill handling:
                 if (typeof (state.RPGstate?.chkSkillBonus) !== 'undefined') { // if there's a skill bonus...
                     chkSitBonus = chkStatLvl + state.RPGstate.chkSkillBonus // ...add it to the attribute modifier to get the full check modifier
-
-                    /*
-                    // get skill-dependent result strings:
-                    for (let skillDef in skillDB) {
-                        if (skillDef === state.RPGstate.chkSitSkill) {
-                            RPGmechsLog("Found skillDef for current skill:" + skillDef)
-
-
-                            if (skillDB[skillDef].overrideAtt === true) {
-                                overrideAtt = true
-                                chkSkillPosStr = state.RPGstate.chkSitSkill.results.positive
-                                chkSkillNegStr = state.RPGstate.chkSitSkill.results.negative
-                            }
-                            if (skillDB[skillDef].overrideAtt === false) {
-                                overrideAtt = false
-                                chkSkillPosStr = skillDB[skillDef].results.positive
-                                chkSkillNegStr = skillDB[skillDef].results.negative
-                            }
-                        }
-                    }
-                    */
-
                 } else { // if there's no skill bonus...
                     chkSitBonus = chkStatLvl // ...just use the attribute modifier
                 }
