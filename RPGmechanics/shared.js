@@ -157,7 +157,7 @@ statConfig = {
     ],
     // locking inputBot on trivial actions:
     locking: {
-        lockTriggers: [`walk`,`look`]
+        lockTriggers: [`walk`,`breathe`]
     }
 }
 
