@@ -60,7 +60,7 @@ const modifier = (text) => {
             state.message = chkCuz // ...show only the reason
         }
 
-        // get check attribute from bot output and assign appropriate attribute modifiers:
+        // get check attribute from bot output and assign appropriate stat modifiers:
         checkBit:
             if (chkStat != null) { // if the bot does come up with anything
 
