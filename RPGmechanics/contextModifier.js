@@ -66,12 +66,14 @@ const modifier = (text) => {
 
                 // bot derpness safety:
                 // TODO: make this more generic + more useful
+                /* Should be handled by 'unknown tracker' above; leaving in for safety for now...
                 if (chkStat.includes("Any")) { // bot sometimes gives that one; just take it as 'too generic'
                     chkStatLvl = 0 // so it gets no attribute bonus
                     chkStatPosAdj = "good" // this is the crucial bit for generation, but since the bot said it's generic...
                     chkStatNegAdj = "bad" // ...AI is told generic things below
                     break checkBit
                 }
+                */
 
                 // get the corresponding modifier from stat menu:
                 if (!chkStat === 'unknown') {
@@ -106,7 +108,7 @@ const modifier = (text) => {
                 // TODO: make most of this configurable!
 
                 // pretend to 'roll a twenty-sided die':
-                // TODO: allow other dice!; +different dice for different things: could go into skillDef!
+                // TODO: different dice for different things: could go into skillDef!
                 let roll = getRndInteger(statConfig.rolling.checkRollRange[0], statConfig.rolling.checkRollRange[1])
 
                 // add the check modifier to the roll to get the result:
@@ -115,6 +117,8 @@ const modifier = (text) => {
                 if (chkModRoll >= chkDC) { // if the result beats the DC...
 
                     chkMessageResult = miscConfig.successMessage // ...put the result in words for the player...
+
+                    // TODO: Add full string customization
 
                     if (typeof (state.RPGstate?.chkSitSkill?.results?.positive) !== 'undefined') {
                         if (state.RPGstate?.chkSitSkill?.overrideAtt === true) {
