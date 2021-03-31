@@ -18,7 +18,10 @@ const modifier = (text) => {
     } else {
         displayStatsUpdate(['You have unspent points! Open the menus to the right'])
     }
-    displayStatsUpdate(['XP', state.RPGstate.XP, 'green'])
+    if (miscConfig.showXP) {
+        displayStatsUpdate(['XP', state.RPGstate.XP, 'green'])
+    }
+
 
     if (info.actionCount > 1 && state.inputBot) {
 
