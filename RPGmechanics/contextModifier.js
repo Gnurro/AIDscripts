@@ -107,7 +107,7 @@ const modifier = (text) => {
 
                 // pretend to 'roll a twenty-sided die':
                 // TODO: allow other dice!; +different dice for different things: could go into skillDef!
-                let roll = getRndInteger(1, 20)
+                let roll = getRndInteger(statConfig.rolling.checkRollRange[0], statConfig.rolling.checkRollRange[1])
 
                 // add the check modifier to the roll to get the result:
                 let chkModRoll = roll + chkSitBonus

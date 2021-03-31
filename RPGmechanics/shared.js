@@ -89,6 +89,9 @@ statConfig = {
         dc: `DC`,
         cuz: `reason`, // ...might change this to something better. 😏
     },
+    rolling: {
+      checkRollRange: [1, 20],
+    },
     // MANDATORY the stats/attributes it can output:
     statList: {
         unknown: {
