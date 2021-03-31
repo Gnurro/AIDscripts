@@ -74,8 +74,11 @@ const modifier = (text) => {
                 }
 
                 // get the corresponding modifier from stat menu:
-                if (!chkStat == 'unknown') {
+                if (!chkStat === 'unknown') {
                     chkStatLvl = state.stats.stats[chkStat].level
+                } else if (statConfig?.locking?.lockArbitraryChecks === true) {
+                    RPGmechsLog(`Stopping check routine due to 'unknown' stat.`)
+                    break checkBit
                 } else {
                     chkStatLvl = 0
                 }
