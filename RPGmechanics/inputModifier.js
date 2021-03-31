@@ -7,6 +7,9 @@ const modifier = (text) => {
     // utility stuff:
     let stopInput = false // good to have
 
+    // locking inputBot:
+    let stopBot = false
+
     // const bracketed = /\[(.*?)\]/g
 
 
@@ -34,6 +37,17 @@ const modifier = (text) => {
             state.message = "Turned DC display on."
         }
         stopInput = true // no model call
+    }
+
+    // locking:
+    if (statConfig?.locking) {
+        for (let trigger of statConfig.locking.lockTriggers) {
+            let curRegEx = new RegExp(trigger, 'gi')
+            if (modifiedText.match(curRegEx)) {
+                RPGmechsLog(`Found '${trigger}' locking trigger, locking inputBot!`)
+                stopBot = true
+            }
+        }
     }
 
     // skill processing:
@@ -73,7 +87,7 @@ const modifier = (text) => {
         }
     }
 
-    if (!stopInput && info.actionCount > 1) { // if the AI gets used
+    if (!stopInput && info.actionCount > 1 && !stopBot) { // if the AI gets used
         state.inputBot = statConfig.inputBot // let the inputBot do her job
     }
     // END RPG mechanics

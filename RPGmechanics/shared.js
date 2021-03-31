@@ -98,7 +98,7 @@ statConfig = {
             icon: "???",
             successAdjective: "good",
             failAdjective: "bad",
-            ignoreForMenu: true
+            ignoreForMenu: true // use this for 'bot derpness catchers' that shouldn't show up in the stats menu
         },
         intelligence: {
             name: "Intelligence",
@@ -154,7 +154,11 @@ statConfig = {
         // threshold is INCLUSIVE, as current level is checked BEFORE raising:
         {threshold:4, newCost:2}, // this means going from 4 to 5 costs 2
         {threshold:9, newCost:3}, // this means going from 9 to 10 costs 3
-    ]
+    ],
+    // locking inputBot on trivial actions:
+    locking: {
+        lockTriggers: [`walk`,`look`]
+    }
 }
 
 // MANDATORY configure skill menu setup:
