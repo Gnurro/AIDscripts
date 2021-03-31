@@ -157,7 +157,7 @@ const modifier = (text) => {
 
                 // display the full line at the bottom:
                 if (info.actionCount >= 2) { // but only if it's useful and possible
-                    state.message += ` ${chkStat} roll: ${chkModRoll} (${roll}${makeModString(chkStatLvl)}${makeModString(state.RPGstate.chkSkillBonus)}), ${chkMessageResult} XP gained: ${chkXP}` // add all the check stuff to the message
+                    state.message += `${chkStat} roll: ${chkModRoll} (${roll}${makeModString(chkStatLvl)}${makeModString(state.RPGstate.chkSkillBonus)}), ${chkMessageResult} XP gained: ${chkXP}` // add all the check stuff to the message
                 }
 
                 // clean up:
