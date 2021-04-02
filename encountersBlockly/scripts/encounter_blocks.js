@@ -919,3 +919,225 @@ Blockly.JavaScript['branchtriggers'] = function(block) {
   var code = 'branchTriggers:[' + statements_branchtriggerlist + '],';
   return code;
 };
+
+/*
+Blockly.JSON['triggers'] = function(block) {
+  var statements_triggers = Blockly.JSON.statementToCode(block, 'triggers');
+  var code = 'triggers:[' + statements_triggers + '],\n';
+  return code;
+};
+
+Blockly.JSON['trigger'] = function(block) {
+  var text_trigger = block.getFieldValue('trigger');
+  var code = '"' + text_trigger + '",';
+  return code;
+};
+
+Blockly.JSON['encounterdef'] = function(block) {
+  var text_encounterid = block.getFieldValue('encounterID');
+  var statements_encounterkeys = Blockly.JSON.statementToCode(block, 'encounterKeys');
+  var code = text_encounterid + ':{"encounterID":"' +  text_encounterid + '",\n' + statements_encounterkeys + '},\n';
+  return code;
+};
+
+Blockly.JSON['opener'] = function(block) {
+  var number_encounterchance = block.getFieldValue('encounterChance');
+  var statements_conditions = Blockly.JSON.statementToCode(block, 'conditions');
+  var code = 'chance:' + number_encounterchance + ',\n' + statements_conditions;
+  return code;
+};
+
+Blockly.JSON['inputlock'] = function(block) {
+  var code = 'inputLock:True,\n';
+  return code;
+};
+
+Blockly.JSON['outputlock'] = function(block) {
+  var code = 'outputLock:True,\n';
+  return code;
+};
+
+Blockly.JSON['prerequisite'] = function(block) {
+  var statements_prereqencs = Blockly.JSON.statementToCode(block, 'prereqEncs');
+  var code = 'prerequisite:[' + statements_prereqencs + '],\n';
+  return code;
+};
+
+Blockly.JSON['encountercount'] = function(block) {
+  var text_encountercountid = block.getFieldValue('encounterCountID');
+  var number_encountercountnumber = block.getFieldValue('encounterCountNumber');
+  var code = '[`' + text_encountercountid + '`,' + number_encountercountnumber + '],';
+  return code;
+};
+
+Blockly.JSON['blockers'] = function(block) {
+  var statements_blockersEncs = Blockly.JSON.statementToCode(block, 'blockersEncs');
+  var code = 'blockers:[' + statements_blockersEncs +  '],\n';
+  return code;
+};
+
+Blockly.JSON['totalactiondelay'] = function(block) {
+  var number_totalactiondelaynumber = block.getFieldValue('totalActionDelayNumber');
+  var code = 'totalActionDelay:' + number_totalactiondelaynumber + ',\n';
+  return code;
+};
+
+Blockly.JSON['textnotes'] = function(block) {
+  var statements_textnoteslist = Blockly.JSON.statementToCode(block, 'textNotesList');
+  var code = 'textNotes:[' + statements_textnoteslist + '],\n';
+  return code;
+};
+
+Blockly.JSON['contextnotes'] = function(block) {
+  var statements_contextnoteslist = Blockly.JSON.statementToCode(block, 'contextNotesList');
+  var code = 'contextNotes:[' + statements_contextnoteslist + '],\n';
+  return code;
+};
+
+Blockly.JSON['messagestring'] = function(block) {
+  var text_messagestringtext = block.getFieldValue('messageStringText');
+  var code = 'messageString:`' + text_messagestringtext + '`,\n';
+  return code;
+};
+
+Blockly.JSON['addwi'] = function(block) {
+  var statements_addwientries = Blockly.JSON.statementToCode(block, 'addWIentries');
+  var code = 'addWI:[' + statements_addwientries + '],\n';
+  return code;
+};
+
+Blockly.JSON['wientry'] = function(block) {
+  var text_wientrykeys = block.getFieldValue('WIentryKeys');
+  var text_wientrytext = block.getFieldValue('WIentryText');
+  var code = '{keys:`' + text_wientrykeys + '`, entry:`' + text_wientrytext + '`},';
+  return code;
+};
+
+Blockly.JSON['activationdelay'] = function(block) {
+  var value_activationDelayNumber = Blockly.JSON.valueToCode(block, 'activationDelayNumber', Blockly.JSON.ORDER_NONE);
+  var code = 'activationDelay:' + value_activationDelayNumber + ',\n';
+  return code;
+};
+
+Blockly.JSON['displaynotes'] = function(block) {
+  var statements_displaynotelist = Blockly.JSON.statementToCode(block, 'displayNoteList');
+  var code = 'displayNotes:[' + statements_displaynotelist + '],\n';
+  return code;
+};
+
+Blockly.JSON['stringnote'] = function(block) {
+  var text_stringnotetext = block.getFieldValue('stringNoteText');
+  var code = '`' + text_stringnotetext + '`,';
+  return code;
+};
+
+Blockly.JSON['stringnoteweighted'] = function(block) {
+  var text_stringnotetext = block.getFieldValue('stringNoteText');
+  var number_stringnotethreshold = block.getFieldValue('stringNoteThreshold');
+  var code = '[`' + text_stringnotetext + '`,' + number_stringnotethreshold + '],';
+  return code;
+};
+
+Blockly.JSON['displaynote'] = function(block) {
+  var text_displaynotekeytext = block.getFieldValue('displayNoteKeyText');
+  var text_displaynotevaluetext = block.getFieldValue('displayNoteValueText');
+  var colour_displaynotecolor = block.getFieldValue('displayNoteColor');
+  var code = '[`' + text_displaynotekeytext + '`, `' + text_displaynotevaluetext + '`, ' + colour_displaynotecolor + '],';
+  return code;
+};
+
+Blockly.JSON['countoccurrence'] = function(block) {
+  var code = 'countOccurrence:true,\n';
+  return code;
+};
+
+Blockly.JSON['memoryadd'] = function(block) {
+  var text_memorytext = block.getFieldValue('memoryText');
+  var dropdown_memorylocation = block.getFieldValue('memoryLocation');
+  var number_memorylingerduration = block.getFieldValue('memoryLingerDuration');
+  var code = 'memoryAdd:{`' + text_memorytext + '`, `' + dropdown_memorylocation + '`, ' + number_memorylingerduration + '},\n';
+  return code;
+};
+
+Blockly.JSON['cooldown'] = function(block) {
+  var value_cooldownNumber = Blockly.JSON.valueToCode(block, 'cooldownNumber', Blockly.JSON.ORDER_NONE);
+  var code = 'cooldown:' + value_cooldownNumber + ',\n';
+  return code;
+};
+
+Blockly.JSON['duration'] = function(block) {
+  var value_durationNumber = Blockly.JSON.valueToCode(block, 'durationNumber', Blockly.JSON.ORDER_NONE);
+  var code = 'duration:' + value_durationNumber + ',\n';
+  return code;
+};
+
+Blockly.JSON['endtriggers'] = function(block) {
+  var statements_endtriggerslist = Blockly.JSON.statementToCode(block, 'endTriggersList');
+  var code = 'endTriggers:[' + statements_endtriggerslist + '],\n';
+  return code;
+};
+
+Blockly.JSON['chained'] = function(block) {
+  var statements_chainedlist = Blockly.JSON.statementToCode(block, 'chainedList');
+  var code = 'chained:[' + statements_chainedlist + '],\n';
+  return code;
+};
+
+Blockly.JSON['encounterlink'] = function(block) {
+  var text_encounterlinkid = block.getFieldValue('encounterLinkID');
+  var code = '`' + text_encounterlinkid + '`,';
+  return code;
+};
+
+Blockly.JSON['encounterlinkthreshold'] = function(block) {
+  var text_encounterlinkid = block.getFieldValue('encounterLinkID');
+  var number_encounterlinkthresholdnumber = block.getFieldValue('encounterLinkThresholdNumber');
+  var code = '[`' + text_encounterlinkid + '`, ' + number_encounterlinkthresholdnumber + '],';
+  return code;
+};
+
+Blockly.JSON['actionnumber'] = function(block) {
+  var number_actionnumbernumber = block.getFieldValue('actionNumberNumber');
+  var code = '' + number_actionnumbernumber;
+  return [code, Blockly.JSON.ORDER_NONE];
+};
+
+Blockly.JSON['rndactionrange'] = function(block) {
+  var number_rndactionrangemin = block.getFieldValue('rndActionRangeMin');
+  var number_rndactionrangemax = block.getFieldValue('rndActionRangeMax');
+  var code = '[' + number_rndactionrangemin + ',' + number_rndactionrangemax + ']';
+  return [code, Blockly.JSON.ORDER_NONE];
+};
+
+Blockly.JSON['branches'] = function(block) {
+  var statements_brancheslist = Blockly.JSON.statementToCode(block, 'branchesList');
+  var code = 'branches:[\n' + statements_brancheslist + '],\n';
+  return code;
+};
+
+Blockly.JSON['branchdef'] = function(block) {
+  var text_branchdefid = block.getFieldValue('branchDefID');
+  var number_branchdefchancenumber = block.getFieldValue('branchDefChanceNumber');
+  var statements_branchdefkeylist = Blockly.JSON.statementToCode(block, 'branchDefKeyList');
+  var code = '{branchID:`' + text_branchdefid + '`, branchChance:' + number_branchdefchancenumber + ', ' + statements_branchdefkeylist + '},\n';
+  return code;
+};
+
+Blockly.JSON['branchtextnotes'] = function(block) {
+  var statements_branchtextnoteslist = Blockly.JSON.statementToCode(block, 'branchTextNotesList');
+  var code = 'branchTextNotes:[' + statements_branchtextnoteslist + '],';
+  return code;
+};
+
+Blockly.JSON['branchchained'] = function(block) {
+  var statements_branchchainedlist = Blockly.JSON.statementToCode(block, 'branchChainedList');
+  var code = 'branchChained:[' + statements_branchchainedlist + '],';
+  return code;
+};
+
+Blockly.JSON['branchtriggers'] = function(block) {
+  var statements_branchtriggerlist = Blockly.JSON.statementToCode(block, 'branchTriggerList');
+  var code = 'branchTriggers:[' + statements_branchtriggerlist + '],';
+  return code;
+};
+*/
