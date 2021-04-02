@@ -39,7 +39,7 @@ const modifier = (text) => {
 
         if (chkStat == null) {
             chkStat = 'unknown'
-        } else if (!statConfig.statList[chkStat]) {
+        } else if (!typeof(statConfig.statList[chkStat]) === 'undefined') {
             RPGmechsLog(`DCbot got creative and said this is ${chkStat}, but that isn't a configured stat - setting it to 'unknown' for processing.`)
             chkStat = 'unknown'
         }
@@ -80,12 +80,15 @@ const modifier = (text) => {
 
                 // get the corresponding modifier from stat menu:
                 if (!chkStat === 'unknown') {
+                    RPGmechsLog(`DCbot came up with 'unknown' stat.`)
                     chkStatLvl = state.stats.stats[chkStat].level
-                } else if (statConfig?.locking?.lockArbitraryChecks === true) {
-                    RPGmechsLog(`Stopping check routine due to 'unknown' stat.`)
-                    break checkBit
+                    if (statConfig?.locking?.lockArbitraryChecks === true) {
+                        RPGmechsLog(`Stopping check routine due to 'unknown' stat.`)
+                        break checkBit
+                    }
                 } else {
-                    chkStatLvl = 0
+                    RPGmechsLog(`${chkStat} found, setting mod to ${state.stats.stats[chkStat].level}.`)
+                    chkStatLvl = state.stats.stats[chkStat].level
                 }
 
                 // get adjectives from statConfig:
