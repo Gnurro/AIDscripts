@@ -79,7 +79,7 @@ const modifier = (text) => {
                 */
 
                 // get the corresponding modifier from stat menu:
-                if (!chkStat === 'unknown') {
+                if (chkStat === 'unknown') {
                     RPGmechsLog(`DCbot came up with 'unknown' stat.`)
                     // chkStatLvl = state.stats.stats[chkStat].level
                     chkStatLvl = 0
