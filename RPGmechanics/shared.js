@@ -23,6 +23,7 @@ const miscConfig = {
     failMessage: `Fail!`,
     messageStatIcon: true,
     showXP: true,
+    showCharLevel: true
 }
 
 // MANDATORY generic character sheet initializer:

@@ -23,6 +23,10 @@ const modifier = (text) => {
         displayStatsUpdate(['XP', state.RPGstate.XP, 'green'])
     }
 
+    if (miscConfig.showCharLevel) {
+        displayStatsUpdate(['Level:', state.RPGstate.charSheet.level])
+    }
+
 
     if (info.actionCount > 1 && state.inputBot) {
 
