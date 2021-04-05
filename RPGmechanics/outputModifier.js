@@ -2,14 +2,14 @@ const modifier = (text) => {
     let modifiedText = text
     const lowered = text.toLowerCase()
 
-    if (state.stats.constitution >= 1) {
+    if (state.stats.stats['Constitution'].level >= 1) {
         let prevHPmatch = true
         if (!state.RPGstate.charSheet.curHP === state.RPGstate.charSheet.baseHP) {
             RPGmechsLog(`HP not full, will keep old curHP.`)
             prevHPmatch = false
         }
-        state.RPGstate.charSheet.baseHP = 3 + state.stats.constitution
-        if (prevHPmatch) {
+        state.RPGstate.charSheet.baseHP = 3 + state.stats.stats['Constitution'].level
+        if (prevHPmatch === true) {
             RPGmechsLog(`HP full, raising curHP as well.`)
             state.RPGstate.charSheet.curHP = state.RPGstate.charSheet.baseHP
         }
