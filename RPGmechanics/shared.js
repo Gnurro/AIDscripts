@@ -30,7 +30,7 @@ if (!RPGstate?.charSheet) {
     RPGstate.charSheet = {
         name: "",
         class: "",
-        stats: [], // TBD - might not be needed, as state.stats can act like this
+        level: 1,
         skills: [],
         // specific:
         petType: "",
