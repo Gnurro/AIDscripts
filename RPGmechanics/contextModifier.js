@@ -24,7 +24,7 @@ const modifier = (text) => {
     }
 
     if (miscConfig.showCharLevel) {
-        displayStatsUpdate(['Level:', state.RPGstate.charSheet.level])
+        displayStatsUpdate(['Level', state.RPGstate.charSheet.level])
     }
 
 
