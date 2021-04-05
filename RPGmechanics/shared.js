@@ -23,7 +23,8 @@ const miscConfig = {
     failMessage: `Fail!`,
     messageStatIcon: true,
     showXP: true,
-    showCharLevel: true
+    showCharLevel: true,
+    showFancyHP: true,
 }
 
 // MANDATORY generic character sheet initializer:
@@ -33,6 +34,9 @@ if (!RPGstate?.charSheet) {
         class: "",
         level: 1,
         skills: [],
+        // combat:
+        baseHP: 3,
+        curHP: 3,
         // specific:
         petType: "",
         petName: ""
