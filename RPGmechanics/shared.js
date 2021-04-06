@@ -242,7 +242,7 @@ const skillDB = {
     },
 
     dragon: {
-        menuString: "Trap Building", // name to be displayed in the skills menu; also the identifier in skills menu processing
+        menuString: "Pretending to be a Dragon", // name to be displayed in the skills menu; also the identifier in skills menu processing
         triggers: ["\\bdragon", "(?<your)\\bwings", "\\bdraconic"], // to be regEx'd
         overrideAtt: true, // if this skills result strings override the att string
         results: {
@@ -252,7 +252,7 @@ const skillDB = {
     },
 
     mining: {
-        menuString: "Trap Building", // name to be displayed in the skills menu; also the identifier in skills menu processing
+        menuString: "Mining", // name to be displayed in the skills menu; also the identifier in skills menu processing
         triggers: ["\\b(build(ing)*|creat(ing|e)|dig(ging)*|excavat(e|ing))(?=(mine(s)*|hole(s)*|shaft)"], // to be regEx'd
         overrideAtt: true, // if this skills result strings override the att string
         results: {
