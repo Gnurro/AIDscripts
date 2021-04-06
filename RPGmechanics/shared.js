@@ -14,7 +14,6 @@ if (!RPGstate?.showDC) {
     RPGstate.showDC = true
 }
 
-
 const miscConfig = {
     successMessage: `Success!`,
     failMessage: `Fail!`,
@@ -23,6 +22,7 @@ const miscConfig = {
     showCharLevel: true,
     showDC: true,
     showFancyHP: true,
+    showResources: true,
     doLog: true,
     hardLog: true
 }
@@ -37,20 +37,10 @@ if (!RPGstate?.charSheet) {
         skills: [],
         // resources:
         resources: {
-            HP:{
-                base:3,
-                current:3,
+            HP: {
+                base: 3,
+                current: 3,
             },
-            MP:{
-                base:3,
-                current:3,
-                // number of actions to restore one point: (SUBJECT TO CHANGE)
-                regen:1,
-            },
-            RAGE:{
-                base:3,
-                current:3,
-            }
         },
         // specific:
         petType: "",
@@ -75,16 +65,30 @@ const classDB = {
     witch: {
         skills: ['cackle', 'potBrew', 'dance', 'petHandle'],
         feats: ['jolly'],
-        // which non-HP resources this class has and which stat gives more of it:
+        // which non-HP resources this class has, which stat gives more of it and starting amounts:
         resources: {
-            MP:`Charisma`,
+            MP: {
+                stat: `Charisma`,
+                base: 3,
+                current: 3,
+                // number of actions to restore one point: (SUBJECT TO CHANGE)
+                regen: 2,
+                // display bar color; progression possible: from high to low, uses HTML color names; currently has three levels: more then half, less than half, less than third
+                colors: ['DarkBlue','Blue','CornflowerBlue']
+            },
         },
     },
     barbarian: {
         skills: ['rockThrow', 'rage', 'intimidate', 'heavyLift'],
         resources: {
-            RAGE:`Constitution`
-        }
+            RAGE: {
+                stat: `Constitution`,
+                base: 3,
+                current: 3,
+                regen: 6,
+                colors:['Red','DarkRed','FireBrick']
+            },
+        },
     },
     kobold: {skills: ['buildTraps', 'hide', 'dragon', 'mining'],},
 }
@@ -102,6 +106,11 @@ if (info.actionCount < 1) {
     // add class skills to charSheet:
     charSheet.skills = classDB[charSheet.class.toLowerCase()].skills
 
+    // add class-based resources to charSheet:
+    for (let resource in classDB[charSheet.class.toLowerCase()].resources) {
+        charSheet.resources[resource] = classDB[charSheet.class.toLowerCase()].resources[resource]
+    }
+
     RPGmechsLog(`Read character information from intro prompt:`)
     RPGmechsLog(charSheet)
 
@@ -115,12 +124,12 @@ statConfig = {
     inputBot: "BIGinputDCattributeBot5",
     botOutputs: {
         // these MUST match the exact bot output value names!
-        stat:`Attribute`,
+        stat: `Attribute`,
         dc: `DC`,
         cuz: `reason`, // ...might change this to something better. 😏
     },
     rolling: {
-      checkRollRange: [1, 20],
+        checkRollRange: [1, 20],
     },
     // MANDATORY the stats/attributes it can output:
     statList: {
@@ -185,12 +194,12 @@ statConfig = {
     // OPTIONAL raise statPoint costs:
     raise: [
         // threshold is INCLUSIVE, as current level is checked BEFORE raising:
-        {threshold:4, newCost:2}, // this means going from 4 to 5 costs 2
-        {threshold:9, newCost:3}, // this means going from 9 to 10 costs 3
+        {threshold: 4, newCost: 2}, // this means going from 4 to 5 costs 2
+        {threshold: 9, newCost: 3}, // this means going from 9 to 10 costs 3
     ],
     // locking inputBot on trivial actions:
     locking: {
-        lockTriggers: [`walk`,`breathe`],
+        lockTriggers: [`walk`, `breathe`],
         lockArbitraryChecks: true
     }
 }
@@ -230,7 +239,7 @@ const skillDB = {
 
     rage: {
         menuString: "Rage",
-        triggers: ["\\brag(e|ing(ly)*)",], // to be regEx'd
+        triggers: ["\\brag(e|ing(ly)*)", 'ang(er(ed)*|r(y|ily))'], // to be regEx'd
         overrideAtt: false, // if this skills result strings override the att string
         results: {
             positive: ["do it brutally well in your rage"],
@@ -311,11 +320,14 @@ if (!state.RPGstate.init) { // but only if they aren't, yet
     RPGmechsLog(`Initializing menus...`)
     // initialize stats menu as defined in statSet:
     if (!state.stats) {
-        state.stats = {stats:{}}
+        state.stats = {stats: {}}
     }
     for (let statID in statConfig.statList) {
         if (!statConfig.statList[statID].ignoreForMenu === true) {
-            state.stats.stats[statConfig.statList[statID].name] = {level: statConfig.starting.level, cost: statConfig.starting.cost}
+            state.stats.stats[statConfig.statList[statID].name] = {
+                level: statConfig.starting.level,
+                cost: statConfig.starting.cost
+            }
             RPGmechsLog(`Added '${statID}' stat to stats menu as '${statConfig.statList[statID].name}'.`)
         } else {
             RPGmechsLog(`Ignored '${statID}' stat for stats menu adding.`)
@@ -349,7 +361,6 @@ if (!state.RPGstate.init) { // but only if they aren't, yet
     state.disableRandomSkill = skillConfig.forbidRandom
 
     // END vanilla menu initializations.
-
 
 
     // state.RPGstate.charSheet.feats = ['jolly']
@@ -454,7 +465,7 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
         if (displayStat.key === inKey || displayStat.key === '\n' + inKey) {
             RPGmechsLog(`Found '${inKey}' displayStats entry: ${state.displayStats[curDisplayStatIndex].key}, ${state.displayStats[curDisplayStatIndex].value}, ${state.displayStats[curDisplayStatIndex].color}, updating!`)
             if (inValue) {
-                if (typeof(inValue) == 'string') {
+                if (typeof (inValue) == 'string') {
                     RPGmechsLog(`Value to update displayStat entry inputted: '${inValue}', updating.`)
                     state.displayStats[curDisplayStatIndex].value = inValue
                 } else {
@@ -489,7 +500,6 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
 
 // START of placeholder grab thing
 // const bracketed = /\[(.*?)\]/g // bracket definition; replace [ ] with symbol of choice - must match smybol used to encapsulate the placeholders in intro prompt!
-
 
 
 // grab all bracketed things, put them into array in state

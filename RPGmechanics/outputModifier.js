@@ -37,6 +37,28 @@ const modifier = (text) => {
         }
     }
 
+    resourceDisplay:{
+        if (miscConfig.showResources) {
+            for (let resource in state.RPGstate.charSheet.resources) {
+                if (resource !== `HP`) {
+                    let resBlocks = ''
+                    RPGmechsLog(`Getting current ${resource}...`)
+                    let curRes = state.RPGstate.charSheet.resources[resource].current
+                    for (i = 0; i < curRes; i++) {
+                        resBlocks += '█'
+                    }
+                    let resColor = state.RPGstate.charSheet.resources[resource].colors[0]
+                    if (curHP < state.RPGstate.charSheet.resources.HP.base / 2) {
+                        resColor = state.RPGstate.charSheet.resources[resource].colors[1]
+                    } else if (curHP < state.RPGstate.charSheet.resources.HP.base / 3) {
+                        resColor = state.RPGstate.charSheet.resources[resource].colors[2]
+                    }
+                    displayStatsUpdate([resource, resBlocks, resColor])
+                }
+            }
+        }
+    }
+
     // You must return an object with the text property defined.
     return {text: modifiedText}
 }
