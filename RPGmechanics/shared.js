@@ -231,6 +231,36 @@ const skillDB = {
         }
     },
 
+    hide: {
+        menuString: "Stealth", // name to be displayed in the skills menu; also the identifier in skills menu processing
+        triggers: ["\\bsneak", "\\bhid(e|ing)"], // to be regEx'd
+        overrideAtt: false, // if this skills result strings override the att string
+        results: {
+            positive: ["remain hidden"],
+            negative: ["obviously show yourself"]
+        }
+    },
+
+    dragon: {
+        menuString: "Trap Building", // name to be displayed in the skills menu; also the identifier in skills menu processing
+        triggers: ["\\bdragon", "(?<your)\\bwings", "\\bdraconic"], // to be regEx'd
+        overrideAtt: true, // if this skills result strings override the att string
+        results: {
+            positive: ["You channel your inner dragon successfully."],
+            negative: ["You look like a oversized lizard."]
+        }
+    },
+
+    mining: {
+        menuString: "Trap Building", // name to be displayed in the skills menu; also the identifier in skills menu processing
+        triggers: ["\\b(build(ing)*|creat(ing|e)|dig(ging)*|excavat(e|ing))(?=(mine(s)*|hole(s)*|shaft)"], // to be regEx'd
+        overrideAtt: true, // if this skills result strings override the att string
+        results: {
+            positive: ["You are great at mining this out."],
+            negative: ["You mess up the digging."]
+        }
+    },
+
     // barbarian = ['rockThrow', 'rage', 'intimidate', 'heavyLift']
 
     heavyLift: {
