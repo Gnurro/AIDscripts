@@ -34,9 +34,17 @@ if (!RPGstate?.charSheet) {
         class: "",
         level: 1,
         skills: [],
-        // combat:
-        baseHP: 3,
-        curHP: 3,
+        // resources:
+        resources: {
+            HP:{
+                base:3,
+                current:3,
+            },
+            MP:{
+                base:3,
+                current:3,
+            }
+        },
         // specific:
         petType: "",
         petName: ""
