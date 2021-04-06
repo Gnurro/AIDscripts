@@ -3,8 +3,8 @@ const modifier = (text) => {
     // BEGIN rpg mechanics
 
     // progression:
-    if (state.RPGstate.XP >= 100) { // if player got more then 100 XP...
-        state.RPGstate.XP -= 100 // ...substract 100 XP,...
+    if (state.RPGstate.charSheet.XP >= 100) { // if player got more then 100 XP...
+        state.RPGstate.charSheet.XP -= 100 // ...substract 100 XP,...
         state.RPGstate.charSheet.level += 1
         state.stats.statPoints += 1 // ...add a stat point,...
         state.skillPoints += 10 // ...add ten skill points...
@@ -19,8 +19,9 @@ const modifier = (text) => {
     } else {
         displayStatsUpdate(['You have unspent points! Open the menus to the right'])
     }
+
     if (miscConfig.showXP) {
-        displayStatsUpdate(['XP', state.RPGstate.XP, 'green'])
+        displayStatsUpdate(['XP', state.RPGstate.charSheet.XP, 'green'])
     }
 
     if (miscConfig.showCharLevel) {

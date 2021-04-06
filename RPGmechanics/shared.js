@@ -14,9 +14,6 @@ if (!RPGstate?.showDC) {
     RPGstate.showDC = true
 }
 
-if (!RPGstate?.doLog) {
-    RPGstate.doLog = true
-}
 
 const miscConfig = {
     successMessage: `Success!`,
@@ -24,7 +21,10 @@ const miscConfig = {
     messageStatIcon: true,
     showXP: true,
     showCharLevel: true,
+    showDC: true,
     showFancyHP: true,
+    doLog: true,
+    hardLog: true
 }
 
 // MANDATORY generic character sheet initializer:
@@ -33,6 +33,7 @@ if (!RPGstate?.charSheet) {
         name: "",
         class: "",
         level: 1,
+        XP: 0,
         skills: [],
         // resources:
         resources: {
@@ -41,6 +42,12 @@ if (!RPGstate?.charSheet) {
                 current:3,
             },
             MP:{
+                base:3,
+                current:3,
+                // number of actions to restore one point: (SUBJECT TO CHANGE)
+                regen:1,
+            },
+            RAGE:{
                 base:3,
                 current:3,
             }
@@ -67,9 +74,18 @@ const introBracketConfig = {
 const classDB = {
     witch: {
         skills: ['cackle', 'potBrew', 'dance', 'petHandle'],
-        feats: ['jolly']
+        feats: ['jolly'],
+        // which non-HP resources this class has and which stat gives more of it:
+        resources: {
+            MP:`Charisma`,
+        },
     },
-    barbarian: {skills: ['rockThrow', 'rage', 'intimidate', 'heavyLift'],},
+    barbarian: {
+        skills: ['rockThrow', 'rage', 'intimidate', 'heavyLift'],
+        resources: {
+            RAGE:`Constitution`
+        }
+    },
     kobold: {skills: ['buildTraps', 'hide', 'dragon', 'mining'],},
 }
 
@@ -219,7 +235,8 @@ const skillDB = {
         results: {
             positive: ["do it brutally well in your rage"],
             negative: ["mess it up in your fury"]
-        }
+        },
+        resource: `RAGE`
     },
 
     rockThrow: {
@@ -277,7 +294,8 @@ const skillDB = {
 
     cackle: {
         menuString: "Cackling",
-        triggers: ["\\bcackl(e|ing)"] // to be regEx'd
+        triggers: ["\\bcackl(e|ing)"], // to be regEx'd
+        resource: `MP`
     }
 }
 
@@ -296,7 +314,7 @@ if (!state.RPGstate.init) { // but only if they aren't, yet
         state.stats = {stats:{}}
     }
     for (let statID in statConfig.statList) {
-        if (!statConfig.statList[statID].ignoreForMenu == true) {
+        if (!statConfig.statList[statID].ignoreForMenu === true) {
             state.stats.stats[statConfig.statList[statID].name] = {level: statConfig.starting.level, cost: statConfig.starting.cost}
             RPGmechsLog(`Added '${statID}' stat to stats menu as '${statConfig.statList[statID].name}'.`)
         } else {
@@ -332,7 +350,7 @@ if (!state.RPGstate.init) { // but only if they aren't, yet
 
     // END vanilla menu initializations.
 
-    state.RPGstate.XP = 0
+
 
     // state.RPGstate.charSheet.feats = ['jolly']
 
@@ -395,8 +413,14 @@ function inputTypeCheck(inputText) {
 }
 
 function RPGmechsLog(msg) {
-    if (state.RPGstate.doLog) {
+    if (miscConfig.doLog) {
         console.log(msg)
+        if (miscConfig.hardLog) {
+            if (!state.RPGstate.hardLog) {
+                state.RPGstate.hardLog = []
+            }
+            state.RPGstate.hardLog.push(msg)
+        }
     }
 }
 

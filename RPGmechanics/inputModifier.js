@@ -77,6 +77,8 @@ const modifier = (text) => {
                             state.RPGstate.chkSkillBonus = 0
                         }
 
+                        // TODO: check for resource availability
+
                         if (skillMod > state.RPGstate.chkSkillBonus) { // if higher boost...
                             state.RPGstate.chkSkillBonus = skillMod // ...use it
                             state.RPGstate.chkSitSkill = skillDB[skillDef]
