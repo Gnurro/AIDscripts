@@ -52,18 +52,21 @@ const modifier = (text) => {
 
     // skill processing:
     // go through skills menu:
+    charSkillLoop:
     for (let skill in state.skills) {
 
         // get skill modifier from menu:
         let skillMod = state.skills[skill]
 
         // go through skillDB:
+        DBskillLoop:
         for (let skillDef in skillDB) {
 
             // check if currently checked menu skill matches current skillDB skill:
             if (skillDB[skillDef].menuString === skill) {
 
                 // go through triggers of matched skill:
+                skillTriggerLoop:
                 for (let triggerStr of skillDB[skillDef].triggers) {
 
                     let triggerRegEx = new RegExp(triggerStr, "gi")
@@ -72,24 +75,48 @@ const modifier = (text) => {
                     if (caughtTrigger) {
                         RPGmechsLog(`Caught '${caughtTrigger}' of '${skillDB[skillDef].menuString}'!`)
 
+                        // check for resource availability:
+                        if (!state.RPGstate.charSheet.resources[skillDB[skillDef].resource].current > 0) {
+                            RPGmechsLog(`Not enough ${skillDB[skillDef].resource} to use skill!`)
+                            continue charSkillLoop
+                        }
+
                         // make RPGstate property to grab in contextMod:
                         if (!state.RPGstate.chkSkillBonus) {
                             state.RPGstate.chkSkillBonus = 0
                         }
 
-                        // TODO: check for resource availability
-
                         if (skillMod > state.RPGstate.chkSkillBonus) { // if higher boost...
                             state.RPGstate.chkSkillBonus = skillMod // ...use it
                             state.RPGstate.chkSitSkill = skillDB[skillDef]
                         }
+
+                        // lower resource used:
+                        state.RPGstate.charSheet.resources[skillDB[skillDef].resource].current -= 1
                     }
                 }
             }
         }
     }
 
-
+    // resource regen:
+    for (let resource in state.RPGstate.charSheet.resources) {
+        RPGmechsLog(`Checking ${resource} regeneration...`)
+        if (state.RPGstate.charSheet.resources[resource].current < state.RPGstate.charSheet.resources[resource].base && !state.RPGstate.charSheet.resources[resource].regenCounter) {
+            RPGmechsLog(`Current ${resource} is lower than its base value, starting regeneration countdown.`)
+            state.RPGstate.charSheet.resources[resource].regenCounter = state.RPGstate.charSheet.resources[resource].regen
+        } else if (state.RPGstate.charSheet.resources[resource].current === state.RPGstate.charSheet.resources[resource].base && state.RPGstate.charSheet.resources[resource].regenCounter) {
+            RPGmechsLog(`Current ${resource} is at its base value, removing regeneration countdown.`)
+            delete state.RPGstate.charSheet.resources[resource].regenCounter
+        }
+        if (state.RPGstate?.charSheet?.resources[resource]?.regenCounter > 0) {
+            RPGmechsLog(`${state.RPGstate.charSheet.resources[resource].regenCounter} actions until ${resource} regeneration.`)
+            state.RPGstate.charSheet.resources[resource].regenCounter -= 1
+        } else {
+            RPGmechsLog(`${resource} regeneration cooldown over, adding 1.`)
+            state.RPGstate.charSheet.resources[resource].current += 1
+        }
+    }
 
     if (!stopInput && info.actionCount > 1 && !stopBot) { // if the AI gets used
         state.inputBot = statConfig.inputBot // let the inputBot do her job

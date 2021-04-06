@@ -40,6 +40,7 @@ if (!RPGstate?.charSheet) {
             HP: {
                 base: 3,
                 current: 3,
+                regen: 20,
             },
         },
         // specific:
@@ -73,7 +74,7 @@ const classDB = {
                 current: 3,
                 // number of actions to restore one point: (SUBJECT TO CHANGE)
                 regen: 2,
-                // display bar color; progression possible: from high to low, uses HTML color names; currently has three levels: more then half, less than half, less than third
+                // display bar color; progression possible: from high to low, uses HTML color names or hex; currently has three levels: more then half, less than half, less than third
                 colors: ['DarkBlue','Blue','CornflowerBlue']
             },
         },
