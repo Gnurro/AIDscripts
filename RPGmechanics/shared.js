@@ -24,7 +24,7 @@ const miscConfig = {
     showFancyHP: true,
     showResources: true,
     doLog: true,
-    hardLog: true
+    hardLog: false
 }
 
 // MANDATORY generic character sheet initializer:
