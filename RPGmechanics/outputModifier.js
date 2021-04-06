@@ -16,6 +16,25 @@ const modifier = (text) => {
         }
     }
 
+    // resource regen:
+    for (let resource in state.RPGstate.charSheet.resources) {
+        RPGmechsLog(`Checking ${resource} regeneration...`)
+        if (state.RPGstate.charSheet.resources[resource].current < state.RPGstate.charSheet.resources[resource].base && !state.RPGstate.charSheet.resources[resource].regenCounter) {
+            RPGmechsLog(`Current ${resource} is lower than its base value, starting regeneration countdown.`)
+            state.RPGstate.charSheet.resources[resource].regenCounter = state.RPGstate.charSheet.resources[resource].regen
+        } else if (state.RPGstate.charSheet.resources[resource].current === state.RPGstate.charSheet.resources[resource].base && state.RPGstate.charSheet.resources[resource].regenCounter) {
+            RPGmechsLog(`Current ${resource} is at its base value, removing regeneration countdown.`)
+            delete state.RPGstate.charSheet.resources[resource].regenCounter
+        }
+        if (state.RPGstate?.charSheet?.resources[resource]?.regenCounter > 0) {
+            RPGmechsLog(`${state.RPGstate.charSheet.resources[resource].regenCounter} actions until ${resource} regeneration.`)
+            state.RPGstate.charSheet.resources[resource].regenCounter -= 1
+        } else {
+            RPGmechsLog(`${resource} regeneration cooldown over, adding 1.`)
+            state.RPGstate.charSheet.resources[resource].current += 1
+        }
+    }
+
     // display fancy HP bar:
     fancyHP:{
         if (miscConfig.showFancyHP) {
