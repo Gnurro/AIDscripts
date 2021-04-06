@@ -449,12 +449,12 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
     }
     let displayStatUpdated = false
     for (let displayStat of state.displayStats) {
-        RPGmechsLog(`Checking '${displayStat.key}' displayStats entry...`)
+        // RPGmechsLog(`Checking '${displayStat.key}' displayStats entry...`)
         let curDisplayStatIndex = state.displayStats.indexOf(displayStat)
         if (displayStat.key === inKey || displayStat.key === '\n' + inKey) {
             RPGmechsLog(`Found '${inKey}' displayStats entry: ${state.displayStats[curDisplayStatIndex].key}, ${state.displayStats[curDisplayStatIndex].value}, ${state.displayStats[curDisplayStatIndex].color}, updating!`)
             if (inValue) {
-                if (typeof (inValue) == 'string') {
+                if (typeof(inValue) == 'string') {
                     RPGmechsLog(`Value to update displayStat entry inputted: '${inValue}', updating.`)
                     state.displayStats[curDisplayStatIndex].value = inValue
                 } else {
@@ -479,7 +479,11 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
         if (state.displayStats.length > 0) {
             inKey = '\n' + inKey
         }
-        state.displayStats.push({'key': inKey, 'value': inValue, 'color': inColor})
+        if (inColor) {
+            state.displayStats.push({'key': inKey, 'value': inValue, 'color': inColor})
+        } else {
+            state.displayStats.push({'key': inKey, 'value': inValue})
+        }
     }
 }
 
