@@ -200,7 +200,7 @@ statConfig = {
     ],
     // locking inputBot on trivial actions:
     locking: {
-        lockTriggers: [`walk`, `breathe`],
+        lockTriggers: [`walk`, `breathe`], // will get regEx'd
         lockArbitraryChecks: true
     }
 }
