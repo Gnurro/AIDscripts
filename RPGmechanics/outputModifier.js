@@ -72,20 +72,30 @@ const modifier = (text) => {
         if (miscConfig.showResources) {
             for (let resource in state.RPGstate.charSheet.resources) {
                 if (resource !== `HP`) {
-                    let resBlocks = ''
-                    RPGmechsLog(`Getting current ${resource}...`)
-                    curRes = state.RPGstate.charSheet.resources[resource].current
-                    for (i = 0; i < curRes; i++) {
-                        resBlocks += '█'
+
+                    // fancy resource display:
+                    if (miscConfig.showFancyResources) {
+                        let resBlocks = ''
+                        RPGmechsLog(`Getting current ${resource}...`)
+                        curRes = state.RPGstate.charSheet.resources[resource].current
+                        for (i = 0; i < curRes; i++) {
+                            resBlocks += '█'
+                        }
+                        resColor = state.RPGstate.charSheet.resources[resource].colors[0]
+                        if (curHP < state.RPGstate.charSheet.resources.HP.base / 2) {
+                            resColor = state.RPGstate.charSheet.resources[resource].colors[1]
+                        } else if (curHP < state.RPGstate.charSheet.resources.HP.base / 3) {
+                            resColor = state.RPGstate.charSheet.resources[resource].colors[2]
+                        }
+                        RPGmechsLog(`Setting ${resource} bar color to ${resColor}`)
+                        displayStatsUpdate([resource, resBlocks, resColor])
+                    } else {
+                        if (state.RPGstate.charSheet.resources[resource].colors) {
+                            displayStatsUpdate([resource, state.RPGstate.charSheet.resources[resource].current, state.RPGstate.charSheet.resources[resource].colors[0]])
+                        } else {
+                            displayStatsUpdate([resource, state.RPGstate.charSheet.resources[resource].current])
+                        }
                     }
-                    resColor = state.RPGstate.charSheet.resources[resource].colors[0]
-                    if (curHP < state.RPGstate.charSheet.resources.HP.base / 2) {
-                        resColor = state.RPGstate.charSheet.resources[resource].colors[1]
-                    } else if (curHP < state.RPGstate.charSheet.resources.HP.base / 3) {
-                        resColor = state.RPGstate.charSheet.resources[resource].colors[2]
-                    }
-                    RPGmechsLog(`Setting ${resource} bar color to ${resColor}`)
-                    displayStatsUpdate([resource, resBlocks, resColor])
                 }
             }
         }

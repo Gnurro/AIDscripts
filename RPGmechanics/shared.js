@@ -25,6 +25,7 @@ const miscConfig = {
     showHP: true,
     showFancyHP: true,
     showResources: true,
+    showFancyResources: true,
     doLog: true,
     hardLog: false
 }
