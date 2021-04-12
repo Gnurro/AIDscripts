@@ -42,26 +42,31 @@ const modifier = (text) => {
     }
 
 
-    // display fancy HP bar:
-    fancyHP:{
-        if (miscConfig.showFancyHP) {
-            let HPblocks = ''
-            RPGmechsLog(`Getting current HP...`)
-            curHP = state.RPGstate.charSheet.resources.HP.current
-            for (i = 0; i < state.RPGstate.charSheet.resources.HP.current; i++) {
-                HPblocks += '█'
+    if (miscConfig.showHP) {
+        // display fancy HP bar:
+        fancyHP:{
+            if (miscConfig.showFancyHP) {
+                let HPblocks = ''
+                RPGmechsLog(`Getting current HP...`)
+                curHP = state.RPGstate.charSheet.resources.HP.current
+                for (i = 0; i < state.RPGstate.charSheet.resources.HP.current; i++) {
+                    HPblocks += '█'
+                }
+                let HPcolor = `green`
+                if (curHP < state.RPGstate.charSheet.resources.HP.base/2) {
+                    HPcolor = `yellow`
+                } else if (curHP < state.RPGstate.charSheet.resources.HP.base/3) {
+                    HPcolor = `red`
+                }
+                displayStatsUpdate(['HP', HPblocks, HPcolor])
+            } else {
+                displayStatsUpdate(['HP', state.RPGstate.charSheet.resources.HP.current.toString()])
             }
-            let HPcolor = `green`
-            if (curHP < state.RPGstate.charSheet.resources.HP.base/2) {
-                HPcolor = `yellow`
-            } else if (curHP < state.RPGstate.charSheet.resources.HP.base/3) {
-                HPcolor = `red`
-            }
-            displayStatsUpdate(['HP', HPblocks, HPcolor])
-        } else {
-            displayStatsUpdate(['HP'])
         }
+    } else {
+        displayStatsUpdate(['HP'])
     }
+
 
     resourceDisplay:{
         if (miscConfig.showResources) {

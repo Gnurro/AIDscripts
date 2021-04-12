@@ -22,6 +22,7 @@ const miscConfig = {
     showXPcolor: `green`, // remove this to use standard theme color
     showCharLevel: true,
     showDC: true,
+    showHP: true,
     showFancyHP: true,
     showResources: true,
     doLog: true,
