@@ -19,7 +19,7 @@ const miscConfig = {
     failMessage: `Fail!`,
     messageStatIcon: true,
     showXP: true,
-    showXPcolor: `green`, // remove this to use standard theme color
+    showXPcolor: `yellow`, // remove this to use standard theme color
     showCharLevel: true,
     showDC: true,
     showHP: true,
@@ -77,8 +77,8 @@ const classDB = {
                 current: 3,
                 // number of actions to restore one point: (SUBJECT TO CHANGE)
                 regen: 2,
-                // display bar color; progression possible: from high to low, uses HTML color names or hex; currently has three levels: more then half, less than half, less than third
-                colors: ['DarkBlue','Blue','CornflowerBlue']
+                // display bar color; progression possible: from high to low, uses HTML color names (in full lowercase); currently has three levels: more then half, less than half, less than third
+                colors: ['royalblue','deepskyblue','cornflowerblue']
             },
         },
     },
@@ -90,7 +90,7 @@ const classDB = {
                 base: 3,
                 current: 3,
                 regen: 6,
-                colors:['Red','DarkRed','FireBrick']
+                colors:['red','darkred','fireBrick']
             },
         },
     },
