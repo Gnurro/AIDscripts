@@ -41,6 +41,25 @@ const modifier = (text) => {
         }
     }
 
+    // infobox at the top right:
+    if (state.stats.statPoints > 0 || state.skillPoints > 0) { // if there are unspent points...
+        displayStatsUpdate(['You have unspent points! Open the menus to the right', '--->', 'red'])
+    } else {
+        displayStatsUpdate(['You have unspent points! Open the menus to the right'])
+    }
+
+    if (miscConfig.showXP) {
+        RPGmechsLog(`Trying to show XP: ${state.RPGstate.charSheet.XP}`)
+        if (miscConfig.showXPcolor) {
+            displayStatsUpdate(['XP', state.RPGstate.charSheet.XP.toString(), miscConfig.showXPcolor])
+        } else {
+            displayStatsUpdate(['XP', state.RPGstate.charSheet.XP.toString()])
+        }
+    }
+
+    if (miscConfig.showCharLevel) {
+        displayStatsUpdate(['Level', state.RPGstate.charSheet.level.toString()])
+    }
 
     if (miscConfig.showHP) {
         // display fancy HP bar:

@@ -6,6 +6,7 @@ const modifier = (text) => {
     if (state.RPGstate.charSheet.XP >= 100) { // if player got more then 100 XP...
         state.RPGstate.charSheet.XP -= 100 // ...substract 100 XP,...
         state.RPGstate.charSheet.level += 1
+        // TODO: make point gains configurable
         state.stats.statPoints += 1 // ...add a stat point,...
         state.skillPoints += 10 // ...add ten skill points...
         displayStatsUpdate(['Level up', 'Points added!', 'yellow']) // ...and tell the player in the info box.
@@ -13,25 +14,7 @@ const modifier = (text) => {
         displayStatsUpdate(['Level up', ''])
     }
 
-    // infobox at the top right:
-    if (state.stats.statPoints > 0 || state.skillPoints > 0) { // if there are unspent points...
-        displayStatsUpdate(['You have unspent points! Open the menus to the right', '--->', 'red'])
-    } else {
-        displayStatsUpdate(['You have unspent points! Open the menus to the right'])
-    }
 
-    if (miscConfig.showXP) {
-        RPGmechsLog(`Trying to show XP: ${state.RPGstate.charSheet.XP}`)
-        if (miscConfig.showXPcolor) {
-            displayStatsUpdate(['XP', state.RPGstate.charSheet.XP.toString(), miscConfig.showXPcolor])
-        } else {
-            displayStatsUpdate(['XP', state.RPGstate.charSheet.XP.toString()])
-        }
-    }
-
-    if (miscConfig.showCharLevel) {
-        displayStatsUpdate(['Level', state.RPGstate.charSheet.level.toString()])
-    }
 
 
     if (info.actionCount > 1 && state.inputBot) {
