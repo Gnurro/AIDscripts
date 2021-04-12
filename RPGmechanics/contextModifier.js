@@ -21,7 +21,8 @@ const modifier = (text) => {
     }
 
     if (miscConfig.showXP) {
-        displayStatsUpdate(['XP', state.RPGstate.charSheet.XP, 'green'])
+        RPGmechsLog(`Trying to show XP: ${state.RPGstate.charSheet.XP}`)
+        displayStatsUpdate(['XP', state.RPGstate.charSheet.XP.toString(), 'green'])
     }
 
     if (miscConfig.showCharLevel) {
