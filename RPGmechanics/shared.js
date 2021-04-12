@@ -19,6 +19,7 @@ const miscConfig = {
     failMessage: `Fail!`,
     messageStatIcon: true,
     showXP: true,
+    showXPcolor: `green`, // remove this to use standard theme color
     showCharLevel: true,
     showDC: true,
     showFancyHP: true,

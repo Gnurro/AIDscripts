@@ -22,7 +22,11 @@ const modifier = (text) => {
 
     if (miscConfig.showXP) {
         RPGmechsLog(`Trying to show XP: ${state.RPGstate.charSheet.XP}`)
-        displayStatsUpdate(['XP', state.RPGstate.charSheet.XP.toString(), 'green'])
+        if (miscConfig.showXPcolor) {
+            displayStatsUpdate(['XP', state.RPGstate.charSheet.XP.toString(), miscConfig.showXPcolor])
+        } else {
+            displayStatsUpdate(['XP', state.RPGstate.charSheet.XP.toString()])
+        }
     }
 
     if (miscConfig.showCharLevel) {
@@ -144,7 +148,7 @@ const modifier = (text) => {
                     } else {
                         resultContextString = `[You are ${chkStatPosAdj} enough for that right now.]`
                     }
-                    state.RPGstate.XP += chkXP // ...then add appropriate XP
+                    state.RPGstate.charSheet.XP += chkXP // ...then add appropriate XP
 
                 } else { // if the result does NOT beat the DC...
 
@@ -163,11 +167,18 @@ const modifier = (text) => {
                     if (chkXP > 1) { // ...make sure to not add half XP...
                         chkXP = Math.floor(chkXP / 2) // ...by rounding up after halving...
                     }
-                    state.RPGstate.XP += chkXP // ...then add appropriate XP
+                    state.RPGstate.charSheet.XP += chkXP // ...then add appropriate XP
                 }
 
                 // update XP display:
-                displayStatsUpdate(['XP', state.RPGstate.XP, 'green'])
+                if (miscConfig.showXP) {
+                    RPGmechsLog(`Trying to show XP: ${state.RPGstate.charSheet.XP}`)
+                    if (miscConfig.showXPcolor) {
+                        displayStatsUpdate(['XP', state.RPGstate.charSheet.XP.toString(), miscConfig.showXPcolor])
+                    } else {
+                        displayStatsUpdate(['XP', state.RPGstate.charSheet.XP.toString()])
+                    }
+                }
 
                 // display the full line at the bottom:
                 if (info.actionCount >= 2) { // but only if it's useful and possible
