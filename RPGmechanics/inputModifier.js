@@ -76,10 +76,18 @@ const modifier = (text) => {
                                     if (caughtTrigger) {
                                         RPGmechsLog(`Caught '${caughtTrigger}' of '${skillDB[skillDef].menuString}'!`)
 
-                                        // check for resource availability:
-                                        if (!state.RPGstate.charSheet.resources[skillDB[skillDef].resource].current > 0) {
-                                            RPGmechsLog(`Not enough ${skillDB[skillDef].resource} to use skill!`)
-                                            continue charSkillLoop
+                                        // check for resource dependency:
+                                        if (skillDB[skillDef].resource) {
+                                            RPGmechsLog(`Skill '${skillDef}' uses '${skillDB[skillDef].resource}', checking availability.`)
+                                            // check for resource availability:
+                                            if (!state.RPGstate.charSheet.resources[skillDB[skillDef].resource].current > 0) {
+                                                RPGmechsLog(`Not enough ${skillDB[skillDef].resource} to use skill!`)
+                                                continue charSkillLoop
+                                            } else {
+                                                RPGmechsLog(`Got enough ${skillDB[skillDef].resource} to use skill!`)
+                                                // lower resource used:
+                                                state.RPGstate.charSheet.resources[skillDB[skillDef].resource].current -= 1
+                                            }
                                         }
 
                                         // make RPGstate property to grab in contextMod:
@@ -91,9 +99,6 @@ const modifier = (text) => {
                                             state.RPGstate.chkSkillBonus = skillMod // ...use it
                                             state.RPGstate.chkSitSkill = skillDB[skillDef]
                                         }
-
-                                        // lower resource used:
-                                        state.RPGstate.charSheet.resources[skillDB[skillDef].resource].current -= 1
                                     }
                                 }
                         }
