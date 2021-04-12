@@ -55,6 +55,8 @@ const modifier = (text) => {
             chkStat = 'unknown'
         }
 
+        RPGmechsLog(`DCbot derp: ${chkStat}, ${statConfig.statList[chkStat]}.`)
+
         if (chkDC == null) {
             chkDC = 0
         }
@@ -170,6 +172,8 @@ const modifier = (text) => {
                     state.RPGstate.charSheet.XP += chkXP // ...then add appropriate XP
                 }
 
+                /*
+
                 // update XP display:
                 if (miscConfig.showXP) {
                     RPGmechsLog(`Trying to show XP: ${state.RPGstate.charSheet.XP}`)
@@ -179,6 +183,8 @@ const modifier = (text) => {
                         displayStatsUpdate(['XP', state.RPGstate.charSheet.XP.toString()])
                     }
                 }
+
+                 */
 
                 // display the full line at the bottom:
                 if (info.actionCount >= 2) { // but only if it's useful and possible
