@@ -48,7 +48,7 @@ const modifier = (text) => {
             if (miscConfig.showFancyHP) {
                 let HPblocks = ''
                 RPGmechsLog(`Getting current HP...`)
-                curHP = state.RPGstate.charSheet.resources.HP.current
+                var curHP = state.RPGstate.charSheet.resources.HP.current
                 for (i = 0; i < state.RPGstate.charSheet.resources.HP.current; i++) {
                     HPblocks += '█'
                 }
