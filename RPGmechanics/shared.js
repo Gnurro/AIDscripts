@@ -487,6 +487,7 @@ function getRndFromList(list) {
 function displayStatsUpdate([inKey, inValue, inColor]) {
     // if key already exists, update; else push new entry; if no value given, removes displayStat entry matching key, if it exists
     if (!state.displayStats) {
+        RPGmechsLog(`No displayStats found, creating empty array.`)
         state.displayStats = []
     }
     let displayStatUpdated = false
@@ -497,10 +498,10 @@ function displayStatsUpdate([inKey, inValue, inColor]) {
             RPGmechsLog(`Found '${inKey}' displayStats entry: ${state.displayStats[curDisplayStatIndex].key}, ${state.displayStats[curDisplayStatIndex].value}, ${state.displayStats[curDisplayStatIndex].color}, updating!`)
             if (inValue) {
                 if (typeof (inValue) == 'string') {
-                    RPGmechsLog(`Value to update displayStat entry inputted: '${inValue}', updating.`)
+                    RPGmechsLog(`String value to update displayStat entry inputted: '${inValue}', updating.`)
                     state.displayStats[curDisplayStatIndex].value = inValue
                 } else {
-                    RPGmechsLog(`Value to update displayStat entry inputted: '${inValue}', updating.`)
+                    RPGmechsLog(`Non-string value to update displayStat entry inputted: '${inValue}', updating.`)
                     state.displayStats[curDisplayStatIndex].value = inValue
                 }
             } else {
