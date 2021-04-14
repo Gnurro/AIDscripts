@@ -347,6 +347,53 @@ const skillDB = {
 // TODO: ...feats.
 const featDB = {}
 
+// Conditions!
+// Stuff that does something to stats, skills, rolls or anything temporarily (even if it sticks for very long times)
+const conditionDB = {
+    poisoned: {
+        conditionID: `poisoned`,
+        value: 1, // which effects from the arrays apply is determined here; initial value set here
+        statEffects: [
+            {constitution: -1},
+            {constitution: -2},
+        ],
+        contextEffects: [
+            {note: `[You are feeling a little sick]`},
+            {note: `[You are feeling quite sick]`, HPcolor: `purple`}
+        ]
+    },
+    drunk: {
+        conditionID: `drunk`,
+        value: 1, // which effects from the arrays apply is determined here
+        statEffects: [
+            {dexterity: -1, charisma: +1},
+            {dexterity: -2},
+            {dexterity: -3, charisma: -3}
+        ],
+        contextEffects: [
+            {note: `[You are feeling tipsy.]`},
+            {note: `[You are drunk.]`},
+            {note: `[You drank way too much.]`}
+        ],
+        endValue: 4,
+        followCondition: `unconscious`
+    },
+    unconscious: {
+        conditionID: `unconscious`,
+        value: 1,
+        statEffects: [
+            {dexterity: `toZero`, charisma: `toZero`,
+                strength: `toZero`, wisdom: `toZero`,
+                intelligence: `toZero`}
+        ],
+        contextEffects: [
+            {note: `[You are unconscious and can not do anything.]`},
+        ],
+        skillOverride: true,
+        statOverride: true
+    }
+}
+
 // initialize all the things!
 if (!state.RPGstate.init) { // but only if they aren't, yet
 
