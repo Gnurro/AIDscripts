@@ -362,6 +362,47 @@ const conditionDB = {
             {note: `[You are feeling quite sick]`, HPcolor: `purple`}
         ]
     },
+    wyvernPoison: {
+        conditionID: `wyvernPoison`,
+        value: 1, // which effects from the arrays apply is determined here; initial value set here
+        raiseFrequency: 4, // increase value by 1 after 4 actions
+        statEffects: [
+            {constitution: -1},
+            {constitution: -2},
+        ],
+    },
+    onFire: {
+        conditionID: `onFire`,
+        value: 1,
+        duration: 10, // after this number of actions this condition ends
+        resourceEffects: [
+            {HP: -1, frequency: 3}, // reduce HP resource by 1 every 3 actions
+        ],
+        contextEffects: [
+            {note: `[You are on fire!]`},
+        ]
+    },
+    mageBlightPoison: {
+        conditionID: `mageBlightPoison`,
+        traits: [
+            `poison`, `magic`, `MP`
+        ],
+        initialStage: 1,
+        stages: [
+            {
+                resources: {MP: -1, frequency: 4},
+                save: {dc: 15, stat: `constitution`, frequency: 2, success: 0, fail: 1}, // do a DC15 recovery roll every 2 actions, using constitution stat; if it succeeds, got to stage 0 (which will end this condition), if it fails go to stage 1 (iE stay at this stage)
+                context: {text: `[You feel your magic slowly draining from you.]`, position: -3},
+                duration: 4,
+            },
+            {
+                resources: {MP: -1, frequency: 2},
+                save: {dc: 20, stat: `constitution`, frequency: 2, success: 1, fail: 2}, // do a DC20 recovery roll every 2 actions, using constitution stat; if it succeeds, got to stage 1, if it fails go to stage 2 (iE stay at this stage)
+                context: [`[Your magic is rapidly draining from you.]`],
+                // missing duration will make this stick until otherwise removed
+            },
+        ],
+    },
     drunk: {
         conditionID: `drunk`,
         value: 1, // which effects from the arrays apply is determined here
