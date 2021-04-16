@@ -347,6 +347,22 @@ const skillDB = {
 // TODO: ...feats.
 const featDB = {}
 
+// Activities!
+
+const activityDB = {
+    stepInFire: {
+        activityID: `stepInFire`,
+        triggers: [`(?<=you.*)(step|walk|stride|move|fall|drop|enter).+(fire|embers|conflagration)(?!.*you)`],
+        applyConditions: [`onFire`]
+    },
+    potionHandle: {
+        activityID: `potionHandle`,
+        triggers: ["\\bpotion", "\\bbrew(?<=potion)(?=potion)", "\\bvial", "\\balchem(ic(al(y)*)*|y)"],
+        skillUse: `potBrew`,
+        allowUntrained: false,
+    }
+}
+
 // Conditions!
 // Stuff that does something to stats, skills, rolls or anything temporarily (even if it sticks for very long times)
 const conditionDB = {
