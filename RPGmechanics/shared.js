@@ -15,17 +15,20 @@ if (!RPGstate?.showDC) {
 }
 
 const miscConfig = {
-    successMessage: `Success!`,
-    failMessage: `Fail!`,
-    messageStatIcon: true,
+    successMessage: `Success!`, // to be shown in the check message
+    failMessage: `Fail!`, // to be shown in the check message
+    messageStatIcon: true, // should the the check message show the icon of the stat?
     showXP: true,
     showXPcolor: `yellow`, // remove this to use standard theme color
+    XPcap: 100, // XP needed for a level up
     showCharLevel: true,
-    showDC: true,
-    showHP: true,
-    showFancyHP: true,
+    levelUpStatPoints: 1, // how many stat points are gained each level-up
+    levelUpSkillPoints: 10, // how many skill points are gained each level-up
+    showDC: true, // visibility of the DC used; set to false for "immersion"
+    showHP: true, // set to false to hide HP if unused; INTENDED: if false, also doesn't show fancy HP bar
+    showFancyHP: true, // set to false to show number instead of the bar
     showResources: true,
-    showFancyResources: true,
+    showFancyResources: true, // set to false to show number instead of the bar
     doLog: true,
     hardLog: false
 }
@@ -38,14 +41,15 @@ if (!RPGstate?.charSheet) {
         level: 1,
         XP: 0,
         skills: [],
+        feats: [],
         // resources:
         resources: {
             HP: {
                 initial: 3, // starting value
-                base: 3,
+                stat: `Constitution`, // HP get raised by the level of this stat
+                base: 3, // 'pool size'/maximum amount; will get adjusted automatically using specified stat
                 current: 3,
-                regen: 20,
-                stat: `Constitution`
+                regen: 20, // number of actions until one HP is regenerated
             },
         },
         // specific:
@@ -74,15 +78,18 @@ const classDB = {
         // which non-HP resources this class has, which stat gives more of it and starting amounts:
         resources: {
             MP: {
-                stat: `Charisma`,
-                base: 3,
+                stat: `Charisma`, // the base amount will be raised by the level of this stat
+                base: 3, // 'pool size'/maximum amount
                 current: 3,
-                // number of actions to restore one point: (SUBJECT TO CHANGE)
-                regen: 2,
+                regen: 6, // number of actions to restore one point
                 // display bar color; progression possible: from high to low, uses HTML color names (in full lowercase); currently has three levels: more then half, less than half, less than third
                 colors: ['royalblue','deepskyblue','cornflowerblue']
             },
         },
+        special: {
+            petType: ``,
+            petName: ``,
+        }
     },
     barbarian: {
         skills: ['rockThrow', 'rage', 'intimidate', 'heavyLift'],
@@ -96,7 +103,10 @@ const classDB = {
             },
         },
     },
-    kobold: {skills: ['buildTraps', 'hide', 'dragon', 'mining'],},
+    kobold: {
+        skills: ['buildTraps', 'hide', 'dragon', 'mining'],
+        feats: [`fireProof`],
+    },
 }
 
 // OPTIONAL grab character info from placeholders:
@@ -330,7 +340,7 @@ const skillDB = {
     dance: {
         menuString: "Dancing",
         triggers: ["\\bdanc(e|ing)", "\\btwirl", "\\btwist", "\\bpranc(e|ing)", "\\bpirouett(e|ing)"], // to be regEx'd
-        overrideAtt: false, // if this skills result strings override the att string
+        overrideAtt: false, // if this skills result strings override the att string - false = the strings get ADDED to the stat result!
         results: {
             positive: ["perform beautifully"],
             negative: ["stumble around"]
@@ -345,9 +355,27 @@ const skillDB = {
 }
 
 // Feats!
-// Stuff that does context notes independent of skill use or checks and prolly sth for checks as well
-// TODO: ...feats.
-const featDB = {}
+// Stuff that permanently modifies something
+const featDB = {
+
+    jolly: {
+        featID: `jolly`,
+        infoString: `You are a jolly witch! Your MP regenerates faster, allowing you to effectively cackle more.`,
+        resources: {
+            MP: {
+                regen: 4 // overrides the standard class values
+            }
+        }
+    },
+
+    fireProof: {
+        featID: `fireProof`,
+        conditions: {
+            immune: [`fire`]
+        }
+    }
+
+}
 
 // Activities!
 
@@ -393,6 +421,7 @@ const conditionDB = {
     },
     onFire: {
         conditionID: `onFire`,
+        traits: [`fire`],
         value: 1,
         duration: 10, // after this number of actions this condition ends
         resourceEffects: [
@@ -404,9 +433,7 @@ const conditionDB = {
     },
     mageBlightPoison: {
         conditionID: `mageBlightPoison`,
-        traits: [
-            `poison`, `magic`, `MP`
-        ],
+        traits: [`poison`, `magic`, `MP`],
         initialStage: 1,
         stages: [
             {
