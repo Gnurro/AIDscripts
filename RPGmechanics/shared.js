@@ -41,9 +41,11 @@ if (!RPGstate?.charSheet) {
         // resources:
         resources: {
             HP: {
+                initial: 3, // starting value
                 base: 3,
                 current: 3,
                 regen: 20,
+                stat: `Constitution`
             },
         },
         // specific:
@@ -353,11 +355,13 @@ const activityDB = {
     stepInFire: {
         activityID: `stepInFire`,
         triggers: [`(?<=you.*)(step|walk|stride|move|fall|drop|enter).+(fire|embers|conflagration)(?!.*you)`],
+        logMessage: `Detected 'entering fire' activity!`,
         applyConditions: [`onFire`]
     },
     potionHandle: {
         activityID: `potionHandle`,
-        triggers: ["\\bpotion", "\\bbrew(?<=potion)(?=potion)", "\\bvial", "\\balchem(ic(al(y)*)*|y)"],
+        triggers: [`\\bpotion", "\\bbrew(?<=potion)(?=potion)", "\\bvial", "\\balchem(ic(al(y)*)*|y)`],
+        logMessage: `Detected 'handling potions' activity!`,
         skillUse: `potBrew`,
         allowUntrained: false,
     }
