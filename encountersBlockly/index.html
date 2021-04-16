@@ -23,6 +23,11 @@
 	Blockly workspace:
 	<button id="saveBlocklyWS" onclick="saveBlocklySpace()">Save</button>	
 	<button id="loadBlocklyWS" onclick="loadBlocklySpace()">Load</button>
+    <button id="exportBlocklyWS" onclick="exportBlocklySpace('EncountersBlocklyWorkspace.xml')">Export</button>
+    <!-- attempt at doing import ... this stuff is stupidly over-complicated, so maybe another time, when I somehow get the urge to learn webDev insanity...
+    <button id="importBlocklyWS" onclick="importBlocklySpace()">Import</button>
+    <input type="file" id="importXMLinput">
+    -->
 	Output to:
     <button id="toConsole" onclick="consoleCheck()">Console</button>	
 	<button id="downloadJS" onclick="download('encounterDefs.js', Blockly.JavaScript.workspaceToCode())">JavaScript File</button>
