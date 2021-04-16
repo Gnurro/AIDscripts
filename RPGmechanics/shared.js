@@ -135,7 +135,7 @@ if (info.actionCount < 1) {
 }
 
 // MANDATORY stats + bot setup:
-statConfig = {
+const statConfig = {
     // MANDATORY the inputBot that is used for general actions:
     inputBot: "BIGinputDCattributeBot5",
     botOutputs: {
@@ -371,7 +371,7 @@ const featDB = {
     fireProof: {
         featID: `fireProof`,
         conditions: {
-            immune: [`fire`]
+            immuneByTrait: [`fire`] // stop conditions with the `fire` trait from being applied
         }
     }
 
@@ -380,12 +380,25 @@ const featDB = {
 // Activities!
 
 const activityDB = {
-    stepInFire: {
-        activityID: `stepInFire`,
+    enterFire: {
+        activityID: `enterFire`,
         triggers: [`(?<=you.*)(step|walk|stride|move|fall|drop|enter).+(fire|embers|conflagration)(?!.*you)`],
         logMessage: `Detected 'entering fire' activity!`,
         applyConditions: [`onFire`]
     },
+
+    getWet: {
+        activityID: `getWet`,
+        triggers: [
+            `(?<=you.*)(step|walk|stride|move|fall|drop|enter|jump|roll) (in(to)*|through).+(puddle|pond|lake|river|brook|water)(?!.*you)`,
+            `starts ((to )*(rain|pour)(ing)*)`,
+            `is.*((rain|pour)ing)(?!.*(fire|meteors|death))`
+        ],
+        logMessage: `Detected 'getting wet' activity!`,
+        removeConditions: [`onFire`],
+        applyConditions: [`waterSoaked`]
+    },
+
     potionHandle: {
         activityID: `potionHandle`,
         triggers: [`\\bpotion", "\\bbrew(?<=potion)(?=potion)", "\\bvial", "\\balchem(ic(al(y)*)*|y)`],
@@ -406,8 +419,11 @@ const conditionDB = {
             {constitution: -2},
         ],
         contextEffects: [
-            {note: `[You are feeling a little sick]`},
-            {note: `[You are feeling quite sick]`, HPcolor: `purple`}
+            {note: `[You are feeling a little sick.]`},
+            {
+                note: `[You are feeling quite sick.]`,
+                HPcolor: `purple` // change HP bar color while this condition is active
+            }
         ]
     },
     wyvernPoison: {
@@ -479,6 +495,9 @@ const conditionDB = {
         ],
         skillOverride: true,
         statOverride: true
+    },
+    waterSoaked: {
+        conditionID: `waterSoaked`,
     }
 }
 
