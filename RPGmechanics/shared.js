@@ -438,14 +438,14 @@ const conditionDB = {
     onFire: {
         conditionID: `onFire`,
         traits: [`fire`],
-        value: 1,
-        duration: 10, // after this number of actions this condition ends
-        resourceEffects: [
-            {HP: -1, frequency: 3}, // reduce HP resource by 1 every 3 actions
+        initialStage: 1,
+        stages: [
+            {
+                resources: {HP: -1, frequency: 3},
+                context: {text: `[You are on fire!]`, position: -3},
+                duration: 10,
+            }
         ],
-        contextEffects: [
-            {note: `[You are on fire!]`},
-        ]
     },
     mageBlightPoison: {
         conditionID: `mageBlightPoison`,
