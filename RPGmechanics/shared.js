@@ -409,7 +409,7 @@ const activityDB = {
 
     drinkAlcohol: {
         activityID: `drinkAlcohol`,
-        triggers: [`(?<=you.*)(drink|chug|slobber|inbibe|quaff|consume).+(alcohol(ic)*|beer|mead|wine|brandy|ale)(?!.*you)`],
+        triggers: [`(?<=you.*)(drink|chug|slobber|inbibe|quaff|consume).+(alcohol((ic)* beverage|drink)*|beer|mead|wine|brandy|ale)(?!.*you)`],
         logMessage: `Detected 'drinking alcohol' activity!`,
         applyConditions: [`drunk`],
         stageConditions: [[`drunk`, 1]] // the stage of the specified condition will be changed by the specified amount; negative numbers decrease stage, positive increase; iE drunk(stage 1) will go to drunk(stage 2)
