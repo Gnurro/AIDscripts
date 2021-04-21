@@ -405,36 +405,21 @@ const activityDB = {
         logMessage: `Detected 'handling potions' activity!`,
         skillUse: `potBrew`,
         allowUntrained: false,
+    },
+
+    drinkAlcohol: {
+        activityID: `drinkAlcohol`,
+        triggers: [`(?<=you.*)(drink|chug|slobber|inbibe|quaff|consume).+(alcohol(ic)*|beer|mead|wine|brandy|ale)(?!.*you)`],
+        logMessage: `Detected 'drinking alcohol' activity!`,
+        applyConditions: [`drunk`],
+        stageConditions: [[`drunk`, 1]] // the stage of the specified condition will be changed by the specified amount; negative numbers decrease stage, positive increase; iE drunk(stage 1) will go to drunk(stage 2)
     }
 }
 
 // Conditions!
 // Stuff that does something to stats, skills, rolls or anything temporarily (even if it sticks for very long times)
 const conditionDB = {
-    poisoned: {
-        conditionID: `poisoned`,
-        value: 1, // which effects from the arrays apply is determined here; initial value set here
-        statEffects: [
-            {constitution: -1},
-            {constitution: -2},
-        ],
-        contextEffects: [
-            {note: `[You are feeling a little sick.]`},
-            {
-                note: `[You are feeling quite sick.]`,
-                HPcolor: `purple` // change HP bar color while this condition is active
-            }
-        ]
-    },
-    wyvernPoison: {
-        conditionID: `wyvernPoison`,
-        value: 1, // which effects from the arrays apply is determined here; initial value set here
-        raiseFrequency: 4, // increase value by 1 after 4 actions
-        statEffects: [
-            {constitution: -1},
-            {constitution: -2},
-        ],
-    },
+
     onFire: {
         conditionID: `onFire`,
         traits: [`fire`],
@@ -447,6 +432,7 @@ const conditionDB = {
             }
         ],
     },
+
     mageBlightPoison: {
         conditionID: `mageBlightPoison`,
         traits: [`poison`, `magic`, `MP`],
@@ -457,6 +443,7 @@ const conditionDB = {
                 save: {dc: 15, stat: `constitution`, frequency: 2, success: 0, fail: 1}, // do a DC15 recovery roll every 2 actions, using constitution stat; if it succeeds, got to stage 0 (which will end this condition), if it fails go to stage 1 (iE stay at this stage)
                 context: {text: `[You feel your magic slowly draining from you.]`, position: -3},
                 duration: 4,
+                continue: 2, // after duration is over, go to this stage
             },
             {
                 resources: {MP: -1, frequency: 2},
@@ -466,36 +453,42 @@ const conditionDB = {
             },
         ],
     },
+
     drunk: {
         conditionID: `drunk`,
-        value: 1, // which effects from the arrays apply is determined here
-        statEffects: [
-            {dexterity: -1, charisma: +1},
-            {dexterity: -2},
-            {dexterity: -3, charisma: -3}
+        initialStage: 1,
+        stages: [
+            {
+                stats: {dexterity: -1, charisma: +1},
+                context: {text: `[You are feeling tipsy.]`}
+            },
+            {
+                stats: {dexterity: -2},
+                context: {text: `[You are drunk.]`}
+            },
+            {
+                stats: {dexterity: -3, charisma: -3},
+                context: {text: `[You drank way too much.]`}
+            },
+            {
+                replaceCondition: `unconscious`
+            }
         ],
-        contextEffects: [
-            {note: `[You are feeling tipsy.]`},
-            {note: `[You are drunk.]`},
-            {note: `[You drank way too much.]`}
-        ],
-        endValue: 4,
-        followCondition: `unconscious`
     },
+
     unconscious: {
         conditionID: `unconscious`,
-        value: 1,
-        statEffects: [
-            {dexterity: `toZero`, charisma: `toZero`,
-                strength: `toZero`, wisdom: `toZero`,
-                intelligence: `toZero`}
+        initialStage: 1,
+        stages: [
+            {
+                stats: {dexterity: `toZero`, charisma: `toZero`, strength: `toZero`, wisdom: `toZero`, intelligence: `toZero`},
+                context: {text: `[You are unconscious and can not do anything.]`, position: -1},
+                skillOverride: true, // if true: override all skill results with context[text]
+                statOverride: true // if true: override all stat results with context[text]
+            },
         ],
-        contextEffects: [
-            {note: `[You are unconscious and can not do anything.]`},
-        ],
-        skillOverride: true,
-        statOverride: true
     },
+
     waterSoaked: {
         conditionID: `waterSoaked`,
     }
