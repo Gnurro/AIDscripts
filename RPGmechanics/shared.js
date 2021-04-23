@@ -426,9 +426,9 @@ const conditionDB = {
         initialStage: 1,
         stages: [
             {
-                resources: {HP: -1, frequency: 3},
+                resources: {HP: -1, frequency: 3}, // reduce HP by one every three actions
                 context: {text: `[You are on fire!]`, position: -3},
-                duration: 10,
+                duration: 10, // duration of this stage; without specified next stage, stage will go down by one, in this case ending the condition
             }
         ],
     },
@@ -471,7 +471,7 @@ const conditionDB = {
                 context: {text: `[You drank way too much.]`}
             },
             {
-                replaceCondition: `unconscious`
+                replaceCondition: `unconscious` // replace this condition with another one
             }
         ],
     },
