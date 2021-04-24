@@ -3,11 +3,11 @@ const modifier = (text) => {
     // BEGIN rpg mechanics
 
     // progression:
-    if (state.RPGstate.charSheet.XP >= miscConfig.XPcap) { // if player got more then 100 XP...
-        state.RPGstate.charSheet.XP -= miscConfig.XPcap // ...substract 100 XP,...
+    if (state.RPGstate.charSheet.XP >= state.RPGstate.miscConfig.XPcap) { // if player got more then 100 XP...
+        state.RPGstate.charSheet.XP -= state.RPGstate.miscConfig.XPcap // ...substract 100 XP,...
         state.RPGstate.charSheet.level += 1
-        state.stats.statPoints += miscConfig.levelUpStatPoints // ...add configured stat point(s),...
-        state.skillPoints += miscConfig.levelUpSkillPoints // ...add configured skill point(s)...
+        state.stats.statPoints += state.RPGstate.miscConfig.levelUpStatPoints // ...add configured stat point(s),...
+        state.skillPoints += state.RPGstate.miscConfig.levelUpSkillPoints // ...add configured skill point(s)...
         displayStatsUpdate(['Level up', 'Points added!', 'yellow']) // ...and tell the player in the info box.
     } else {
         // remove the level up message:
@@ -50,8 +50,8 @@ const modifier = (text) => {
 
         // optional DC display:
         // TODO: make this more configurable; framework options
-        if (miscConfig.showDC) { // if the display is on (iE, state.showDC == true)...
-            state.message = `${miscConfig.messageStatIcon ? statConfig.statList[chkStat.toLowerCase()].icon : statConfig.statList[chkStat.toLowerCase()].name} DC${chkDC}: ${chkCuz}` // ...show the attribute, DC and reason in state.message
+        if (state.RPGstate.miscConfig.showDC) { // if the display is on (iE, state.showDC == true)...
+            state.message = `${state.RPGstate.miscConfig.messageStatIcon ? statConfig.statList[chkStat.toLowerCase()].icon : statConfig.statList[chkStat.toLowerCase()].name} DC${chkDC}: ${chkCuz}` // ...show the attribute, DC and reason in state.message
         } else { // if the display is off (iE, state.showDC == false)...
             state.message = chkCuz // ...show only the reason
         }
@@ -116,7 +116,7 @@ const modifier = (text) => {
 
                 if (chkModRoll >= chkDC) { // if the result beats the DC...
 
-                    chkMessageResult = miscConfig.successMessage // ...put the result in words for the player...
+                    chkMessageResult = state.RPGstate.miscConfig.successMessage // ...put the result in words for the player...
 
                     // TODO: Add full string customization
 
@@ -134,7 +134,7 @@ const modifier = (text) => {
 
                 } else { // if the result does NOT beat the DC...
 
-                    chkMessageResult = miscConfig.failMessage // ...put the result in words for the player...
+                    chkMessageResult = state.RPGstate.miscConfig.failMessage // ...put the result in words for the player...
 
                     if (typeof (state.RPGstate?.chkSitSkill?.results?.negative) !== 'undefined') {
                         if (state.RPGstate?.chkSitSkill?.overrideAtt === true) {
@@ -155,10 +155,10 @@ const modifier = (text) => {
                 /*
 
                 // update XP display:
-                if (miscConfig.showXP) {
+                if (state.RPGstate.miscConfig.showXP) {
                     RPGmechsLog(`Trying to show XP: ${state.RPGstate.charSheet.XP}`)
-                    if (miscConfig.showXPcolor) {
-                        displayStatsUpdate(['XP', state.RPGstate.charSheet.XP.toString(), miscConfig.showXPcolor])
+                    if (state.RPGstate.miscConfig.showXPcolor) {
+                        displayStatsUpdate(['XP', state.RPGstate.charSheet.XP.toString(), state.RPGstate.miscConfig.showXPcolor])
                     } else {
                         displayStatsUpdate(['XP', state.RPGstate.charSheet.XP.toString()])
                     }

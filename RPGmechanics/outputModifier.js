@@ -29,23 +29,23 @@ const modifier = (text) => {
         displayStatsUpdate(['You have unspent points! Open the menus to the right'])
     }
 
-    if (miscConfig.showXP) {
+    if (state.RPGstate.miscConfig.showXP) {
         RPGmechsLog(`Trying to show XP: ${state.RPGstate.charSheet.XP}`)
-        if (miscConfig.showXPcolor) {
-            displayStatsUpdate(['XP', state.RPGstate.charSheet.XP.toString(), miscConfig.showXPcolor])
+        if (state.RPGstate.miscConfig.showXPcolor) {
+            displayStatsUpdate(['XP', state.RPGstate.charSheet.XP.toString(), state.RPGstate.miscConfig.showXPcolor])
         } else {
             displayStatsUpdate(['XP', state.RPGstate.charSheet.XP.toString()])
         }
     }
 
-    if (miscConfig.showCharLevel) {
+    if (state.RPGstate.miscConfig.showCharLevel) {
         displayStatsUpdate(['Level', state.RPGstate.charSheet.level.toString()])
     }
 
-    if (miscConfig.showHP) {
+    if (state.RPGstate.miscConfig.showHP) {
         // display fancy HP bar:
         fancyHP:{
-            if (miscConfig.showFancyHP) {
+            if (state.RPGstate.miscConfig.showFancyHP) {
                 let HPblocks = ''
                 RPGmechsLog(`Getting current HP...`)
                 var curHP = state.RPGstate.charSheet.resources.HP.current
@@ -69,12 +69,12 @@ const modifier = (text) => {
 
 
     resourceDisplay:{
-        if (miscConfig.showResources) {
+        if (state.RPGstate.miscConfig.showResources) {
             for (let resource in state.RPGstate.charSheet.resources) {
                 if (resource !== `HP`) {
 
                     // fancy resource display:
-                    if (miscConfig.showFancyResources) {
+                    if (state.RPGstate.miscConfig.showFancyResources) {
                         let resBlocks = ''
                         RPGmechsLog(`Getting current ${resource}...`)
                         curRes = state.RPGstate.charSheet.resources[resource].current

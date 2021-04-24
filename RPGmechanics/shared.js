@@ -14,7 +14,7 @@ if (!RPGstate?.showDC) {
     RPGstate.showDC = true
 }
 
-const miscConfig = {
+state.RPGstate.miscConfig = {
     successMessage: `Success!`, // to be shown in the check message
     failMessage: `Fail!`, // to be shown in the check message
     messageStatIcon: true, // should the the check message show the icon of the stat?
@@ -635,9 +635,9 @@ function inputTypeCheck(inputText) {
 }
 
 function RPGmechsLog(msg) {
-    if (miscConfig.doLog) {
+    if (state.RPGstate.miscConfig.doLog) {
         console.log(msg)
-        if (miscConfig.hardLog) {
+        if (state.RPGstate.miscConfig.hardLog) {
             if (!state.RPGstate.hardLog) {
                 state.RPGstate.hardLog = []
             }
