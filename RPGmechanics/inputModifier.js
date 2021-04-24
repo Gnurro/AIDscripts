@@ -131,6 +131,7 @@ const modifier = (text) => {
         }
     }
 
+    // inputBot assignment:
     if (!stopInput && info.actionCount > 1 && !stopBot) { // if the AI gets used
         state.inputBot = statConfig.inputBot // let the inputBot do her job
     }
