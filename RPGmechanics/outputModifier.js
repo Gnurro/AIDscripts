@@ -4,7 +4,7 @@ const modifier = (text) => {
 
     // raising HP by specified stat:
     if (state.stats.stats[state.RPGstate.charSheet.resources.HP.stat].level >= 1) {
-        RPGmechsLog(`${state.RPGstate.charSheet.resources.HP.stat} is 1 or higher, raising HP...`)
+        RPGmechsLog(`${state.RPGstate.charSheet.resources.HP.stat} is 1 or higher, adapting HP...`)
         let prevHPmatch = true
         if (!state.RPGstate.charSheet.resources.HP.current === state.RPGstate.charSheet.resources.HP.base) {
             RPGmechsLog(`HP not full, will keep old curHP.`)

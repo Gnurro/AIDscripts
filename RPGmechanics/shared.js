@@ -552,6 +552,8 @@ if (!state.RPGstate.init) { // but only if they aren't, yet
 // iterate over stats, raise costs:
 // TODO: turn this into a function
 if (statConfig.raise) {
+    // - NOTE: This can be cheesed by raising a stat beyond the thresholds between actions, as the menu does not allow realtime updates
+    // -       can be mitigated by only adding a single statpoint on level ups, but remains an issue for initial char creation
     // RPGmechsLog(`Found stat cost raising in statConfig.`)
     for (let stat in state.stats.stats) {
         // RPGmechsLog(`Raising stat costs: Checking level of '${stat}'.`)
@@ -573,7 +575,7 @@ state.RPGstate = RPGstate
 // RPGmx functions:
 
 function resourceRegeneration() {
-
+    // iterates over resources on charSheet and handles regen timing
     for (let resource in state.RPGstate.charSheet.resources) {
         RPGmechsLog(`Checking ${resource} regeneration...`)
         if (state.RPGstate.charSheet.resources[resource]?.regenCounter) {
