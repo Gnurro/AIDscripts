@@ -494,8 +494,8 @@ const conditionDB = {
     }
 }
 
-// initialize all the things!
-if (!state.RPGstate.init) { // but only if they aren't, yet
+// initialize menus:
+if (!state.RPGstate.init.stats) { // but only if they aren't, yet
 
     // BEGIN vanilla menu initializations:
     RPGmechsLog(`Initializing menus...`)
@@ -517,6 +517,9 @@ if (!state.RPGstate.init) { // but only if they aren't, yet
     }
     state.stats.statPoints = statConfig.starting.points
 
+    state.RPGstate.init.stats = true
+}
+if (!state.RPGstate.init.skills) {
     // initialize skills menu according to charSheet:
 
     // state.skills enables the skills menu; class skills object must fit with it!
@@ -546,7 +549,7 @@ if (!state.RPGstate.init) { // but only if they aren't, yet
 
     // state.RPGstate.charSheet.feats = ['jolly']
 
-    state.RPGstate.init = true // so it knows it's been initialized
+    state.RPGstate.init.skills = true // so it knows it's been initialized
 }
 
 // iterate over stats, raise costs:
