@@ -109,7 +109,7 @@ const classDB = {
     },
 }
 
-// OPTIONAL grab character info from placeholders:
+// grab character info from placeholders:
 if (info.actionCount < 1) {
     // convenience swap:
     charSheet = RPGstate.charSheet
