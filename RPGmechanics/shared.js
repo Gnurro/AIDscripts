@@ -550,6 +550,7 @@ if (!state.RPGstate.init) { // but only if they aren't, yet
 }
 
 // iterate over stats, raise costs:
+// TODO: turn this into a function
 if (statConfig.raise) {
     // RPGmechsLog(`Found stat cost raising in statConfig.`)
     for (let stat in state.stats.stats) {
@@ -569,8 +570,33 @@ if (statConfig.raise) {
 // backswap ... may be redundant, but better safe than sorry:
 state.RPGstate = RPGstate
 
+// RPGmx functions:
 
-// Utility functions:
+function resourceRegeneration() {
+
+    for (let resource in state.RPGstate.charSheet.resources) {
+        RPGmechsLog(`Checking ${resource} regeneration...`)
+        if (state.RPGstate.charSheet.resources[resource]?.regenCounter) {
+            RPGmechsLog(`${resource} regeneration cooldown remaining: ${state.RPGstate.charSheet.resources[resource].regenCounter}`)
+        }
+        if (state.RPGstate.charSheet.resources[resource].current < state.RPGstate.charSheet.resources[resource].base && !state.RPGstate.charSheet.resources[resource].regenCounter) {
+            RPGmechsLog(`Current ${resource} is lower than its base value, starting regeneration countdown.`)
+            state.RPGstate.charSheet.resources[resource].regenCounter = state.RPGstate.charSheet.resources[resource].regen
+        } else if (state.RPGstate.charSheet.resources[resource].current === state.RPGstate.charSheet.resources[resource].base && state.RPGstate.charSheet.resources[resource].regenCounter) {
+            RPGmechsLog(`Current ${resource} is at its base value, removing regeneration countdown.`)
+            delete state.RPGstate.charSheet.resources[resource].regenCounter
+        }
+        if (state.RPGstate.charSheet.resources[resource]?.regenCounter > 0) {
+            RPGmechsLog(`${state.RPGstate.charSheet.resources[resource].regenCounter} actions until ${resource} regeneration.`)
+            state.RPGstate.charSheet.resources[resource].regenCounter -= 1
+        } else if (state.RPGstate.charSheet.resources[resource]?.regenCounter <= 0) {
+            RPGmechsLog(`${resource} regeneration cooldown over, adding 1.`)
+            state.RPGstate.charSheet.resources[resource].current += 1
+        }
+    }
+
+}
+
 function makeModString(int) { // makes neat modifier strings with adaptive +/- depending on given value
     if (Number.isInteger(int)) {
         if (int >= 0) {
@@ -583,6 +609,8 @@ function makeModString(int) { // makes neat modifier strings with adaptive +/- d
     }
     return (string)
 }
+
+// Utility functions:
 
 function inputTypeCheck(inputText) {
     let doTriggered = inputText.match(/> You /gi)
