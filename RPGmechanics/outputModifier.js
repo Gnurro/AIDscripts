@@ -2,7 +2,7 @@ const modifier = (text) => {
     let modifiedText = text
     const lowered = text.toLowerCase()
 
-    // raising HP by CON:
+    // raising HP by specified stat:
     if (state.stats.stats[state.RPGstate.charSheet.resources.HP.stat].level >= 1) {
         RPGmechsLog(`${state.RPGstate.charSheet.resources.HP.stat} is 1 or higher, raising HP...`)
         let prevHPmatch = true
@@ -10,7 +10,7 @@ const modifier = (text) => {
             RPGmechsLog(`HP not full, will keep old curHP.`)
             prevHPmatch = false
         }
-        state.RPGstate.charSheet.resources.HP.base = state.RPGstate.charSheet.resources.HP.initial + state.stats.stats['Constitution'].level
+        state.RPGstate.charSheet.resources.HP.base = state.RPGstate.charSheet.resources.HP.initial + state.stats.stats[state.RPGstate.charSheet.resources.HP.stat].level
         if (prevHPmatch === true) {
             RPGmechsLog(`HP full, raising curHP as well.`)
             state.RPGstate.charSheet.resources.HP.current = state.RPGstate.charSheet.resources.HP.base
