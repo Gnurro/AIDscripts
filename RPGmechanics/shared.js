@@ -208,7 +208,7 @@ const statConfig = {
         cost: 1,
     },
     // OPTIONAL raise statPoint costs:
-    raise: [
+    raiseCost: [
         // threshold is INCLUSIVE, as current level is checked BEFORE raising:
         {threshold: 4, newCost: 2}, // this means going from 4 to 5 costs 2
         {threshold: 9, newCost: 3}, // this means going from 9 to 10 costs 3
@@ -495,7 +495,7 @@ const conditionDB = {
 }
 
 // initialize menus:
-if (!state.RPGstate.init.stats) { // but only if they aren't, yet
+if (!state.RPGstate.init?.stats) { // but only if they aren't, yet
 
     // BEGIN vanilla menu initializations:
     RPGmechsLog(`Initializing menus...`)
@@ -520,7 +520,7 @@ if (!state.RPGstate.init.stats) { // but only if they aren't, yet
     state.RPGstate.init.stats = true
 }
 
-if (!state.RPGstate.init.skills) {
+if (!state.RPGstate.init?.skills) {
     // initialize skills menu according to charSheet:
 
     // state.skills enables the skills menu; class skills object must fit with it!
@@ -547,15 +547,14 @@ if (!state.RPGstate.init.skills) {
 
     // END vanilla menu initializations.
 
-
-    // state.RPGstate.charSheet.feats = ['jolly']
-
     state.RPGstate.init.skills = true // so it knows it's been initialized
 }
 
+// state.RPGstate.charSheet.feats = ['jolly']
+
 // iterate over stats, raise costs:
 // TODO: turn this into a function
-if (statConfig.raise) {
+if (statConfig.raiseCost) {
     // - NOTE: This can be cheesed by raising a stat beyond the thresholds between actions, as the menu does not allow realtime updates
     // -       can be mitigated by only adding a single statpoint on level ups, but remains an issue for initial char creation
     // RPGmechsLog(`Found stat cost raising in statConfig.`)
