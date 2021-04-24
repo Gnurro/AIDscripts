@@ -519,6 +519,7 @@ if (!state.RPGstate.init.stats) { // but only if they aren't, yet
 
     state.RPGstate.init.stats = true
 }
+
 if (!state.RPGstate.init.skills) {
     // initialize skills menu according to charSheet:
 
