@@ -10,6 +10,7 @@ const modifier = (text) => {
         state.skillPoints += miscConfig.levelUpSkillPoints // ...add configured skill point(s)...
         displayStatsUpdate(['Level up', 'Points added!', 'yellow']) // ...and tell the player in the info box.
     } else {
+        // remove the level up message:
         displayStatsUpdate(['Level up', ''])
     }
 

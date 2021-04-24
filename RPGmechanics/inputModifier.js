@@ -54,6 +54,7 @@ const modifier = (text) => {
     // go through skills menu:
     if (info.actionCount > 0) {
         charSkillLoop:
+            // go through each of the skills currently in the skills menu:
             for (let skill in state.skills) {
 
                 // get skill modifier from menu:
