@@ -18,7 +18,7 @@ const modifier = (text) => {
     }
 
     // resource regen:
-    if (info.actionCount > 0) {
+    if (info.actionCount > 0 && state.RPGstate.miscConfig.outputRegen) {
         resourceRegeneration()
     }
 
