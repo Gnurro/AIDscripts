@@ -30,7 +30,9 @@ state.RPGstate.miscConfig = {
     showResources: true,
     showFancyResources: true, // set to false to show number instead of the bar
     doLog: true,
-    hardLog: false
+    hardLog: false,
+    inputRegen: true,
+    outputRegen: true
 }
 
 // MANDATORY generic character sheet initializer:
