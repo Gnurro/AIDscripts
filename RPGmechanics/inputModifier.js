@@ -58,8 +58,7 @@ const modifier = (text) => {
                         RPGmechsLog(activityDB[activity].logMessage)
 
                         // conditions:
-                        conditionBlock: {
-
+                        conditionsBlock: {
                             if (state.RPGstate.charSheet.conditions) {
                                 // removing conditions:
                                 if (activityDB[activity]?.removeConditions) {
@@ -82,37 +81,48 @@ const modifier = (text) => {
 
                             // applying conditions:
                             if (activityDB[activity]?.applyConditions) {
+                                // make sure there is the conditions array in charSheet:
                                 if (!state.RPGstate.charSheet.conditions) {
                                     state.RPGstate.charSheet.conditions = []
                                 }
+                                // add the listed conditions, if char doesn't already have them:
                                 for (let condition of activityDB[activity].applyConditions) {
-                                    let newCondition = conditionDB[condition]
-                                    // add curStage value to charSheet condition for tracking of current condition stage:
-                                    newCondition.curStage = conditionDB[condition].initialStage
-                                    state.RPGstate.charSheet.conditions.push(newCondition)
+                                    if (!state.RPGstate.charSheet.conditions.includes(condition)) {
+                                        RPGmechsLog(`Character does not have '${condition}' yet, adding it.`)
+                                        let newCondition = conditionDB[condition]
+                                        // add curStage value to charSheet condition for tracking of current condition stage:
+                                        newCondition.curStage = conditionDB[condition].initialStage
+                                        state.RPGstate.charSheet.conditions.push(newCondition)
+                                    } else {
+                                        RPGmechsLog(`Character already has '${condition}', not adding it.`)
+                                    }
                                 }
                             }
                         }
 
-                        // skillActivities:
-                        // these are intended to apply to skills THE CHARACTER DOES __NOT__ HAVE!
-                        // skills the character does have are handled below
-                        if (activityDB[activity]?.skillUse) {
-                            // check if the char has that skill:
-                            if (!state.RPGstate.charSheet.skills.includes(activityDB[activity].skillUse)) {
-                                RPGmechsLog(`'${activityDB[activity].activityID}' is a skill activity, and the character does not have the '${activityDB[activity].skillUse}' skill.`)
-                                if (!activityDB[activity].allowUntrained) {
-                                    RPGmechsLog(`'${activityDB[activity].activityID}' does not allow untrained skill use.`)
-                                    state.RPGstate.actSkillFail = true
-                                    state.RPGstate.chkSitSkill = skillDB[activityDB[activity].skillUse]
-                                } else {
-                                    RPGmechsLog(`'${activityDB[activity].activityID}' does allow untrained skill use, applying untrained malus.`)
-                                    state.RPGstate.chkSitSkill = skillDB[activityDB[activity].skillUse]
-                                    state.RPGstate.chkSkillBonus = activityDB[activity].untrainedSkillUseMalus
+                        skillActivitiesBlock: {
+                            // skillActivities:
+                            // these are intended to apply to skills THE CHARACTER DOES __NOT__ HAVE!
+                            // skills the character does have are handled below
+                            if (activityDB[activity]?.skillUse) {
+                                // check if the char has that skill:
+                                if (!state.RPGstate.charSheet.skills.includes(activityDB[activity].skillUse)) {
+                                    RPGmechsLog(`'${activityDB[activity].activityID}' is a skill activity, and the character does not have the '${activityDB[activity].skillUse}' skill.`)
+                                    if (skillDB[activityDB[activity].skillUse]) {
+                                        state.RPGstate.chkSitSkill = skillDB[activityDB[activity].skillUse]
+                                        if (!activityDB[activity].allowUntrained) {
+                                            RPGmechsLog(`'${activityDB[activity].activityID}' does not allow untrained skill use.`)
+                                            state.RPGstate.actSkillFail = true
+                                        } else {
+                                            RPGmechsLog(`'${activityDB[activity].activityID}' does allow untrained skill use, applying untrained malus.`)
+                                            state.RPGstate.chkSkillBonus = activityDB[activity].untrainedSkillUseMalus
+                                        }
+                                    } else {
+                                        RPGmechsLog(`ERROR: '${activityDB[activity].activityID}' is checking for an undefined skill, '${activityDB[activity].skillUse}'!`)
+                                    }
                                 }
                             }
                         }
-
 
                         break activityTriggerLoop // one trigger is enough!
                     }
