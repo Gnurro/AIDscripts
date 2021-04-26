@@ -26,7 +26,7 @@ if (!state.RPGstate?.miscConfig) {
         doLog: true,
         hardLog: false,
         inputRegen: true,
-        outputRegen: true
+        outputRegen: true,
     }
 }
 
@@ -403,7 +403,16 @@ const activityDB = {
         triggers: [`\\bpotion", "\\bbrew(?<=potion)(?=potion)", "\\bvial", "\\balchem(ic(al(y)*)*|y)`],
         logMessage: `Detected 'handling potions' activity!`,
         skillUse: `potBrew`,
-        allowUntrained: false,
+        allowUntrained: true,
+        untrainedSkillUseMalus: -10
+    },
+
+    poisonHandle: {
+        activityID: `poisonHandle`,
+        triggers: [`\\bpotion", "\\bbrew(?<=potion)(?=potion)", "\\bvial", "\\balchem(ic(al(y)*)*|y)`],
+        logMessage: `Detected 'handling poisons' activity!`,
+        skillUse: `poisoning`,
+        allowUntrained: false
     },
 
     drinkAlcohol: {

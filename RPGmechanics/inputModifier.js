@@ -94,7 +94,24 @@ const modifier = (text) => {
                             }
                         }
 
-                        // skill activities:
+                        // skillActivities:
+                        // these are intended to apply to skills THE CHARACTER DOES __NOT__ HAVE!
+                        // skills the character does have are handled below
+                        if (activityDB[activity]?.skillUse) {
+                            // check if the char has that skill:
+                            if (!state.RPGstate.charSheet.skills.includes(activityDB[activity].skillUse)) {
+                                RPGmechsLog(`'${activityDB[activity].activityID}' is a skill activity, and the character does not have the '${activityDB[activity].skillUse}' skill.`)
+                                if (!activityDB[activity].allowUntrained) {
+                                    RPGmechsLog(`'${activityDB[activity].activityID}' does not allow untrained skill use.`)
+                                    state.RPGstate.actSkillFail = true
+                                    state.RPGstate.chkSitSkill = skillDB[activityDB[activity].skillUse]
+                                } else {
+                                    RPGmechsLog(`'${activityDB[activity].activityID}' does allow untrained skill use, applying untrained malus.`)
+                                    state.RPGstate.chkSitSkill = skillDB[activityDB[activity].skillUse]
+                                    state.RPGstate.chkSkillBonus = activityDB[activity].untrainedSkillUseMalus
+                                }
+                            }
+                        }
 
 
                         break activityTriggerLoop // one trigger is enough!

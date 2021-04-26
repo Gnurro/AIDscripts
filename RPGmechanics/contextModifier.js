@@ -114,7 +114,7 @@ const modifier = (text) => {
                 // add the check modifier to the roll to get the result:
                 let chkModRoll = roll + chkSitBonus
 
-                if (chkModRoll >= chkDC) { // if the result beats the DC...
+                if (chkModRoll >= chkDC && !state.RPGstate.actSkillFail) { // if the result beats the DC and there is no skillActivity auto-fail...
 
                     chkMessageResult = state.RPGstate.miscConfig.successMessage // ...put the result in words for the player...
 
@@ -132,7 +132,7 @@ const modifier = (text) => {
                     }
                     state.RPGstate.charSheet.XP += chkXP // ...then add appropriate XP
 
-                } else { // if the result does NOT beat the DC...
+                } else { // if the result does NOT beat the DC or there is a skillActivity auto-fail...
 
                     chkMessageResult = state.RPGstate.miscConfig.failMessage // ...put the result in words for the player...
 
@@ -147,9 +147,14 @@ const modifier = (text) => {
                         resultContextString = `[You are too ${chkStatNegAdj} for that right now.]`
                     }
                     if (chkXP > 1) { // ...make sure to not add half XP...
-                        chkXP = Math.floor(chkXP / 2) // ...by rounding up after halving...
+                        chkXP = Math.floor(chkXP / 2) // ...by rounding down after halving...
                     }
                     state.RPGstate.charSheet.XP += chkXP // ...then add appropriate XP
+
+                    // skillActivity auto-fail cleanup:
+                    if (typeof(state.RPGstate.actSkillFail) !== 'undefined') {
+                        delete state.RPGstate.actSkillFail
+                    }
                 }
 
                 /*
