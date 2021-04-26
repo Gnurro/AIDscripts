@@ -57,7 +57,7 @@ const modifier = (text) => {
         }
 
         // get check attribute from bot output and assign appropriate stat modifiers:
-        checkBit:
+        checkBlock:
             if (chkStat != null) { // if the bot does come up with anything
 
                 // bot derpness safety:
@@ -67,7 +67,7 @@ const modifier = (text) => {
                     chkStatLvl = 0 // so it gets no attribute bonus
                     chkStatPosAdj = "good" // this is the crucial bit for generation, but since the bot said it's generic...
                     chkStatNegAdj = "bad" // ...AI is told generic things below
-                    break checkBit
+                    break checkBlock
                 }
                 */
 
@@ -78,7 +78,7 @@ const modifier = (text) => {
                     chkStatLvl = 0
                     if (statConfig?.locking?.lockArbitraryChecks === true) {
                         RPGmechsLog(`Stopping check routine due to 'unknown' stat.`)
-                        break checkBit
+                        break checkBlock
                     }
                 } else {
                     RPGmechsLog(`${chkStat} found, setting mod to ${state.stats.stats[chkStat].level}.`)
