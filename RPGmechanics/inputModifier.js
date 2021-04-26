@@ -35,20 +35,75 @@ const modifier = (text) => {
         stopInput = true // no model call
     }
 
-    // locking:
-    if (statConfig?.locking) {
-        for (let trigger of statConfig.locking.lockTriggers) {
-            let curRegEx = new RegExp(trigger, 'gi')
-            if (modifiedText.match(curRegEx)) {
-                RPGmechsLog(`Found '${trigger}' locking trigger, locking inputBot!`)
-                stopBot = true
+    if (info.actionCount > 0) {
+
+        // locking:
+        if (statConfig?.locking) {
+            for (let trigger of statConfig.locking.lockTriggers) {
+                let curRegEx = new RegExp(trigger, 'gi')
+                if (modifiedText.match(curRegEx)) {
+                    RPGmechsLog(`Found '${trigger}' locking trigger, locking inputBot!`)
+                    stopBot = true
+                }
             }
         }
-    }
 
-    // skill processing:
-    // go through skills menu:
-    if (info.actionCount > 0) {
+        // activity processing:
+        for (let activity in activityDB) {
+            activityTriggerLoop:
+                for (let trigger of activityDB[activity].triggers) {
+                    let curRegEx = new RegExp(trigger, 'gi')
+                    if (modifiedText.match(curRegEx)) {
+                        RPGmechsLog(`Found '${trigger}' activity trigger!`)
+                        RPGmechsLog(activityDB[activity].logMessage)
+
+                        // conditions:
+                        conditionBlock: {
+
+                            if (state.RPGstate.charSheet.conditions) {
+                                // removing conditions:
+                                if (activityDB[activity]?.removeConditions) {
+                                    for (let condition of activityDB[activity].removeConditions) {
+                                        state.RPGstate.charSheet.conditions.splice(state.RPGstate.charSheet.conditions.indexOf(condition), 1)
+                                    }
+                                }
+
+                                // staging conditions:
+                                if (activityDB[activity]?.stageConditions) {
+                                    for (let conditionStager of activityDB[activity].stageConditions) {
+                                        for (let condition of state.RPGstate.charSheet.conditions) {
+                                            if (condition.conditionID === conditionStager[0]) {
+                                                state.RPGstate.charSheet.conditions[state.RPGstate.charSheet.conditions.indexOf(condition)].curStage += conditionStager[1]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            // applying conditions:
+                            if (activityDB[activity]?.applyConditions) {
+                                if (!state.RPGstate.charSheet.conditions) {
+                                    state.RPGstate.charSheet.conditions = []
+                                }
+                                for (let condition of activityDB[activity].applyConditions) {
+                                    let newCondition = conditionDB[condition]
+                                    // add curStage value to charSheet condition for tracking of current condition stage:
+                                    newCondition.curStage = conditionDB[condition].initialStage
+                                    state.RPGstate.charSheet.conditions.push(newCondition)
+                                }
+                            }
+                        }
+
+                        // skill activities:
+
+
+                        break activityTriggerLoop // one trigger is enough!
+                    }
+                }
+        }
+
+        // skill processing:
+        // go through skills menu:
         charSkillLoop:
             // go through each of the skills currently in the skills menu:
             for (let skill in state.skills) {

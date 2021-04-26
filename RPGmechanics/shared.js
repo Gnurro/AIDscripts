@@ -378,7 +378,6 @@ const featDB = {
 }
 
 // Activities!
-
 const activityDB = {
     enterFire: {
         activityID: `enterFire`,
@@ -497,7 +496,7 @@ const conditionDB = {
 
 // initialize menus:
 // initialize stats menu:
-if (!state.RPGstate.init?.stats) { // but only if they aren't, yet
+if (!state.RPGstate.init?.stats) {
     // BEGIN vanilla menu initializations:
     RPGmechsLog(`Initializing stat menu...`)
     // create stats.stats object, add empty menu:
@@ -559,6 +558,7 @@ if (!state.RPGstate.init?.skills) {
 
 // state.RPGstate.charSheet.feats = ['jolly']
 
+// raise stat costs: (might be better in other modifiers?)
 raiseStatCosts()
 
 // backswap ... may be redundant, but better safe than sorry:
