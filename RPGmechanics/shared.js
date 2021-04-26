@@ -7,33 +7,31 @@ if (!state.RPGstate) {
     state.RPGstate = {}
 }
 
+if (!state.RPGstate?.miscConfig) {
+    state.RPGstate.miscConfig = {
+        successMessage: `Success!`, // to be shown in the check message
+        failMessage: `Fail!`, // to be shown in the check message
+        messageStatIcon: true, // should the the check message show the icon of the stat?
+        showXP: true,
+        showXPcolor: `yellow`, // remove this to use standard theme color
+        XPcap: 100, // XP needed for a level up
+        showCharLevel: true,
+        levelUpStatPoints: 1, // how many stat points are gained each level-up
+        levelUpSkillPoints: 10, // how many skill points are gained each level-up
+        showDC: true, // visibility of the DC used; set to false for "immersion"
+        showHP: true, // set to false to hide HP if unused; INTENDED: if false, also doesn't show fancy HP bar
+        showFancyHP: true, // set to false to show number instead of the bar
+        showResources: true,
+        showFancyResources: true, // set to false to show number instead of the bar
+        doLog: true,
+        hardLog: false,
+        inputRegen: true,
+        outputRegen: true
+    }
+}
+
 // swap for neater code - backswap needed! (or not...? JS is weird...)
 RPGstate = state.RPGstate
-
-if (!RPGstate?.showDC) {
-    RPGstate.showDC = true
-}
-
-state.RPGstate.miscConfig = {
-    successMessage: `Success!`, // to be shown in the check message
-    failMessage: `Fail!`, // to be shown in the check message
-    messageStatIcon: true, // should the the check message show the icon of the stat?
-    showXP: true,
-    showXPcolor: `yellow`, // remove this to use standard theme color
-    XPcap: 100, // XP needed for a level up
-    showCharLevel: true,
-    levelUpStatPoints: 1, // how many stat points are gained each level-up
-    levelUpSkillPoints: 10, // how many skill points are gained each level-up
-    showDC: true, // visibility of the DC used; set to false for "immersion"
-    showHP: true, // set to false to hide HP if unused; INTENDED: if false, also doesn't show fancy HP bar
-    showFancyHP: true, // set to false to show number instead of the bar
-    showResources: true,
-    showFancyResources: true, // set to false to show number instead of the bar
-    doLog: true,
-    hardLog: false,
-    inputRegen: true,
-    outputRegen: true
-}
 
 // MANDATORY generic character sheet initializer:
 if (!RPGstate?.charSheet) {
@@ -85,7 +83,7 @@ const classDB = {
                 current: 3,
                 regen: 6, // number of actions to restore one point
                 // display bar color; progression possible: from high to low, uses HTML color names (in full lowercase); currently has three levels: more then half, less than half, less than third
-                colors: ['royalblue','deepskyblue','cornflowerblue']
+                colors: ['royalblue', 'deepskyblue', 'cornflowerblue']
             },
         },
         special: {
@@ -101,7 +99,7 @@ const classDB = {
                 base: 3,
                 current: 3,
                 regen: 6,
-                colors:['red','darkred','fireBrick']
+                colors: ['red', 'darkred', 'fireBrick']
             },
         },
     },
@@ -215,7 +213,7 @@ const statConfig = {
         {threshold: 4, newCost: 2}, // this means going from 4 to 5 costs 2
         {threshold: 9, newCost: 3}, // this means going from 9 to 10 costs 3
     ],
-    // locking inputBot on trivial actions:
+    // OPTIONAL locking inputBot on trivial actions:
     locking: {
         lockTriggers: [`walk`, `breathe`], // will get regEx'd
         lockArbitraryChecks: true
@@ -421,7 +419,6 @@ const activityDB = {
 // Conditions!
 // Stuff that does something to stats, skills, rolls or anything temporarily (even if it sticks for very long times)
 const conditionDB = {
-
     onFire: {
         conditionID: `onFire`,
         traits: [`fire`],
@@ -434,7 +431,6 @@ const conditionDB = {
             }
         ],
     },
-
     mageBlightPoison: {
         conditionID: `mageBlightPoison`,
         traits: [`poison`, `magic`, `MP`],
@@ -455,7 +451,6 @@ const conditionDB = {
             },
         ],
     },
-
     drunk: {
         conditionID: `drunk`,
         initialStage: 1,
@@ -477,37 +472,45 @@ const conditionDB = {
             }
         ],
     },
-
     unconscious: {
         conditionID: `unconscious`,
         initialStage: 1,
         stages: [
             {
-                stats: {dexterity: `toZero`, charisma: `toZero`, strength: `toZero`, wisdom: `toZero`, intelligence: `toZero`},
+                stats: {
+                    dexterity: `toZero`,
+                    charisma: `toZero`,
+                    strength: `toZero`,
+                    wisdom: `toZero`,
+                    intelligence: `toZero`
+                },
                 context: {text: `[You are unconscious and can not do anything.]`, position: -1},
                 skillOverride: true, // if true: override all skill results with context[text]
                 statOverride: true // if true: override all stat results with context[text]
             },
         ],
     },
-
     waterSoaked: {
         conditionID: `waterSoaked`,
     }
 }
 
 // initialize menus:
+// initialize stats menu:
 if (!state.RPGstate.init?.stats) { // but only if they aren't, yet
-
     // BEGIN vanilla menu initializations:
-    RPGmechsLog(`Initializing menus...`)
-    // initialize stats menu as defined in statSet:
+    RPGmechsLog(`Initializing stat menu...`)
+    // create stats.stats object, add empty menu:
     if (!state.stats) {
         state.stats = {stats: {}}
     }
-    for (let statID in statConfig.statList) {
-        if (!statConfig.statList[statID].ignoreForMenu === true) {
+    // initialize stats menu content as defined in statConfig:
+    for (let statID in statConfig.statList) { // go through all the stats in statConfig
+        // check if the stat should be in the menu:
+        if (!statConfig.statList[statID].ignoreForMenu === true) { // 'if stat is NOT to be IGNORED for menu'
+            // add stat to menu using defined 'name':
             state.stats.stats[statConfig.statList[statID].name] = {
+                // assign the standard starting values to it:
                 level: statConfig.starting.level,
                 cost: statConfig.starting.cost
             }
@@ -515,22 +518,22 @@ if (!state.RPGstate.init?.stats) { // but only if they aren't, yet
         } else {
             RPGmechsLog(`Ignored '${statID}' stat for stats menu adding.`)
         }
-
     }
+    // set starting statpoints:
     state.stats.statPoints = statConfig.starting.points
-
+    // make sure this is only done once (or after resetting):
     state.RPGstate.init.stats = true
 }
-
+// initialize skills menu according to charSheet:
 if (!state.RPGstate.init?.skills) {
-    // initialize skills menu according to charSheet:
-
-    // state.skills enables the skills menu; class skills object must fit with it!
+    RPGmechsLog(`Initializing skills menu...`)
+    // state.skills enables empty skills menu
     state.skills = {}
-
+    // go through charSheet skills:
     sheetSkillLoop:
-        for (let curSkillID of charSheet.skills) {
+        for (let curSkillID of charSheet.skills) { // skill list must contain defined skillIDs!
             RPGmechsLog(`Trying to add '${curSkillID}' skill from character sheet to menu.`)
+            // go through skillDB skillDefs to get skill values:
             for (let skillDef in skillDB) {
                 // RPGmechsLog(`Looking at '${skillDef}' in skillsDB...`)
                 if (skillDef === curSkillID) {
@@ -543,14 +546,14 @@ if (!state.RPGstate.init?.skills) {
             }
             RPGmechsLog(`ERROR: Couldn't find fitting skill definition for '${curSkillID}' in skillDB!`)
         }
-
+    // set starting skill points according to skillConfig:
     state.skillPoints = skillConfig.starting.points
-    state.disableRandomSkill = skillConfig.forbidRandom
-
-    // END vanilla menu initializations.
-
-    state.RPGstate.init.skills = true // so it knows it's been initialized
+    // disable random skill generation:
+    state.disableRandomSkill = skillConfig.forbidRandom // random skills will lack processing and break the script!
+    // make sure skills menu is only initialized once (or after reset):
+    state.RPGstate.init.skills = true
 }
+// END vanilla menu initializations.
 
 // state.RPGstate.charSheet.feats = ['jolly']
 
