@@ -39,11 +39,13 @@ const modifier = (text) => {
 
         // locking:
         if (statConfig?.locking) {
+            lockTriggerLoop:
             for (let trigger of statConfig.locking.lockTriggers) {
                 let curRegEx = new RegExp(trigger, 'gi')
                 if (modifiedText.match(curRegEx)) {
                     RPGmechsLog(`Found '${trigger}' locking trigger, locking inputBot!`)
                     stopBot = true
+                    break lockTriggerLoop // once triggered is enough!
                 }
             }
         }
