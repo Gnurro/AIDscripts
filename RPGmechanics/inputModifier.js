@@ -28,12 +28,12 @@ const modifier = (text) => {
 
     // /showDC command
     if (lowered.includes("/showdc")) {
-        if (state.RPGstate.showDC === true) {
-            state.RPGstate.showDC = false
+        if (state.RPGstate.miscConfig.showDC === true) {
+            state.RPGstate.miscConfig.showDC = false
             state.message = "Turned DC display off."
         }
-        if (state.RPGstate.showDC === false) {
-            state.RPGstate.showDC = true
+        if (state.RPGstate.miscConfig.showDC === false) {
+            state.RPGstate.miscConfig.showDC = true
             state.message = "Turned DC display on."
         }
         stopInput = true // no model call
