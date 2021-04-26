@@ -596,7 +596,6 @@ function cleanCharSheetStats() {
 }
 
 
-
 function procConditions() {
     // condition processing
 
@@ -713,6 +712,11 @@ function procConditions() {
                 }
 
             }
+
+        if (state.RPGstate.charSheet.conditions.length === 0) {
+            delete state.RPGstate.charSheet.conditions
+        }
+
     } else {
         RPGmechsLog(`CONDITIONS: No active conditions found.`)
     }
