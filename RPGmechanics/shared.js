@@ -12,6 +12,8 @@ if (!state.RPGstate?.miscConfig) {
         successMessage: `Success!`, // to be shown in the check message
         failMessage: `Fail!`, // to be shown in the check message
         messageStatIcon: true, // should the the check message show the icon of the stat?
+        XPdcDivider: 5, // the DC of each check is divided by this number to calculate the base XP gained; DCs are divisible by five (using BIGdcAttributeBot5)
+        XPfailFactor: 2, // XP is divided by this number on failed checks
         showXP: true,
         showXPcolor: `yellow`, // remove this to use standard theme color
         XPcap: 100, // XP needed for a level up

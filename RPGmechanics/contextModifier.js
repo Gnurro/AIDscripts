@@ -3,8 +3,8 @@ const modifier = (text) => {
     // BEGIN rpg mechanics
 
     // progression:
-    if (state.RPGstate.charSheet.XP >= state.RPGstate.miscConfig.XPcap) { // if player got more then 100 XP...
-        state.RPGstate.charSheet.XP -= state.RPGstate.miscConfig.XPcap // ...substract 100 XP,...
+    if (state.RPGstate.charSheet.XP >= state.RPGstate.miscConfig.XPcap) { // if player got more then XPcap XP...
+        state.RPGstate.charSheet.XP -= state.RPGstate.miscConfig.XPcap // ...substract XPcap XP,...
         state.RPGstate.charSheet.level += 1
         state.stats.statPoints += state.RPGstate.miscConfig.levelUpStatPoints // ...add configured stat point(s),...
         state.skillPoints += state.RPGstate.miscConfig.levelUpSkillPoints // ...add configured skill point(s)...
@@ -30,7 +30,7 @@ const modifier = (text) => {
 
         if (chkStat == null) {
             chkStat = 'unknown'
-        } else if (!typeof(statConfig.statList[chkStat]) === 'undefined') {
+        } else if (typeof(statConfig.statList[chkStat]) === 'undefined') {
             RPGmechsLog(`DCbot got creative and said this is ${chkStat}, but that isn't a configured stat - setting it to 'unknown' for processing.`)
             chkStat = 'unknown'
         }
@@ -45,8 +45,7 @@ const modifier = (text) => {
         delete state.inputBot
 
         // use difficulty to scale XP:
-        // TODO: make this a framework option
-        let chkXP = chkDC / 5 // DC are divisible by five, so this probably works
+        let chkXP = chkDC / state.RPGstate.miscConfig.XPdcDivider
 
         // optional DC display:
         // TODO: make this more configurable; framework options
@@ -139,7 +138,7 @@ const modifier = (text) => {
                         resultContextString = `[You are too ${chkStatNegAdj} for that right now.]`
                     }
                     if (chkXP > 1) { // ...make sure to not add half XP...
-                        chkXP = Math.floor(chkXP / 2) // ...by rounding down after halving...
+                        chkXP = Math.floor(chkXP / state.RPGstate.miscConfig.XPfailFactor) // ...by rounding down after halving...
                     }
                     state.RPGstate.charSheet.XP += chkXP // ...then add appropriate XP
 
