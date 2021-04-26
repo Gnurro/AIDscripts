@@ -555,32 +555,39 @@ if (!state.RPGstate.init?.skills) {
 }
 // END vanilla menu initializations.
 
+// TODO: make skill menu update function to allow later addition of skills
+
 // state.RPGstate.charSheet.feats = ['jolly']
 
-// iterate over stats, raise costs:
-// TODO: turn this into a function
-if (statConfig.raiseCost) {
-    // - NOTE: This can be cheesed by raising a stat beyond the thresholds between actions, as the menu does not allow realtime updates
-    // -       can be mitigated by only adding a single statpoint on level ups, but remains an issue for initial char creation
-    // RPGmechsLog(`Found stat cost raising in statConfig.`)
-    for (let stat in state.stats.stats) {
-        // RPGmechsLog(`Raising stat costs: Checking level of '${stat}'.`)
-        for (let curRaise of statConfig.raise) {
-            // RPGmechsLog(`Raising stat costs: Checking level '${curRaise.threshold}' raise.`)
-            if (state.stats.stats[stat].level >= curRaise.threshold) {
-                // RPGmechsLog(`'${stat}' level (${state.stats.stats[stat].level}) at or over ${curRaise.threshold} threshold, setting cost to ${curRaise.newCost}`)
-                state.stats.stats[stat]["cost"] = 2
-            } else {
-                // RPGmechsLog(`Raising stat costs: Level of '${stat}' below threshold.`)
-            }
-        }
-    }
-}
+raiseStatCosts()
 
 // backswap ... may be redundant, but better safe than sorry:
 state.RPGstate = RPGstate
 
 // RPGmx functions:
+
+function raiseStatCosts() {
+    if (statConfig.raiseCost) {
+        // - NOTE: This can be cheesed by raising a stat beyond the thresholds between actions, as the menu does not allow realtime updates
+        // -       can be mitigated by only adding a single statpoint on level ups, but remains an issue for initial char creation
+        // RPGmechsLog(`Found stat cost raising in statConfig.`)
+        // iterate over stats, raise costs:
+        for (let stat in state.stats.stats) {
+            // RPGmechsLog(`Raising stat costs: Checking level of '${stat}'.`)
+            for (let curRaise of statConfig.raise) {
+                // RPGmechsLog(`Raising stat costs: Checking level '${curRaise.threshold}' raise.`)
+                if (state.stats.stats[stat].level >= curRaise.threshold) {
+                    // RPGmechsLog(`'${stat}' level (${state.stats.stats[stat].level}) at or over ${curRaise.threshold} threshold, setting cost to ${curRaise.newCost}`)
+                    state.stats.stats[stat]["cost"] = 2 // TODO: make this configurable
+                } else {
+                    // RPGmechsLog(`Raising stat costs: Level of '${stat}' below threshold.`)
+                }
+            }
+        }
+    } else {
+        RPGmechsLog(`Raising stat costs is not enabled.`)
+    }
+}
 
 function resourceRegeneration() {
     // iterates over resources on charSheet and handles regen timing
@@ -604,7 +611,6 @@ function resourceRegeneration() {
             state.RPGstate.charSheet.resources[resource].current += 1
         }
     }
-
 }
 
 function makeModString(int) { // makes neat modifier strings with adaptive +/- depending on given value

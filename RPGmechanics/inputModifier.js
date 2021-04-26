@@ -10,14 +10,10 @@ const modifier = (text) => {
     // locking inputBot:
     let stopBot = false
 
-    // const bracketed = /\[(.*?)\]/g
-
-
     if (info.actionCount < 1) {
         // clean up the text that goes into history:
         modifiedText = text.replace(/\[|\]/g, '')
     }
-
 
     // /r command - this will reset ALL stats and skills!
     if (lowered.includes("/r")) {
