@@ -580,13 +580,13 @@ state.RPGstate = RPGstate
 // RPGmx functions:
 
 function cleanCharSheetStats() {
-    // only do this if no conditions change current stats:
-    if (!state.RPGstate.charSheet.conditions) {
-        for (let menuStat in state.stats.stats) {
-            if (state.RPGstate.charSheet.baseStats[menuStat] !== state.stats.stats[menuStat].level) {
-                RPGmechsLog(`MenuStat/charSheet baseStats mismatch detected, updating charSheet.`)
-                state.RPGstate.charSheet.baseStats[menuStat] = state.stats.stats[menuStat].level
-            }
+    for (let menuStat in state.stats.stats) {
+        if (state.RPGstate.charSheet.baseStats[menuStat] !== state.stats.stats[menuStat].level) {
+            RPGmechsLog(`MenuStat/charSheet baseStats mismatch detected, updating charSheet.`)
+            state.RPGstate.charSheet.baseStats[menuStat] = state.stats.stats[menuStat].level
+        }
+        // only do this if no conditions change current stats:
+        if (!state.RPGstate.charSheet.conditions) {
             if (state.RPGstate.charSheet.curStats[menuStat] !== state.stats.stats[menuStat].level) {
                 RPGmechsLog(`MenuStat/charSheet curStats mismatch without conditions detected, updating charSheet.`)
                 state.RPGstate.charSheet.curStats[menuStat] = state.stats.stats[menuStat].level
@@ -637,6 +637,12 @@ function procConditions() {
                             activeStage.saveRoll.cd = activeStage.saveRoll.frequency
                         } else {
                             activeStage.saveRoll.cd -= 1
+                        }
+                    }
+
+                    if (activeStage.stats) {
+                        for (let statID in activeStage.stats) {
+                            state.RPGstate.charSheet.curStats[statID] = state.RPGstate.charSheet.baseStats[statID] + activeStage.stats[statID]
                         }
                     }
 

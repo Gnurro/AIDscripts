@@ -70,6 +70,8 @@ const modifier = (text) => {
                 }
                 */
 
+                // TODO: use charSheet.curStats!
+
                 // get the corresponding modifier from stat menu:
                 if (chkStat === 'unknown') {
                     RPGmechsLog(`DCbot came up with 'unknown' stat.`)
@@ -80,8 +82,11 @@ const modifier = (text) => {
                         break checkBlock
                     }
                 } else {
-                    RPGmechsLog(`${chkStat} found, setting mod to ${state.stats.stats[chkStat].level}.`)
-                    chkStatLvl = state.stats.stats[chkStat].level
+                    RPGmechsLog(`${chkStat} found, setting mod to ${state.RPGstate.charSheet.curStats[chkStat]}.`)
+                    chkStatLvl = state.RPGstate.charSheet.curStats[chkStat]
+
+                    // RPGmechsLog(`${chkStat} found, setting mod to ${state.stats.stats[chkStat].level}.`)
+                    // chkStatLvl = state.stats.stats[chkStat].level
                 }
 
                 // get adjectives from statConfig:
