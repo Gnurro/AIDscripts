@@ -96,14 +96,6 @@ const modifier = (text) => {
                     chkSitBonus = chkStatLvl // ...just use the attribute modifier
                 }
 
-                // Feats handling:
-                /*
-                for (feat of state.charFeats) {
-                    console.log(feat)
-                }
-                */
-
-
                 // the actual check:
                 // TODO: make most of this configurable!
 

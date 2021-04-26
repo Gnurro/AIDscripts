@@ -17,9 +17,15 @@ const modifier = (text) => {
         }
     }
 
-    // resource regen:
-    if (info.actionCount > 0 && state.RPGstate.miscConfig.outputRegen) {
-        resourceRegeneration()
+    if (info.actionCount > 0) {
+
+        // activity processing:
+        procActivities(true, false)
+
+        // resource regen:
+        if (state.RPGstate.miscConfig.outputRegen) {
+            resourceRegeneration()
+        }
     }
 
     // infobox at the top right:
@@ -53,9 +59,9 @@ const modifier = (text) => {
                     HPblocks += '█'
                 }
                 let HPcolor = `green`
-                if (curHP < state.RPGstate.charSheet.resources.HP.base/2) {
+                if (curHP < state.RPGstate.charSheet.resources.HP.base / 2) {
                     HPcolor = `yellow`
-                } else if (curHP < state.RPGstate.charSheet.resources.HP.base/3) {
+                } else if (curHP < state.RPGstate.charSheet.resources.HP.base / 3) {
                     HPcolor = `red`
                 }
                 displayStatsUpdate(['HP', HPblocks, HPcolor])
