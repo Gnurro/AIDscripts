@@ -30,7 +30,7 @@ const modifier = (text) => {
 
         if (chkStat == null) {
             chkStat = 'unknown'
-        } else if (typeof(statConfig.statList[chkStat]) === 'undefined') {
+        } else if (typeof (statConfig.statList[chkStat]) === 'undefined') {
             RPGmechsLog(`DCbot got creative and said this is ${chkStat}, but that isn't a configured stat - setting it to 'unknown' for processing.`)
             chkStat = 'unknown'
         }
@@ -143,7 +143,7 @@ const modifier = (text) => {
                     state.RPGstate.charSheet.XP += chkXP // ...then add appropriate XP
 
                     // skillActivity auto-fail cleanup:
-                    if (typeof(state.RPGstate.actSkillFail) !== 'undefined') {
+                    if (typeof (state.RPGstate.actSkillFail) !== 'undefined') {
                         delete state.RPGstate.actSkillFail
                     }
                 }
@@ -188,11 +188,24 @@ const modifier = (text) => {
     const lines = context.split("\n")
 
     // BEGIN rpg mechanics
+
+    if (state.RPGstate.conditionContexts) {
+        for (let conditionContext of state.RPGstate.conditionContexts) {
+            if (conditionContext.position) {
+                lines.splice(conditionContext.position, 0, conditionContext.text)
+            } else {
+                lines.splice(-2, 0, conditionContext.text)
+            }
+        }
+        delete state.RPGstate.conditionContexts
+    }
+
     // THE MAGIC:
     if (typeof (resultContextString) !== 'undefined') { // if there's a result to tell AI...
         lines.splice(-1, 0, resultContextString) // ...put it right below the players input, so AI knows what the check did
         delete resultContextString
     }
+
     // END rpg mechanics
 
     const combinedLines = lines.join("\n").slice(-(info.maxChars - info.memoryLength))

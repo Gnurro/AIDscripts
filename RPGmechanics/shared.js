@@ -43,6 +43,8 @@ if (!RPGstate?.charSheet) {
         level: 1,
         XP: 0,
         skills: [],
+        baseStats: {},
+        curStats: {},
         feats: [],
         // resources:
         resources: {
@@ -448,14 +450,14 @@ const conditionDB = {
         stages: [
             {
                 resources: {MP: -1, frequency: 4},
-                save: {dc: 15, stat: `constitution`, frequency: 2, success: 0, fail: 1}, // do a DC15 recovery roll every 2 actions, using constitution stat; if it succeeds, got to stage 0 (which will end this condition), if it fails go to stage 1 (iE stay at this stage)
+                saveRoll: {dc: 15, stat: `constitution`, frequency: 2, success: 0, fail: 1}, // do a DC15 recovery roll every 2 actions, using constitution stat; if it succeeds, got to stage 0 (which will end this condition), if it fails go to stage 1 (iE stay at this stage)
                 context: {text: `[You feel your magic slowly draining from you.]`, position: -3},
                 duration: 4,
-                continue: 2, // after duration is over, go to this stage
+                followStage: 2, // after duration is over, go to this stage
             },
             {
                 resources: {MP: -1, frequency: 2},
-                save: {dc: 20, stat: `constitution`, frequency: 2, success: 1, fail: 2}, // do a DC20 recovery roll every 2 actions, using constitution stat; if it succeeds, got to stage 1, if it fails go to stage 2 (iE stay at this stage)
+                saveRoll: {dc: 20, stat: `constitution`, frequency: 2, success: 1, fail: 2}, // do a DC20 recovery roll every 2 actions, using constitution stat; if it succeeds, got to stage 1, if it fails go to stage 2 (iE stay at this stage)
                 context: [`[Your magic is rapidly draining from you.]`],
                 // missing duration will make this stick until otherwise removed
             },
@@ -576,6 +578,145 @@ raiseStatCosts()
 state.RPGstate = RPGstate
 
 // RPGmx functions:
+
+function cleanCharSheetStats() {
+    // only do this if no conditions change current stats:
+    if (!state.RPGstate.charSheet.conditions) {
+        for (let menuStat in state.stats.stats) {
+            if (state.RPGstate.charSheet.baseStats[menuStat] !== state.stats.stats[menuStat].level) {
+                RPGmechsLog(`MenuStat/charSheet baseStats mismatch detected, updating charSheet.`)
+                state.RPGstate.charSheet.baseStats[menuStat] = state.stats.stats[menuStat].level
+            }
+            if (state.RPGstate.charSheet.curStats[menuStat] !== state.stats.stats[menuStat].level) {
+                RPGmechsLog(`MenuStat/charSheet curStats mismatch without conditions detected, updating charSheet.`)
+                state.RPGstate.charSheet.curStats[menuStat] = state.stats.stats[menuStat].level
+            }
+        }
+    }
+}
+
+
+
+function procConditions() {
+    // condition processing
+
+    if (state.RPGstate.charSheet.conditions) {
+
+        currentConditionsLoop:
+            for (let condition of state.RPGstate.charSheet.conditions) {
+                RPGmechsLog(`Character has '${condition.conditionID}' at stage ${condition.curStage}.`)
+
+                activeStageBlock: {
+
+                    // get current stage, base-0 for array handling:
+                    if (!condition.activeStage) {
+                        condition.activeStage = condition.stages[condition.curStage - 1]
+                    }
+                    activeStage = condition.activeStage
+
+                    if (activeStage.saveRoll) {
+                        if (!activeStage.saveRoll.cd) {
+                            // 'roll die' and add specified stat mod:
+                            let saveRollValue = getRndInteger(statConfig.rolling.checkRollRange[0], statConfig.rolling.checkRollRange[1]) + state.stats.stats[capFirstLetter(activeStage.saveRoll.stat)].level
+                            // check if roll beats the DC:
+                            if (saveRollValue >= activeStage.saveRoll.dc) {
+                                // check result curStage change:
+                                if (activeStage.saveRoll.success !== (condition.stages.indexOf(activeStage) - 1)) {
+                                    condition.curStage = activeStage.saveRoll.success
+                                    delete condition.activeStage
+                                    // if the saveRoll results in a stage change, don't process the rest of this stage:
+                                    break activeStageBlock
+                                }
+                            } else {
+                                if (activeStage.saveRoll.fail !== (condition.stages.indexOf(activeStage) - 1)) {
+                                    condition.curStage = activeStage.saveRoll.fail
+                                    delete condition.activeStage
+                                    break activeStageBlock
+                                }
+                            }
+                            // (re)set the cooldown:
+                            activeStage.saveRoll.cd = activeStage.saveRoll.frequency
+                        } else {
+                            activeStage.saveRoll.cd -= 1
+                        }
+                    }
+
+                    if (activeStage.resources) {
+                        // check if cooldown does not exist yet or is 0:
+                        if (!activeStage.resources.cd) {
+                            // apply the effect:
+                            for (let resource in state.RPGstate.charSheet.resources) {
+                                if (activeStage.resources[resource]) {
+                                    state.RPGstate.charSheet.resources[resource] += activeStage.resources[resource]
+                                }
+                            }
+                            // (re)set the cooldown:
+                            activeStage.resources.cd = activeStage.resources.frequency
+                        } else {
+                            activeStage.resources.cd -= 1
+                        }
+                    }
+
+                    if (activeStage.context) {
+                        if (!state.RPGstate.conditionContexts || typeof (state.RPGstate.conditionContexts) === 'undefined') {
+                            state.RPGstate.conditionContexts = []
+                        }
+                        state.RPGstate.conditionContexts.push(activeStage.context)
+                    }
+
+                    if (activeStage.duration) {
+                        // curDuration = remaining duration, counts down, not up
+                        if (typeof (activeStage.curDuration) === 'undefined') {
+                            activeStage.curDuration = activeStage.duration
+                        }
+                        if (activeStage.curDuration <= 0) {
+                            if (activeStage.followStage) {
+                                condition.curStage = activeStage.followStage
+                                delete condition.activeStage
+                                break activeStageBlock
+                            } else {
+                                condition.curStage -= 1
+                                delete condition.activeStage
+                                break activeStageBlock
+                            }
+                        } else {
+                            activeStage.curDuration -= 1
+                        }
+                    }
+
+                    // immediately remove this condition and add a specified other condition:
+                    if (activeStage.replaceCondition) {
+                        state.RPGstate.charSheet.conditions.splice(state.RPGstate.charSheet.conditions.indexOf(condition), 1)
+                        if (!state.RPGstate.charSheet.conditions.includes(activeStage.replaceCondition)) {
+                            RPGmechsLog(`Character does not have '${activeStage.replaceCondition}' yet, adding it.`)
+                            let newCondition = conditionDB[activeStage.replaceCondition]
+                            // add curStage value to charSheet condition for tracking of current condition stage:
+                            newCondition.curStage = conditionDB[activeStage.replaceCondition].initialStage
+                            state.RPGstate.charSheet.conditions.push(newCondition)
+                        } else {
+                            RPGmechsLog(`Character already has '${activeStage.replaceCondition}', not adding it.`)
+                        }
+                        // go on with further conditions; preventing curStage hiccups:
+                        continue currentConditionsLoop
+                    }
+
+                    condition.activeStage = activeStage
+
+                }
+
+                // ending conditions when curStage hits 0:
+                if (condition.curStage <= 0) {
+                    state.RPGstate.charSheet.conditions.splice(state.RPGstate.charSheet.conditions.indexOf(condition), 1)
+                } else {
+                    // update condition by replacing prior entry (to preserve activeStage values):
+                    state.RPGstate.charSheet.conditions.splice(state.RPGstate.charSheet.conditions.indexOf(condition), 1, condition)
+                }
+
+            }
+    } else {
+        RPGmechsLog(`CONDITIONS: No active conditions found.`)
+    }
+}
 
 function procActivities(procConditions, procSkills) {
     // activity processing
