@@ -17,17 +17,22 @@ const modifier = (text) => {
         }
     }
 
-    // raising resources by specified stats:
-    if (state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[`MP`].stat] >= 1) {
-        RPGmechsLog(`RESADJUST: ${state.RPGstate.charSheet.resources[`MP`].stat} is 1 or higher, adapting ${`MP`}...`)
+    // adjusting resources by specified stats:
+    if (!state.RPGstate.charSheet.resources[`MP`].curStatMod) {
+        state.RPGstate.charSheet.resources[`MP`].curStatMod = state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[`MP`].stat]
+        state.RPGstate.charSheet.resources[`MP`].base = state.RPGstate.charSheet.resources[`MP`].initial + state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[`MP`].stat]
+    }
+
+    if (state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[`MP`].stat] !== state.RPGstate.charSheet.resources[`MP`].curStatMod) {
+        RPGmechsLog(`RESADJUST: ${state.RPGstate.charSheet.resources[`MP`].stat} has changed, adapting ${`MP`}...`)
         let prevResMatch = true
         if (!state.RPGstate.charSheet.resources[`MP`].current === state.RPGstate.charSheet.resources[`MP`].base) {
-            RPGmechsLog(`RESADJUST: ${`MP`} not full, will keep old ${`MP`}.`)
+            RPGmechsLog(`RESADJUST: ${`MP`} not full, will keep old ${`MP`} amount.`)
             prevResMatch = false
         }
         state.RPGstate.charSheet.resources[`MP`].base = state.RPGstate.charSheet.resources[`MP`].initial + state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[`MP`].stat]
-        if (prevResMatch === true) {
-            RPGmechsLog(`RESADJUST: ${`MP`} full, raising ${`MP`} as well.`)
+        if (prevResMatch === true || state.RPGstate.charSheet.resources[`MP`].current > state.RPGstate.charSheet.resources[`MP`].base) {
+            RPGmechsLog(`RESADJUST: Current ${`MP`} full or over base, adjusting current ${`MP`}.`)
             state.RPGstate.charSheet.resources[`MP`].current = state.RPGstate.charSheet.resources[`MP`].base
         }
     }
