@@ -536,6 +536,9 @@ if (!state.RPGstate.init?.stats) {
     // set starting statpoints:
     state.stats.statPoints = statConfig.starting.points
     // make sure this is only done once (or after resetting):
+    if (!state.RPGstate.init) {
+        state.RPGstate.init = {}
+    }
     state.RPGstate.init.stats = true
 }
 // initialize skills menu according to charSheet:
