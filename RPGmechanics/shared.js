@@ -705,6 +705,10 @@ function procConditions() {
                         }
                     }
 
+                    if (activeStage.skillOverride) {
+                        state.RPGstate.conditionOverrideSkills = true
+                    }
+
                     if (activeStage.duration) {
                         // curDuration = remaining duration, counts down, not up
                         if (typeof (activeStage.curDuration) === 'undefined') {
@@ -758,8 +762,8 @@ function procConditions() {
         if (state.RPGstate.charSheet.conditionStatMods) {
             RPGmechsLog(`CONDITIONS: conditionsStatMods found:`)
             RPGmechsLog(state.RPGstate.charSheet.conditionStatMods)
-            RPGmechsLog(`CONDITIONS: stats before:`)
-            RPGmechsLog(state.RPGstate.charSheet.curStats)
+            // RPGmechsLog(`CONDITIONS: stats before:`)
+            // RPGmechsLog(state.RPGstate.charSheet.curStats)
             // reset curStats to prevent overflow:
             for (let statID in state.RPGstate.charSheet.curStats) {
                 state.RPGstate.charSheet.curStats[statID] = 0
@@ -768,8 +772,8 @@ function procConditions() {
             for (let statID in state.RPGstate.charSheet.conditionStatMods) {
                 state.RPGstate.charSheet.curStats[statID] = state.RPGstate.charSheet.baseStats[statID] + state.RPGstate.charSheet.conditionStatMods[statID]
             }
-            RPGmechsLog(`CONDITIONS: stats after:`)
-            RPGmechsLog(state.RPGstate.charSheet.curStats)
+            // RPGmechsLog(`CONDITIONS: stats after:`)
+            // RPGmechsLog(state.RPGstate.charSheet.curStats)
             // then clean them up to prevent overflow:
             delete state.RPGstate.charSheet.conditionStatMods
         }
