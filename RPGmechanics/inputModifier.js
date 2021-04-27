@@ -51,7 +51,7 @@ const modifier = (text) => {
         }
 
         // activity processing:
-        procActivities(false, true, modifiedText)
+        procActivities(true, true, modifiedText)
 
         // conditions processing:
         if (state.RPGstate.miscConfig.inputConditionsTick) {
