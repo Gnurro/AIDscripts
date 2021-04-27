@@ -20,6 +20,8 @@ const modifier = (text) => {
     // adjusting resources by specified stats:
     for (let resource in state.RPGstate.charSheet.resources) {
         if (resource !== `HP`) {
+            RPGmechsLog(`RESADJUST: Checking ${resource}...`)
+
             if (!state.RPGstate.charSheet.resources[resource].curStatMod) {
                 state.RPGstate.charSheet.resources[resource].curStatMod = state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat]
                 state.RPGstate.charSheet.resources[resource].base = state.RPGstate.charSheet.resources[resource].initial + state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat]
