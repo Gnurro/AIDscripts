@@ -702,8 +702,6 @@ function procConditions() {
                             }
 
                             state.RPGstate.conditionContexts.push(chkConditionContext)
-
-
                         }
                     }
 
