@@ -64,7 +64,7 @@ const modifier = (text) => {
                 }
 
                 if (state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat] !== state.RPGstate.charSheet.resources[resource].curStatMod) {
-                    RPGmechsLog(`RESADJUST: ${state.RPGstate.charSheet.resources[resource].stat} has changed, adapting ${resource}...`)
+                    RPGmechsLog(`RESADJUST: ${state.RPGstate.charSheet.resources[resource].stat} has changed (${state.RPGstate.charSheet.resources[resource].curStatMod}->${state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat]}), adapting ${resource}...`)
                     let prevResMatch = true
                     if (state.RPGstate.charSheet.resources[resource].current !== state.RPGstate.charSheet.resources[resource].base) {
                         RPGmechsLog(`RESADJUST: ${resource} not full, will keep old ${resource} amount.`)
