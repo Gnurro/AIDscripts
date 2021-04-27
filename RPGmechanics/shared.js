@@ -756,6 +756,8 @@ function procConditions() {
             }
 
         if (state.RPGstate.charSheet.conditionStatMods) {
+            RPGmechsLog(`CONDITIONS: conditionsStatMods found!`)
+            RPGmechsLog(state.RPGstate.charSheet.conditionStatMods)
             // apply all stat modifications:
             for (let statID in state.RPGstate.charSheet.conditionStatMods) {
                 state.RPGstate.charSheet.curStats[statID] = state.RPGstate.charSheet.baseStats[statID] + state.RPGstate.charSheet.conditionStatMods[statID]
