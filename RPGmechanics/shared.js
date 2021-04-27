@@ -761,7 +761,9 @@ function procConditions() {
             RPGmechsLog(`CONDITIONS: stats before:`)
             RPGmechsLog(state.RPGstate.charSheet.curStats)
             // reset curStats to prevent overflow:
-            //state.RPGstate.charSheet.curStats = state.RPGstate.charSheet.baseStats
+            for (let statID in state.RPGstate.charSheet.curStats) {
+                state.RPGstate.charSheet.curStats[statID] = 0
+            }
             // apply all stat modifications:
             for (let statID in state.RPGstate.charSheet.conditionStatMods) {
                 state.RPGstate.charSheet.curStats[statID] = state.RPGstate.charSheet.baseStats[statID] + state.RPGstate.charSheet.conditionStatMods[statID]
