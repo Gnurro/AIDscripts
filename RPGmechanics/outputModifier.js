@@ -18,6 +18,31 @@ const modifier = (text) => {
     }
 
     // adjusting resources by specified stats:
+    for (let resource in state.RPGstate.charSheet.resources) {
+        if (resource !== `HP`) {
+            if (!state.RPGstate.charSheet.resources[resource].curStatMod) {
+                state.RPGstate.charSheet.resources[resource].curStatMod = state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat]
+                state.RPGstate.charSheet.resources[resource].base = state.RPGstate.charSheet.resources[resource].initial + state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat]
+            }
+
+            if (state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat] !== state.RPGstate.charSheet.resources[resource].curStatMod) {
+                RPGmechsLog(`RESADJUST: ${state.RPGstate.charSheet.resources[resource].stat} has changed, adapting ${resource}...`)
+                let prevResMatch = true
+                if (state.RPGstate.charSheet.resources[resource].current !== state.RPGstate.charSheet.resources[resource].base) {
+                    RPGmechsLog(`RESADJUST: ${resource} not full, will keep old ${resource} amount.`)
+                    prevResMatch = false
+                }
+                state.RPGstate.charSheet.resources[resource].base = state.RPGstate.charSheet.resources[resource].initial + state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat]
+                if (prevResMatch === true || state.RPGstate.charSheet.resources[resource].current > state.RPGstate.charSheet.resources[resource].base) {
+                    RPGmechsLog(`RESADJUST: Current ${resource} full or over base, adjusting current ${resource}.`)
+                    state.RPGstate.charSheet.resources[resource].current = state.RPGstate.charSheet.resources[resource].base
+                }
+            }
+        }
+    }
+
+    /*
+
     if (!state.RPGstate.charSheet.resources[`MP`].curStatMod) {
         state.RPGstate.charSheet.resources[`MP`].curStatMod = state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[`MP`].stat]
         state.RPGstate.charSheet.resources[`MP`].base = state.RPGstate.charSheet.resources[`MP`].initial + state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[`MP`].stat]
@@ -36,6 +61,8 @@ const modifier = (text) => {
             state.RPGstate.charSheet.resources[`MP`].current = state.RPGstate.charSheet.resources[`MP`].base
         }
     }
+
+     */
 
     if (info.actionCount > 0) {
 
