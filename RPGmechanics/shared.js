@@ -579,6 +579,8 @@ if (!state.RPGstate.init?.skills) {
 // raise stat costs: (might be better in other modifiers?)
 raiseStatCosts()
 
+cleanCharSheetStats()
+
 // backswap ... may be redundant, but better safe than sorry:
 state.RPGstate = RPGstate
 
