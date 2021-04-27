@@ -27,8 +27,10 @@ if (!state.RPGstate?.miscConfig) {
         showFancyResources: true, // set to false to show number instead of the bar
         doLog: true,
         hardLog: false,
-        inputRegen: true,
-        outputRegen: true,
+        inputRegen: true, // toggle inputs being counted for resource regeneration
+        outputRegen: true, // toggle outputs being counted for resource regeneration
+        inputConditionsTick: true,  // toggle inputs being counted for condition progression
+        outputConditionsTick: true,  // toggle outputs being counted for condition progression
     }
 }
 
@@ -675,7 +677,9 @@ function procConditions() {
                         if (!state.RPGstate.conditionContexts || typeof (state.RPGstate.conditionContexts) === 'undefined') {
                             state.RPGstate.conditionContexts = []
                         }
-                        state.RPGstate.conditionContexts.push(activeStage.context)
+                        if (!state.RPGstate.conditionContexts.includes(activeStage.context)) {
+                            state.RPGstate.conditionContexts.push(activeStage.context)
+                        }
                     }
 
                     if (activeStage.duration) {
@@ -746,7 +750,7 @@ function procConditions() {
     }
 }
 
-function procActivities(procConditions, procSkills) {
+function procActivities(doConditions, doSkills) {
     // activity processing
     // parameters = bool
     for (let activity in activityDB) {
@@ -757,7 +761,7 @@ function procActivities(procConditions, procSkills) {
                     RPGmechsLog(`Found '${trigger}' activity trigger:`)
                     RPGmechsLog(activityDB[activity].logMessage)
 
-                    if (procConditions) {
+                    if (doConditions) {
                         // conditions:
                         conditionsBlock: {
                             if (state.RPGstate.charSheet.conditions) {
@@ -802,7 +806,7 @@ function procActivities(procConditions, procSkills) {
                         }
                     }
 
-                    if (procSkills) {
+                    if (doSkills) {
                         // skillActivities:
                         skillActivitiesBlock: {
                             // these are intended to apply to skills THE CHARACTER DOES __NOT__ HAVE!

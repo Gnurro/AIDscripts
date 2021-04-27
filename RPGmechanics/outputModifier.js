@@ -22,6 +22,11 @@ const modifier = (text) => {
         // activity processing:
         procActivities(true, false)
 
+        // conditions processing:
+        if (state.RPGstate.miscConfig.outputConditionsTick) {
+            procConditions()
+        }
+
         // resource regen:
         if (state.RPGstate.miscConfig.outputRegen) {
             resourceRegeneration()

@@ -15,15 +15,15 @@ const modifier = (text) => {
         modifiedText = text.replace(/\[|\]/g, '')
     }
 
-    // /r command - this will reset ALL stats and skills!
-    if (lowered.includes("/r")) {
+    // /reset command - this will reset ALL stats and skills!
+    if (text.includes("/RPG reset")) {
         delete state.RPGstate.init // init block will run again
         state.message = "Init reset done."
         stopInput = true // no model call
     }
 
     // /showDC command
-    if (lowered.includes("/showdc")) {
+    if (text.includes("/RPG showdc")) {
         if (state.RPGstate.miscConfig.showDC === true) {
             state.RPGstate.miscConfig.showDC = false
             state.message = "Turned DC display off."
@@ -52,6 +52,16 @@ const modifier = (text) => {
 
         // activity processing:
         procActivities(false, true)
+
+        // conditions processing:
+        if (state.RPGstate.miscConfig.inputConditionsTick) {
+            procConditions()
+        }
+
+        // resource regen:
+        if (state.RPGstate.miscConfig.inputRegen) {
+            resourceRegeneration()
+        }
 
         // skill processing:
         // go through skills menu:
@@ -109,10 +119,7 @@ const modifier = (text) => {
             }
     }
 
-    // resource regen:
-    if (info.actionCount > 0 && state.RPGstate.miscConfig.inputRegen) {
-        resourceRegeneration()
-    }
+
 
     // inputBot assignment:
     if (!stopInput && info.actionCount > 1 && !stopBot) { // if the AI gets used
