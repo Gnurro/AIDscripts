@@ -75,6 +75,7 @@ const modifier = (text) => {
                         RPGmechsLog(`RESADJUST: Current ${resource} full or over base, adjusting current ${resource}.`)
                         state.RPGstate.charSheet.resources[resource].current = state.RPGstate.charSheet.resources[resource].base
                     }
+                    state.RPGstate.charSheet.resources[resource].curStatMod = state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat]
                 }
             }
         }
