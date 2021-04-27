@@ -17,31 +17,7 @@ const modifier = (text) => {
         }
     }
 
-    // adjusting resources by specified stats:
-    for (let resource in state.RPGstate.charSheet.resources) {
-        if (resource !== `HP`) {
-            RPGmechsLog(`RESADJUST: Checking ${resource}...`)
 
-            if (!state.RPGstate.charSheet.resources[resource].curStatMod) {
-                state.RPGstate.charSheet.resources[resource].curStatMod = state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat]
-                state.RPGstate.charSheet.resources[resource].base = state.RPGstate.charSheet.resources[resource].initial + state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat]
-            }
-
-            if (state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat] !== state.RPGstate.charSheet.resources[resource].curStatMod) {
-                RPGmechsLog(`RESADJUST: ${state.RPGstate.charSheet.resources[resource].stat} has changed, adapting ${resource}...`)
-                let prevResMatch = true
-                if (state.RPGstate.charSheet.resources[resource].current !== state.RPGstate.charSheet.resources[resource].base) {
-                    RPGmechsLog(`RESADJUST: ${resource} not full, will keep old ${resource} amount.`)
-                    prevResMatch = false
-                }
-                state.RPGstate.charSheet.resources[resource].base = state.RPGstate.charSheet.resources[resource].initial + state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat]
-                if (prevResMatch === true || state.RPGstate.charSheet.resources[resource].current > state.RPGstate.charSheet.resources[resource].base) {
-                    RPGmechsLog(`RESADJUST: Current ${resource} full or over base, adjusting current ${resource}.`)
-                    state.RPGstate.charSheet.resources[resource].current = state.RPGstate.charSheet.resources[resource].base
-                }
-            }
-        }
-    }
 
     /*
 
@@ -74,6 +50,33 @@ const modifier = (text) => {
         // conditions processing:
         if (state.RPGstate.miscConfig.outputConditionsTick) {
             procConditions()
+        }
+
+        // adjusting resources by specified stats:
+        for (let resource in state.RPGstate.charSheet.resources) {
+            if (resource !== `HP`) {
+                RPGmechsLog(`RESADJUST: Checking ${resource}...`)
+
+                if (!state.RPGstate.charSheet.resources[resource].curStatMod) {
+                    RPGmechsLog(`RESADJUST: ${resource} has no curStatMod, adding it.`)
+                    state.RPGstate.charSheet.resources[resource].curStatMod = state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat]
+                    state.RPGstate.charSheet.resources[resource].base = state.RPGstate.charSheet.resources[resource].initial + state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat]
+                }
+
+                if (state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat] !== state.RPGstate.charSheet.resources[resource].curStatMod) {
+                    RPGmechsLog(`RESADJUST: ${state.RPGstate.charSheet.resources[resource].stat} has changed, adapting ${resource}...`)
+                    let prevResMatch = true
+                    if (state.RPGstate.charSheet.resources[resource].current !== state.RPGstate.charSheet.resources[resource].base) {
+                        RPGmechsLog(`RESADJUST: ${resource} not full, will keep old ${resource} amount.`)
+                        prevResMatch = false
+                    }
+                    state.RPGstate.charSheet.resources[resource].base = state.RPGstate.charSheet.resources[resource].initial + state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat]
+                    if (prevResMatch === true || state.RPGstate.charSheet.resources[resource].current > state.RPGstate.charSheet.resources[resource].base) {
+                        RPGmechsLog(`RESADJUST: Current ${resource} full or over base, adjusting current ${resource}.`)
+                        state.RPGstate.charSheet.resources[resource].current = state.RPGstate.charSheet.resources[resource].base
+                    }
+                }
+            }
         }
 
         // resource regen:
