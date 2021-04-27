@@ -753,14 +753,14 @@ function procConditions() {
     }
 }
 
-function procActivities(doConditions, doSkills) {
+function procActivities(doConditions, doSkills, curText) {
     // activity processing
     // parameters = bool
     for (let activity in activityDB) {
         activityTriggerLoop:
             for (let trigger of activityDB[activity].triggers) {
                 let curRegEx = new RegExp(trigger, 'gi')
-                if (modifiedText.match(curRegEx)) {
+                if (curText.match(curRegEx)) {
                     RPGmechsLog(`Found '${trigger}' activity trigger:`)
                     RPGmechsLog(activityDB[activity].logMessage)
 

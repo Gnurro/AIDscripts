@@ -20,7 +20,7 @@ const modifier = (text) => {
     if (info.actionCount > 0) {
 
         // activity processing:
-        procActivities(true, false)
+        procActivities(true, false, modifiedText)
 
         // conditions processing:
         if (state.RPGstate.miscConfig.outputConditionsTick) {
