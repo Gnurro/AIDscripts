@@ -685,11 +685,25 @@ function procConditions() {
                     }
 
                     if (activeStage.context) {
+                        // make list of condition context inserts, if not yet defined:
                         if (!state.RPGstate.conditionContexts || typeof (state.RPGstate.conditionContexts) === 'undefined') {
                             state.RPGstate.conditionContexts = []
                         }
-                        if (!state.RPGstate.conditionContexts.includes(activeStage.context)) {
-                            state.RPGstate.conditionContexts.push(activeStage.context)
+                        // create active contextInsert object to prevent stages from adding separate inserts for the same condition
+                        let chkConditionContext = activeStage.context
+                        chkConditionContext.conditionID = condition.conditionID
+
+                        conditionContextInsertsCheckBlock: {
+
+                            for (let activeContextInsert of state.RPGstate.conditionContexts) {
+                                if (activeContextInsert.conditionID === chkConditionContext.conditionID) {
+                                    break conditionContextInsertsCheckBlock
+                                }
+                            }
+
+                            state.RPGstate.conditionContexts.push(chkConditionContext)
+
+
                         }
                     }
 
