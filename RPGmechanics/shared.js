@@ -797,11 +797,11 @@ function procActivities(doConditions, doSkills, curText) {
                                 }
                                 // add the listed conditions, if char doesn't already have them:
                                 for (let condition of activityDB[activity].applyConditions) {
-                                    RPGmechsLog(`ACTIVITY: Checking applyCondition '${condition.conditionID}'`)
+                                    RPGmechsLog(`ACTIVITY: Checking applyCondition '${condition}'`)
                                     dupeConditionsCheckBlock: {
                                         for (let preCondition of state.RPGstate.charSheet.conditions) {
                                             RPGmechsLog(`ACTIVITY: Checking present condition '${preCondition.conditionID}'.`)
-                                            if (preCondition.conditionID === condition.conditionID) {
+                                            if (preCondition.conditionID === condition) {
                                                 RPGmechsLog(`ACTIVITY: Character already has '${condition}', not adding it.`)
                                                 break dupeConditionsCheckBlock
                                             }
