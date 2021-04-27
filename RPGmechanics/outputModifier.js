@@ -57,7 +57,7 @@ const modifier = (text) => {
             if (resource !== `HP`) {
                 RPGmechsLog(`RESADJUST: Checking ${resource}...`)
 
-                if (!state.RPGstate.charSheet.resources[resource].curStatMod) {
+                if (typeof (state.RPGstate.charSheet.resources[resource].curStatMod) === 'undefined') {
                     RPGmechsLog(`RESADJUST: ${resource} has no curStatMod, adding it.`)
                     state.RPGstate.charSheet.resources[resource].curStatMod = state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat]
                     state.RPGstate.charSheet.resources[resource].base = state.RPGstate.charSheet.resources[resource].initial + state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat]
