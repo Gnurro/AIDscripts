@@ -452,14 +452,14 @@ const conditionDB = {
         stages: [
             {
                 resources: {MP: -1, frequency: 4},
-                saveRoll: {dc: 15, stat: `constitution`, frequency: 2, success: 0, fail: 1}, // do a DC15 recovery roll every 2 actions, using constitution stat; if it succeeds, got to stage 0 (which will end this condition), if it fails go to stage 1 (iE stay at this stage)
+                saveRoll: {dc: 15, stat: `Constitution`, frequency: 2, success: 0, fail: 1}, // do a DC15 recovery roll every 2 actions, using constitution stat; if it succeeds, got to stage 0 (which will end this condition), if it fails go to stage 1 (iE stay at this stage)
                 context: {text: `[You feel your magic slowly draining from you.]`, position: -3},
                 duration: 4,
                 followStage: 2, // after duration is over, go to this stage
             },
             {
                 resources: {MP: -1, frequency: 2},
-                saveRoll: {dc: 20, stat: `constitution`, frequency: 2, success: 1, fail: 2}, // do a DC20 recovery roll every 2 actions, using constitution stat; if it succeeds, got to stage 1, if it fails go to stage 2 (iE stay at this stage)
+                saveRoll: {dc: 20, stat: `Constitution`, frequency: 2, success: 1, fail: 2}, // do a DC20 recovery roll every 2 actions, using constitution stat; if it succeeds, got to stage 1, if it fails go to stage 2 (iE stay at this stage)
                 context: [`[Your magic is rapidly draining from you.]`],
                 // missing duration will make this stick until otherwise removed
             },
@@ -470,15 +470,15 @@ const conditionDB = {
         initialStage: 1,
         stages: [
             {
-                stats: {dexterity: -1, charisma: +1},
+                stats: {Dexterity: -1, Charisma: +1},
                 context: {text: `[You are feeling tipsy.]`}
             },
             {
-                stats: {dexterity: -2},
+                stats: {Dexterity: -2},
                 context: {text: `[You are drunk.]`}
             },
             {
-                stats: {dexterity: -3, charisma: -3},
+                stats: {Dexterity: -3, Charisma: -3},
                 context: {text: `[You drank way too much.]`}
             },
             {
