@@ -608,11 +608,11 @@ function procConditions() {
 
     if (state.RPGstate.charSheet.conditions) {
         RPGmechsLog(`CONDITIONS: Conditions found!`)
-        RPGmechsLog(state.RPGstate.charSheet.conditions)
+        // RPGmechsLog(state.RPGstate.charSheet.conditions)
 
         currentConditionsLoop:
             for (let condition of state.RPGstate.charSheet.conditions) {
-                RPGmechsLog(`Character has '${condition.conditionID}' at stage ${condition.curStage}.`)
+                RPGmechsLog(`CONDITIONS: Character has '${condition.conditionID}' at stage ${condition.curStage}.`)
 
                 activeStageBlock: {
 
@@ -711,13 +711,13 @@ function procConditions() {
                     if (activeStage.replaceCondition) {
                         state.RPGstate.charSheet.conditions.splice(state.RPGstate.charSheet.conditions.indexOf(condition), 1)
                         if (!state.RPGstate.charSheet.conditions.includes(activeStage.replaceCondition)) {
-                            RPGmechsLog(`Character does not have '${activeStage.replaceCondition}' yet, adding it.`)
+                            RPGmechsLog(`CONDITIONS: Character does not have '${activeStage.replaceCondition}' yet, adding it.`)
                             let newCondition = conditionDB[activeStage.replaceCondition]
                             // add curStage value to charSheet condition for tracking of current condition stage:
                             newCondition.curStage = conditionDB[activeStage.replaceCondition].initialStage
                             state.RPGstate.charSheet.conditions.push(newCondition)
                         } else {
-                            RPGmechsLog(`Character already has '${activeStage.replaceCondition}', not adding it.`)
+                            RPGmechsLog(`CONDITIONS: Character already has '${activeStage.replaceCondition}', not adding it.`)
                         }
                         // go on with further conditions; preventing curStage hiccups:
                         continue currentConditionsLoop
