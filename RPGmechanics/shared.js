@@ -600,6 +600,8 @@ function procConditions() {
     // condition processing
 
     if (state.RPGstate.charSheet.conditions) {
+        RPGmechsLog(`CONDITIONS: Conditions found!`)
+        RPGmechsLog(state.RPGstate.charSheet.conditions)
 
         currentConditionsLoop:
             for (let condition of state.RPGstate.charSheet.conditions) {
@@ -641,8 +643,15 @@ function procConditions() {
                     }
 
                     if (activeStage.stats) {
+                        if (!state.RPGstate.charSheet.conditionStatMods) {
+                            state.RPGstate.charSheet.conditionStatMods = {}
+                        }
                         for (let statID in activeStage.stats) {
-                            state.RPGstate.charSheet.curStats[statID] = state.RPGstate.charSheet.baseStats[statID] + activeStage.stats[statID]
+                            if (!state.RPGstate.charSheet.conditionStatMods[statID]) {
+                                state.RPGstate.charSheet.conditionStatMods[statID] = activeStage.stats[statID]
+                            } else {
+                                state.RPGstate.charSheet.conditionStatMods[statID] += activeStage.stats[statID]
+                            }
                         }
                     }
 
@@ -718,6 +727,15 @@ function procConditions() {
                 }
 
             }
+
+        if (state.RPGstate.charSheet.conditionStatMods) {
+            // apply all stat modifications:
+            for (let statID in state.RPGstate.charSheet.conditionStatMods) {
+                state.RPGstate.charSheet.curStats[statID] = state.RPGstate.charSheet.baseStats[statID] + state.RPGstate.charSheet.conditionStatMods[statID]
+            }
+            // then clean them up to prevent overflow:
+            delete state.RPGstate.charSheet.conditionStatMods
+        }
 
         if (state.RPGstate.charSheet.conditions.length === 0) {
             delete state.RPGstate.charSheet.conditions
