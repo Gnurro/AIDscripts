@@ -30,7 +30,7 @@ const modifier = (text) => {
 
         if (chkStat == null) {
             chkStat = 'unknown'
-        } else if (!statConfig.statList[chkStat]) {
+        } else if (!statConfig.statList[chkStat.toLowerCase()]) {
             RPGmechsLog(`DCbot got creative and said this is ${chkStat}, but that isn't a configured stat - setting it to 'unknown' for processing.`)
             chkStat = 'unknown'
         }
