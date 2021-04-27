@@ -415,7 +415,7 @@ const activityDB = {
 
     poisonHandle: {
         activityID: `poisonHandle`,
-        triggers: [`\\bpotion", "\\bbrew(?<=potion)(?=potion)", "\\bvial", "\\balchem(ic(al(y)*)*|y)`],
+        triggers: [`\\bpoison", "\\bbrew(?<=poison)(?=poison)", "\\bvial", "\\balchem(ic(al(y)*)*|y)`],
         logMessage: `Detected 'handling poisons' activity!`,
         skillUse: `poisoning`,
         allowUntrained: false
