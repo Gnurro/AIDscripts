@@ -616,9 +616,15 @@ function procConditions() {
 
                 activeStageBlock: {
 
+                    // check if activeStage is the stage defined by curStage:
+                    if (condition.activeStage?.stagesIndex !== condition.curStage) {
+                        delete condition.activeStage
+                    }
+
                     // get current stage, base-0 for array handling:
                     if (!condition.activeStage) {
                         condition.activeStage = condition.stages[condition.curStage - 1]
+                        condition.activeStage.stagesIndex = condition.curStage
                     }
                     activeStage = condition.activeStage
 
