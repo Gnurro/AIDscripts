@@ -84,6 +84,7 @@ const classDB = {
         // which non-HP resources this class has, which stat gives more of it and starting amounts:
         resources: {
             MP: {
+                initial: 3,
                 stat: `Charisma`, // the base amount will be raised by the level of this stat
                 base: 3, // 'pool size'/maximum amount
                 current: 3,

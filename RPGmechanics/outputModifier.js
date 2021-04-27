@@ -17,6 +17,21 @@ const modifier = (text) => {
         }
     }
 
+    // raising resources by specified stats:
+    if (state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[`MP`].stat] >= 1) {
+        RPGmechsLog(`RESADJUST: ${state.RPGstate.charSheet.resources[`MP`].stat} is 1 or higher, adapting ${`MP`}...`)
+        let prevResMatch = true
+        if (!state.RPGstate.charSheet.resources[`MP`].current === state.RPGstate.charSheet.resources[`MP`].base) {
+            RPGmechsLog(`RESADJUST: ${`MP`} not full, will keep old ${`MP`}.`)
+            prevResMatch = false
+        }
+        state.RPGstate.charSheet.resources[`MP`].base = state.RPGstate.charSheet.resources[`MP`].initial + state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[`MP`].stat]
+        if (prevResMatch === true) {
+            RPGmechsLog(`RESADJUST: ${`MP`} full, raising ${`MP`} as well.`)
+            state.RPGstate.charSheet.resources[`MP`].current = state.RPGstate.charSheet.resources[`MP`].base
+        }
+    }
+
     if (info.actionCount > 0) {
 
         // activity processing:
@@ -34,11 +49,7 @@ const modifier = (text) => {
     }
 
     // infobox at the top right:
-    if (state.stats.statPoints > 0 || state.skillPoints > 0) { // if there are unspent points...
-        displayStatsUpdate(['You have unspent points! Open the menus to the right', '--->', 'red'])
-    } else {
-        displayStatsUpdate(['You have unspent points! Open the menus to the right'])
-    }
+
 
     if (state.RPGstate.miscConfig.showXP) {
         RPGmechsLog(`Trying to show XP: ${state.RPGstate.charSheet.XP}`)
@@ -110,6 +121,12 @@ const modifier = (text) => {
                 }
             }
         }
+    }
+
+    if (state.stats.statPoints > 0 || state.skillPoints > 0) { // if there are unspent points...
+        displayStatsUpdate(['You have unspent points! Open the menus to the right', '--->', 'red'])
+    } else {
+        displayStatsUpdate(['You have unspent points! Open the menus to the right'])
     }
 
     // You must return an object with the text property defined.
