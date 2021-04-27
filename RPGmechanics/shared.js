@@ -492,11 +492,11 @@ const conditionDB = {
         stages: [
             {
                 stats: {
-                    dexterity: `toZero`,
-                    charisma: `toZero`,
-                    strength: `toZero`,
-                    wisdom: `toZero`,
-                    intelligence: `toZero`
+                    Dexterity: -20,
+                    Charisma: -20,
+                    Strength: -20,
+                    Wisdom: -20,
+                    Intelligence: -20
                 },
                 context: {text: `[You are unconscious and can not do anything.]`, position: -1},
                 skillOverride: true, // if true: override all skill results with context[text]
