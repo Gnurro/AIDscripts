@@ -4,15 +4,15 @@ const modifier = (text) => {
 
     // raising HP by specified stat:
     if (state.stats.stats[state.RPGstate.charSheet.resources.HP.stat].level >= 1) {
-        RPGmechsLog(`${state.RPGstate.charSheet.resources.HP.stat} is 1 or higher, adapting HP...`)
+        RPGmechsLog(`HPADJUST: ${state.RPGstate.charSheet.resources.HP.stat} is 1 or higher, adapting HP...`)
         let prevHPmatch = true
         if (!state.RPGstate.charSheet.resources.HP.current === state.RPGstate.charSheet.resources.HP.base) {
-            RPGmechsLog(`HP not full, will keep old curHP.`)
+            RPGmechsLog(`HPADJUST: HP not full, will keep old curHP.`)
             prevHPmatch = false
         }
         state.RPGstate.charSheet.resources.HP.base = state.RPGstate.charSheet.resources.HP.initial + state.stats.stats[state.RPGstate.charSheet.resources.HP.stat].level
         if (prevHPmatch === true) {
-            RPGmechsLog(`HP full, raising curHP as well.`)
+            RPGmechsLog(`HPADJUST: HP full, raising curHP as well.`)
             state.RPGstate.charSheet.resources.HP.current = state.RPGstate.charSheet.resources.HP.base
         }
     }
@@ -87,18 +87,18 @@ const modifier = (text) => {
                     // fancy resource display:
                     if (state.RPGstate.miscConfig.showFancyResources) {
                         let resBlocks = ''
-                        RPGmechsLog(`Getting current ${resource}...`)
+                        RPGmechsLog(`RESOURCEDISPLAY: Getting current ${resource}...`)
                         curRes = state.RPGstate.charSheet.resources[resource].current
                         for (i = 0; i < curRes; i++) {
                             resBlocks += '█'
                         }
                         resColor = state.RPGstate.charSheet.resources[resource].colors[0]
-                        if (curHP < state.RPGstate.charSheet.resources.HP.base / 2) {
+                        if (curRes < state.RPGstate.charSheet.resources[resource].base / 2) {
                             resColor = state.RPGstate.charSheet.resources[resource].colors[1]
-                        } else if (curHP < state.RPGstate.charSheet.resources.HP.base / 3) {
+                        } else if (curRes < state.RPGstate.charSheet.resources[resource].base / 3) {
                             resColor = state.RPGstate.charSheet.resources[resource].colors[2]
                         }
-                        RPGmechsLog(`Setting ${resource} bar color to ${resColor}`)
+                        RPGmechsLog(`RESOURCEDISPLAY: Setting ${resource} bar color to ${resColor}`)
                         displayStatsUpdate([resource, resBlocks, resColor])
                     } else {
                         if (state.RPGstate.charSheet.resources[resource].colors) {

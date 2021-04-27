@@ -31,11 +31,11 @@ const modifier = (text) => {
         if (chkStat == null) {
             chkStat = 'unknown'
         } else if (!statConfig.statList[chkStat.toLowerCase()]) {
-            RPGmechsLog(`DCbot got creative and said this is ${chkStat}, but that isn't a configured stat - setting it to 'unknown' for processing.`)
+            RPGmechsLog(`CHECK: DCbot got creative and said this is ${chkStat}, but that isn't a configured stat - setting it to 'unknown' for processing.`)
             chkStat = 'unknown'
         }
 
-        RPGmechsLog(`DCbot derp: ${chkStat}, ${statConfig.statList[chkStat]}.`)
+        // RPGmechsLog(`DCbot derp: ${chkStat}, ${statConfig.statList[chkStat]}.`)
 
         if (chkDC == null) {
             chkDC = 0
@@ -74,15 +74,15 @@ const modifier = (text) => {
 
                 // get the corresponding modifier from stat menu:
                 if (chkStat === 'unknown') {
-                    RPGmechsLog(`DCbot came up with 'unknown' stat.`)
+                    RPGmechsLog(`CHECK: DCbot came up with 'unknown' stat.`)
                     // chkStatLvl = state.stats.stats[chkStat].level
                     chkStatLvl = 0
                     if (statConfig?.locking?.lockArbitraryChecks === true) {
-                        RPGmechsLog(`Stopping check routine due to 'unknown' stat.`)
+                        RPGmechsLog(`CHECK: Stopping check routine due to 'unknown' stat.`)
                         break checkBlock
                     }
                 } else {
-                    RPGmechsLog(`${chkStat} found, setting mod to ${state.RPGstate.charSheet.curStats[chkStat]}.`)
+                    RPGmechsLog(`CHECK: ${chkStat} found, setting mod to ${state.RPGstate.charSheet.curStats[chkStat]}.`)
                     chkStatLvl = state.RPGstate.charSheet.curStats[chkStat]
 
                     // RPGmechsLog(`${chkStat} found, setting mod to ${state.stats.stats[chkStat].level}.`)

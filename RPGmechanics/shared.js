@@ -589,13 +589,13 @@ state.RPGstate = RPGstate
 function cleanCharSheetStats() {
     for (let menuStat in state.stats.stats) {
         if (state.RPGstate.charSheet.baseStats[menuStat] !== state.stats.stats[menuStat].level) {
-            RPGmechsLog(`MenuStat/charSheet baseStats mismatch detected, updating charSheet.`)
+            RPGmechsLog(`STATS: MenuStat/charSheet baseStats mismatch detected, updating charSheet.`)
             state.RPGstate.charSheet.baseStats[menuStat] = state.stats.stats[menuStat].level
         }
         // only do this if no conditions change current stats:
         if (!state.RPGstate.charSheet.conditions) {
             if (state.RPGstate.charSheet.curStats[menuStat] !== state.stats.stats[menuStat].level) {
-                RPGmechsLog(`MenuStat/charSheet curStats mismatch without conditions detected, updating charSheet.`)
+                RPGmechsLog(`STATS: MenuStat/charSheet curStats mismatch without conditions detected, updating charSheet.`)
                 state.RPGstate.charSheet.curStats[menuStat] = state.stats.stats[menuStat].level
             }
         }
@@ -901,29 +901,29 @@ function raiseStatCosts() {
             }
         }
     } else {
-        RPGmechsLog(`Raising stat costs is not enabled.`)
+        RPGmechsLog(`STATS: Raising stat costs is not enabled.`)
     }
 }
 
 function resourceRegeneration() {
     // iterates over resources on charSheet and handles regen timing
     for (let resource in state.RPGstate.charSheet.resources) {
-        RPGmechsLog(`Checking ${resource} regeneration...`)
+        RPGmechsLog(`RESOURCES: Checking ${resource} regeneration...`)
         if (state.RPGstate.charSheet.resources[resource]?.regenCounter) {
             RPGmechsLog(`${resource} regeneration cooldown remaining: ${state.RPGstate.charSheet.resources[resource].regenCounter}`)
         }
         if (state.RPGstate.charSheet.resources[resource].current < state.RPGstate.charSheet.resources[resource].base && !state.RPGstate.charSheet.resources[resource].regenCounter) {
-            RPGmechsLog(`Current ${resource} is lower than its base value, starting regeneration countdown.`)
+            RPGmechsLog(`RESOURCES: Current ${resource} is lower than its base value, starting regeneration countdown.`)
             state.RPGstate.charSheet.resources[resource].regenCounter = state.RPGstate.charSheet.resources[resource].regen
         } else if (state.RPGstate.charSheet.resources[resource].current === state.RPGstate.charSheet.resources[resource].base && state.RPGstate.charSheet.resources[resource].regenCounter) {
-            RPGmechsLog(`Current ${resource} is at its base value, removing regeneration countdown.`)
+            RPGmechsLog(`RESOURCES: Current ${resource} is at its base value, removing regeneration countdown.`)
             delete state.RPGstate.charSheet.resources[resource].regenCounter
         }
         if (state.RPGstate.charSheet.resources[resource]?.regenCounter > 0) {
-            RPGmechsLog(`${state.RPGstate.charSheet.resources[resource].regenCounter} actions until ${resource} regeneration.`)
+            RPGmechsLog(`RESOURCES: ${state.RPGstate.charSheet.resources[resource].regenCounter} actions until ${resource} regeneration.`)
             state.RPGstate.charSheet.resources[resource].regenCounter -= 1
         } else if (state.RPGstate.charSheet.resources[resource]?.regenCounter <= 0) {
-            RPGmechsLog(`${resource} regeneration cooldown over, adding 1.`)
+            RPGmechsLog(`RESOURCES: ${resource} regeneration cooldown over, adding 1.`)
             state.RPGstate.charSheet.resources[resource].current += 1
         }
     }

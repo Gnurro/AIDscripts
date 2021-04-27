@@ -87,17 +87,17 @@ const modifier = (text) => {
                                     let caughtTrigger = text.match(triggerRegEx)
 
                                     if (caughtTrigger) {
-                                        RPGmechsLog(`Caught '${caughtTrigger}' of '${skillDB[skillDef].menuString}'!`)
+                                        RPGmechsLog(`SKILLS: Caught '${caughtTrigger}' of '${skillDB[skillDef].menuString}'!`)
 
                                         // check for resource dependency:
                                         if (skillDB[skillDef].resource) {
-                                            RPGmechsLog(`Skill '${skillDef}' uses '${skillDB[skillDef].resource}', checking availability.`)
+                                            RPGmechsLog(`SKILLS: Skill '${skillDef}' uses '${skillDB[skillDef].resource}', checking availability.`)
                                             // check for resource availability:
                                             if (!state.RPGstate.charSheet.resources[skillDB[skillDef].resource].current > 0) {
-                                                RPGmechsLog(`Not enough ${skillDB[skillDef].resource} to use skill!`)
+                                                RPGmechsLog(`SKILLS: Not enough ${skillDB[skillDef].resource} to use skill!`)
                                                 continue charSkillLoop
                                             } else {
-                                                RPGmechsLog(`Got enough ${skillDB[skillDef].resource} to use skill!`)
+                                                RPGmechsLog(`SKILLS: Got enough ${skillDB[skillDef].resource} to use skill!`)
                                                 // lower resource used:
                                                 state.RPGstate.charSheet.resources[skillDB[skillDef].resource].current -= 1
                                             }
