@@ -764,7 +764,7 @@ function procActivities(doConditions, doSkills, curText) {
                 let curRegEx = new RegExp(trigger, 'gi')
                 if (curText.match(curRegEx)) {
                     RPGmechsLog(`ACTIVITY: Found '${trigger}' activity trigger:`)
-                    RPGmechsLog(activityDB[activity].logMessage)
+                    RPGmechsLog(`ACTIVITY: ` + activityDB[activity].logMessage)
 
                     if (doConditions) {
                         // conditions:
