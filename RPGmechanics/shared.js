@@ -850,7 +850,7 @@ function raiseStatCosts() {
         // iterate over stats, raise costs:
         for (let stat in state.stats.stats) {
             // RPGmechsLog(`Raising stat costs: Checking level of '${stat}'.`)
-            for (let curRaise of statConfig.raise) {
+            for (let curRaise of statConfig.raiseCost) {
                 // RPGmechsLog(`Raising stat costs: Checking level '${curRaise.threshold}' raise.`)
                 if (state.stats.stats[stat].level >= curRaise.threshold) {
                     // RPGmechsLog(`'${stat}' level (${state.stats.stats[stat].level}) at or over ${curRaise.threshold} threshold, setting cost to ${curRaise.newCost}`)
