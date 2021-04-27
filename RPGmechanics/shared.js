@@ -401,7 +401,7 @@ const activityDB = {
         ],
         logMessage: `Detected 'getting wet' activity!`,
         removeConditions: [`onFire`],
-        applyConditions: [`waterSoaked`]
+        // applyConditions: [`waterSoaked`]
     },
 
     potionHandle: {
