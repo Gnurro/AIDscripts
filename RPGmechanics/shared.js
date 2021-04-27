@@ -797,14 +797,18 @@ function procActivities(doConditions, doSkills, curText) {
                                 }
                                 // add the listed conditions, if char doesn't already have them:
                                 for (let condition of activityDB[activity].applyConditions) {
-                                    if (!state.RPGstate.charSheet.conditions.includes(condition)) {
+                                    dupeConditionsCheckBlock: {
+                                        for (let preCondition of state.RPGstate.charSheet.conditions) {
+                                            if (preCondition.conditionID === condition.conditionID) {
+                                                RPGmechsLog(`Character already has '${condition}', not adding it.`)
+                                                break dupeConditionsCheckBlock
+                                            }
+                                        }
                                         RPGmechsLog(`Character does not have '${condition}' yet, adding it.`)
                                         let newCondition = conditionDB[condition]
                                         // add curStage value to charSheet condition for tracking of current condition stage:
                                         newCondition.curStage = conditionDB[condition].initialStage
                                         state.RPGstate.charSheet.conditions.push(newCondition)
-                                    } else {
-                                        RPGmechsLog(`Character already has '${condition}', not adding it.`)
                                     }
                                 }
                             }
