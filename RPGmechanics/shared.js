@@ -948,7 +948,7 @@ function resourceRegeneration() {
     for (let resource in state.RPGstate.charSheet.resources) {
         RPGmechsLog(`RESOURCES: Checking ${resource} regeneration...`)
         if (state.RPGstate.charSheet.resources[resource]?.regenCounter) {
-            RPGmechsLog(`${resource} regeneration cooldown remaining: ${state.RPGstate.charSheet.resources[resource].regenCounter}`)
+            RPGmechsLog(`RESOURCES: ${resource} regeneration cooldown remaining: ${state.RPGstate.charSheet.resources[resource].regenCounter}`)
         }
         if (state.RPGstate.charSheet.resources[resource].current < state.RPGstate.charSheet.resources[resource].base && !state.RPGstate.charSheet.resources[resource].regenCounter) {
             RPGmechsLog(`RESOURCES: Current ${resource} is lower than its base value, starting regeneration countdown.`)
