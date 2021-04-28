@@ -2,6 +2,8 @@ const modifier = (text) => {
     let modifiedText = text
     const lowered = text.toLowerCase()
 
+
+    /*
     // raising HP by specified stat:
     if (state.stats.stats[state.RPGstate.charSheet.resources.HP.stat].level >= 1) {
         RPGmechsLog(`HPADJUST: ${state.RPGstate.charSheet.resources.HP.stat} is 1 or higher, adapting HP...`)
@@ -16,6 +18,8 @@ const modifier = (text) => {
             state.RPGstate.charSheet.resources.HP.current = state.RPGstate.charSheet.resources.HP.base
         }
     }
+
+     */
 
 
 
@@ -53,6 +57,8 @@ const modifier = (text) => {
         }
 
         // adjusting resources by specified stats:
+        adjustResourcesByStats()
+        /*
         for (let resource in state.RPGstate.charSheet.resources) {
             if (resource !== `HP`) {
                 RPGmechsLog(`RESADJUST: Checking ${resource}...`)
@@ -79,6 +85,8 @@ const modifier = (text) => {
                 }
             }
         }
+
+         */
 
         // resource regen:
         if (state.RPGstate.miscConfig.outputRegen) {

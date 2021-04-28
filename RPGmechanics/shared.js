@@ -883,6 +883,41 @@ function procActivities(doConditions, doSkills, curText) {
 
 }
 
+function adjustResourcesByStats(ignoredResources) {
+    // ignoredResources = Array of Strings: ResourceIDs
+    // example: adjustResourcesByStats(['HP', 'MP']) => HP and MP will not get adjusted
+    if (!ignoredResources) {
+        ignoredResources = []
+    }
+    // adjusting resources by specified stats:
+    for (let resource in state.RPGstate.charSheet.resources) {
+        if (!ignoredResources.includes(resource)) {
+            RPGmechsLog(`RESADJUST: Checking ${resource}...`)
+
+            if (typeof (state.RPGstate.charSheet.resources[resource].curStatMod) === 'undefined') {
+                RPGmechsLog(`RESADJUST: ${resource} has no curStatMod, adding it.`)
+                state.RPGstate.charSheet.resources[resource].curStatMod = state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat]
+                state.RPGstate.charSheet.resources[resource].base = state.RPGstate.charSheet.resources[resource].initial + state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat]
+            }
+
+            if (state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat] !== state.RPGstate.charSheet.resources[resource].curStatMod) {
+                RPGmechsLog(`RESADJUST: ${state.RPGstate.charSheet.resources[resource].stat} has changed (${state.RPGstate.charSheet.resources[resource].curStatMod}->${state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat]}), adapting ${resource}...`)
+                let prevResMatch = true
+                if (state.RPGstate.charSheet.resources[resource].current !== state.RPGstate.charSheet.resources[resource].base) {
+                    RPGmechsLog(`RESADJUST: ${resource} not full, will keep old ${resource} amount.`)
+                    prevResMatch = false
+                }
+                state.RPGstate.charSheet.resources[resource].base = state.RPGstate.charSheet.resources[resource].initial + state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat]
+                if (prevResMatch === true || state.RPGstate.charSheet.resources[resource].current > state.RPGstate.charSheet.resources[resource].base) {
+                    RPGmechsLog(`RESADJUST: Current ${resource} full or over base, adjusting current ${resource}.`)
+                    state.RPGstate.charSheet.resources[resource].current = state.RPGstate.charSheet.resources[resource].base
+                }
+                state.RPGstate.charSheet.resources[resource].curStatMod = state.RPGstate.charSheet.curStats[state.RPGstate.charSheet.resources[resource].stat]
+            }
+        }
+    }
+}
+
 function raiseStatCosts() {
     if (statConfig.raiseCost) {
         // - NOTE: This can be cheesed by raising a stat beyond the thresholds between actions, as the menu does not allow realtime updates
