@@ -718,16 +718,20 @@ function procConditions() {
                             activeStage.curDuration = activeStage.duration
                         }
                         if (activeStage.curDuration <= 0) {
+                            RPGmechsLog(`CONDITIONS: '${condition.conditionID}' stage ${condition.curStage} duration is over.`)
                             if (activeStage.followStage) {
+                                RPGmechsLog(`CONDITIONS: '${condition.conditionID}' stage ${condition.curStage} has a followStage: ${activeStage.followStage}.`)
                                 condition.curStage = activeStage.followStage
                                 delete condition.activeStage
                                 break activeStageBlock
                             } else {
+                                RPGmechsLog(`CONDITIONS: '${condition.conditionID}' stage ${condition.curStage} has no followStage, lowering stage by 1.`)
                                 condition.curStage -= 1
                                 delete condition.activeStage
                                 break activeStageBlock
                             }
                         } else {
+                            RPGmechsLog(`CONDITIONS: '${condition.conditionID}' stage ${condition.curStage} duration remaining: ${activeStage.curDuration}.`)
                             activeStage.curDuration -= 1
                         }
                     }
@@ -754,6 +758,7 @@ function procConditions() {
 
                 // ending conditions when curStage hits 0:
                 if (condition.curStage <= 0) {
+                    RPGmechsLog(`CONDITIONS: '${condition.conditionID}' is at stage 0, removing it.`)
                     state.RPGstate.charSheet.conditions.splice(state.RPGstate.charSheet.conditions.indexOf(condition), 1)
                 } else {
                     // update condition by replacing prior entry (to preserve activeStage values):
