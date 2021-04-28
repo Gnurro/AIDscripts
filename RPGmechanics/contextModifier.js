@@ -207,10 +207,10 @@ const modifier = (text) => {
 
     // THE MAGIC:
     if (typeof (resultContextString) !== 'undefined') { // if there's a result to tell AI...
-        if (!state.RPGstate.conditionOverrideSkills) {
+        if (!state.RPGstate.conditionOverrideCheckResult) {
             lines.splice(-1, 0, resultContextString) // ...put it right below the players input, so AI knows what the check did
         } else {
-            delete state.RPGstate.conditionOverrideSkills
+            delete state.RPGstate.conditionOverrideCheckResult
         }
         delete resultContextString
     }

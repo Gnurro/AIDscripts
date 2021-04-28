@@ -524,8 +524,7 @@ const conditionDB = {
                     Intelligence: -20
                 },
                 context: {text: `[You are unconscious and can not do anything.]`, position: -1},
-                skillOverride: true, // if true: override all skill results with context[text]
-                statOverride: true // if true: override all stat results with context[text]
+                checkOverride: true, // if true: override check results
             },
         ],
     },
@@ -740,8 +739,8 @@ function procConditions() {
                         }
                     }
 
-                    if (activeStage.skillOverride) {
-                        state.RPGstate.conditionOverrideSkills = true
+                    if (activeStage.checkOverride) {
+                        state.RPGstate.conditionOverrideCheckResult = true
                     }
 
                     if (activeStage.duration) {
