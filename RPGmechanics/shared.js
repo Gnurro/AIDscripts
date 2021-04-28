@@ -672,9 +672,11 @@ function procConditions() {
                     if (activeStage.resources) {
                         // check if cooldown does not exist yet or is 0:
                         if (!activeStage.resources.cd) {
+                            RPGmechsLog(`CONDITIONS: '${condition.conditionID}' resource effect cooldown zero or undefined, checking character...`)
                             // apply the effect:
                             for (let resource in state.RPGstate.charSheet.resources) {
                                 if (activeStage.resources[resource]) {
+                                    RPGmechsLog(`CONDITIONS: '${resource}' resource found on character, applying effect.`)
                                     state.RPGstate.charSheet.resources[resource] += activeStage.resources[resource]
                                 }
                             }
