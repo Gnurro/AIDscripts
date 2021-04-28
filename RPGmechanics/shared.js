@@ -662,7 +662,7 @@ function procConditions() {
                             if (saveRollValue >= activeStage.saveRoll.dc) {
                                 RPGmechsLog(`CONDITIONS: '${condition.conditionID}' saveRoll over DC${activeStage.saveRoll.dc}.`)
                                 // check result curStage change:
-                                if (activeStage.saveRoll.success !== (condition.stages.indexOf(activeStage) - 1)) {
+                                if (activeStage.saveRoll.success !== activeStage.stagesIndex) {
                                     RPGmechsLog(`CONDITIONS: '${condition.conditionID}' saveRoll success, changing current stage to ${activeStage.saveRoll.success}.`)
                                     condition.curStage = activeStage.saveRoll.success
                                     delete condition.activeStage
@@ -672,7 +672,7 @@ function procConditions() {
                                 RPGmechsLog(`CONDITIONS: '${condition.conditionID}' saveRoll success, staying at current stage}.`)
                             } else {
                                 RPGmechsLog(`CONDITIONS: '${condition.conditionID}' saveRoll below DC${activeStage.saveRoll.dc}.`)
-                                if (activeStage.saveRoll.fail !== (condition.stages.indexOf(activeStage) - 1)) {
+                                if (activeStage.saveRoll.fail !== activeStage.stagesIndex) {
                                     RPGmechsLog(`CONDITIONS: '${condition.conditionID}' saveRoll failed, changing current stage to ${activeStage.saveRoll.fail}.`)
                                     condition.curStage = activeStage.saveRoll.fail
                                     delete condition.activeStage
