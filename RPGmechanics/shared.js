@@ -669,7 +669,7 @@ function procConditions() {
                                     // if the saveRoll results in a stage change, don't process the rest of this stage:
                                     break activeStageBlock
                                 }
-                                RPGmechsLog(`CONDITIONS: '${condition.conditionID}' saveRoll success, staying at current stage}.`)
+                                RPGmechsLog(`CONDITIONS: '${condition.conditionID}' saveRoll success, staying at current stage.`)
                             } else {
                                 RPGmechsLog(`CONDITIONS: '${condition.conditionID}' saveRoll below DC${activeStage.saveRoll.dc}.`)
                                 if (activeStage.saveRoll.fail !== activeStage.stagesIndex) {
@@ -678,7 +678,7 @@ function procConditions() {
                                     delete condition.activeStage
                                     break activeStageBlock
                                 }
-                                RPGmechsLog(`CONDITIONS: '${condition.conditionID}' saveRoll failed, staying at current stage}.`)
+                                RPGmechsLog(`CONDITIONS: '${condition.conditionID}' saveRoll failed, staying at current stage.`)
                             }
                             // (re)set the cooldown:
                             activeStage.saveRoll.cd = activeStage.saveRoll.frequency
