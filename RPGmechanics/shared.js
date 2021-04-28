@@ -440,9 +440,9 @@ const conditionDB = {
         initialStage: 1,
         stages: [
             {
-                resources: {HP: -1, frequency: 3}, // reduce HP by one every three actions
-                context: {text: `[You are on fire!]`, position: -3},
-                duration: 10, // duration of this stage; without specified next stage, stage will go down by one, in this case ending the condition
+                resources: {HP: -1, frequency: 2}, // reduce HP by one every three actions
+                context: {text: `[You are on fire!]`, position: -1},
+                duration: 4, // duration of this stage; without specified next stage, stage will go down by one, in this case ending the condition
             }
         ],
     },
