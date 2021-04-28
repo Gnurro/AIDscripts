@@ -677,7 +677,7 @@ function procConditions() {
                             for (let resource in state.RPGstate.charSheet.resources) {
                                 if (activeStage.resources[resource]) {
                                     RPGmechsLog(`CONDITIONS: '${resource}' resource found on character, applying effect.`)
-                                    state.RPGstate.charSheet.resources[resource] += activeStage.resources[resource]
+                                    state.RPGstate.charSheet.resources[resource].current += activeStage.resources[resource]
                                 }
                             }
                             // (re)set the cooldown:
