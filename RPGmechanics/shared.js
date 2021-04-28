@@ -393,6 +393,13 @@ const activityDB = {
         applyConditions: [`onFire`]
     },
 
+    bonking: {
+        activityID: `bonking`,
+        triggers: [`(?<=you.*)bonk.+(?!.*you)`],
+        logMessage: `Detected 'bonking' activity!`,
+        applyConditions: [`bonked`]
+    },
+
     getWet: {
         activityID: `getWet`,
         triggers: [
@@ -444,6 +451,23 @@ const conditionDB = {
                 context: {text: `[You are on fire!]`, position: -1},
                 duration: 4, // duration of this stage; without specified next stage, stage will go down by one, in this case ending the condition
             }
+        ],
+    },
+    bonked: {
+        conditionID: `bonked`,
+        initialStage: 1,
+        stages: [
+            {
+                saveRoll: {dc: 15, stat: `Constitution`, frequency: 2, success: 0, fail: 1}, // do a DC15 recovery roll every 2 actions, using constitution stat; if it succeeds, got to stage 0 (which will end this condition), if it fails go to stage 1 (iE stay at this stage)
+                context: {text: `[You are derping a little.]`, position: -2},
+                duration: 4,
+                followStage: 2, // after duration is over, go to this stage
+            },
+            {
+                saveRoll: {dc: 20, stat: `Constitution`, frequency: 2, success: 1, fail: 2}, // do a DC20 recovery roll every 2 actions, using constitution stat; if it succeeds, got to stage 1, if it fails go to stage 2 (iE stay at this stage)
+                context: [`[You are derping hard.]`],
+                // missing duration will make this stick until otherwise removed
+            },
         ],
     },
     mageBlightPoison: {
@@ -603,7 +627,6 @@ function cleanCharSheetStats() {
     }
 }
 
-
 function procConditions() {
     // condition processing
 
@@ -631,27 +654,36 @@ function procConditions() {
 
                     if (activeStage.saveRoll) {
                         if (!activeStage.saveRoll.cd) {
+                            RPGmechsLog(`CONDITIONS: '${condition.conditionID}' saveRoll cooldown zero or undefined.`)
                             // 'roll die' and add specified stat mod:
-                            let saveRollValue = getRndInteger(statConfig.rolling.checkRollRange[0], statConfig.rolling.checkRollRange[1]) + state.stats.stats[capFirstLetter(activeStage.saveRoll.stat)].level
+                            let saveRollValue = getRndInteger(statConfig.rolling.checkRollRange[0], statConfig.rolling.checkRollRange[1]) + state.RPGstate.charSheet.curStats[capFirstLetter(activeStage.saveRoll.stat)]
+                            RPGmechsLog(`CONDITIONS: '${condition.conditionID}' saveRoll using '${activeStage.saveRoll.stat}' roll: ${saveRollValue}.`)
                             // check if roll beats the DC:
                             if (saveRollValue >= activeStage.saveRoll.dc) {
+                                RPGmechsLog(`CONDITIONS: '${condition.conditionID}' saveRoll over DC${activeStage.saveRoll.dc}.`)
                                 // check result curStage change:
                                 if (activeStage.saveRoll.success !== (condition.stages.indexOf(activeStage) - 1)) {
+                                    RPGmechsLog(`CONDITIONS: '${condition.conditionID}' saveRoll success, changing current stage to ${activeStage.saveRoll.success}.`)
                                     condition.curStage = activeStage.saveRoll.success
                                     delete condition.activeStage
                                     // if the saveRoll results in a stage change, don't process the rest of this stage:
                                     break activeStageBlock
                                 }
+                                RPGmechsLog(`CONDITIONS: '${condition.conditionID}' saveRoll success, staying at current stage}.`)
                             } else {
+                                RPGmechsLog(`CONDITIONS: '${condition.conditionID}' saveRoll below DC${activeStage.saveRoll.dc}.`)
                                 if (activeStage.saveRoll.fail !== (condition.stages.indexOf(activeStage) - 1)) {
+                                    RPGmechsLog(`CONDITIONS: '${condition.conditionID}' saveRoll failed, changing current stage to ${activeStage.saveRoll.fail}.`)
                                     condition.curStage = activeStage.saveRoll.fail
                                     delete condition.activeStage
                                     break activeStageBlock
                                 }
+                                RPGmechsLog(`CONDITIONS: '${condition.conditionID}' saveRoll failed, staying at current stage}.`)
                             }
                             // (re)set the cooldown:
                             activeStage.saveRoll.cd = activeStage.saveRoll.frequency
                         } else {
+                            RPGmechsLog(`CONDITIONS: '${condition.conditionID}' saveRoll cooldown remaining: ${activeStage.saveRoll.cd}.`)
                             activeStage.saveRoll.cd -= 1
                         }
                     }
